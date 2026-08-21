@@ -1,0 +1,432 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Kuba\\Projects\\PlanWise\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\createuser\\createusercommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\createuser\\createusercommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B9FB6F9-A787-40BE-8006-A4731E5C6C8B}|PlanWise.Modules.IdentityAccess.Infrastructure\\PlanWise.Modules.IdentityAccess.Infrastructure.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.infrastructure\\users\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B9FB6F9-A787-40BE-8006-A4731E5C6C8B}|PlanWise.Modules.IdentityAccess.Infrastructure\\PlanWise.Modules.IdentityAccess.Infrastructure.csproj|solutionrelative:planwise.modules.identityaccess.infrastructure\\users\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\createuser\\createusercommandvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\createuser\\createusercommandvalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\abstractions\\data\\idbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\abstractions\\data\\idbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.domain\\users\\usererrors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|solutionrelative:planwise.modules.identityaccess.domain\\users\\usererrors.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\getuser\\geruserqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\getuser\\geruserqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.domain\\users\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|solutionrelative:planwise.modules.identityaccess.domain\\users\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.domain\\users\\usercreateddomainevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|solutionrelative:planwise.modules.identityaccess.domain\\users\\usercreateddomainevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.domain\\users\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|solutionrelative:planwise.modules.identityaccess.domain\\users\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\getuser\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\getuser\\userresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\assemblyreference.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\assemblyreference.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\createuser\\createusercommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\createuser\\createusercommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9B9FB6F9-A787-40BE-8006-A4731E5C6C8B}|PlanWise.Modules.IdentityAccess.Infrastructure\\PlanWise.Modules.IdentityAccess.Infrastructure.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.infrastructure\\usersmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B9FB6F9-A787-40BE-8006-A4731E5C6C8B}|PlanWise.Modules.IdentityAccess.Infrastructure\\PlanWise.Modules.IdentityAccess.Infrastructure.csproj|solutionrelative:planwise.modules.identityaccess.infrastructure\\usersmodule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.presentation\\apiresults\\resultextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|solutionrelative:planwise.modules.identityaccess.presentation\\apiresults\\resultextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\users\\getuser\\getuserquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\users\\getuser\\getuserquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\abstractions\\messaging\\icommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\abstractions\\messaging\\icommandhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.presentation\\users\\userendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|solutionrelative:planwise.modules.identityaccess.presentation\\users\\userendpoints.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\abstractions\\messaging\\iquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\abstractions\\messaging\\iquery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.presentation\\users\\createuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|solutionrelative:planwise.modules.identityaccess.presentation\\users\\createuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.presentation\\users\\getuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|solutionrelative:planwise.modules.identityaccess.presentation\\users\\getuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.presentation\\apiresults\\apiresults.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9819C6B8-7F07-4C33-A54F-6C3C4B8058F7}|PlanWise.Modules.IdentityAccess.Presentation\\PlanWise.Modules.IdentityAccess.Presentation.csproj|solutionrelative:planwise.modules.identityaccess.presentation\\apiresults\\apiresults.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.domain\\abstractions\\validationerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6EF9304A-3A88-4CF8-91CF-F9C5C85CE6DB}|PlanWise.Modules.IdentityAccess.Domain\\PlanWise.Modules.IdentityAccess.Domain.csproj|solutionrelative:planwise.modules.identityaccess.domain\\abstractions\\validationerror.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\abstractions\\messaging\\iqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\abstractions\\messaging\\iqueryhandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|c:\\users\\kuba\\projects\\planwise\\planwise.modules.identityaccess.application\\abstractions\\messaging\\icommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{058F7B68-F29F-4238-8D44-B04ADDDDD14E}|PlanWise.Modules.IdentityAccess.Application\\PlanWise.Modules.IdentityAccess.Application.csproj|solutionrelative:planwise.modules.identityaccess.application\\abstractions\\messaging\\icommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 23,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Microsoft.Common.CurrentVersion.targets",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
+              "ViewState": "AgIAAMgTAAAAAAAAAAAkwOQTAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2026-06-25T14:32:17.571Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Infrastructure\\Users\\UserRepository.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Infrastructure\\Users\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Infrastructure\\Users\\UserRepository.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Infrastructure\\Users\\UserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T14:24:07.123Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AssemblyReference.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\AssemblyReference.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\AssemblyReference.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\AssemblyReference.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\AssemblyReference.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T13:37:34.246Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CreateUserCommandValidator.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandValidator.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandValidator.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandValidator.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T13:27:11.141Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UserResponse.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\UserResponse.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\UserResponse.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\UserResponse.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\UserResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T13:14:00.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserErrors.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\UserErrors.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Domain\\Users\\UserErrors.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\UserErrors.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Domain\\Users\\UserErrors.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAkAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T13:09:27.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "ValidationError.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Abstractions\\ValidationError.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Domain\\Abstractions\\ValidationError.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Abstractions\\ValidationError.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Domain\\Abstractions\\ValidationError.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:53:47.288Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "ApiResults.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ApiResults.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ApiResults.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ApiResults.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ApiResults.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:34:40.639Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ResultExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ResultExtensions.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ResultExtensions.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ResultExtensions.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Presentation\\ApiResults\\ResultExtensions.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:29:38.384Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "CreateUser.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\CreateUser.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\CreateUser.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\CreateUser.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\CreateUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:15:46.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "UserEndpoints.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\UserEndpoints.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\UserEndpoints.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\UserEndpoints.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\UserEndpoints.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:15:45.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "GetUser.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\GetUser.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\GetUser.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Presentation\\Users\\GetUser.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Presentation\\Users\\GetUser.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:15:44.945Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "UsersModule.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Infrastructure\\UsersModule.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Infrastructure\\UsersModule.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Infrastructure\\UsersModule.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Infrastructure\\UsersModule.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAQwB4AAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T12:07:28.121Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\User.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Domain\\Users\\User.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\User.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Domain\\Users\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:55:49.563Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "IUserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\IUserRepository.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Domain\\Users\\IUserRepository.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\IUserRepository.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Domain\\Users\\IUserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:55:10.954Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UserCreatedDomainEvent.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\UserCreatedDomainEvent.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Domain\\Users\\UserCreatedDomainEvent.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Domain\\Users\\UserCreatedDomainEvent.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Domain\\Users\\UserCreatedDomainEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:52:04.657Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "IQueryHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQueryHandler.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQueryHandler.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQueryHandler.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQueryHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:48:31.287Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "GetUserQuery.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GetUserQuery.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GetUserQuery.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GetUserQuery.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GetUserQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:47:51.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "GerUserQueryHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GerUserQueryHandler.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GerUserQueryHandler.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GerUserQueryHandler.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\GetUser\\GerUserQueryHandler.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB4AAABLAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:47:50.741Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "IQuery.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQuery.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQuery.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQuery.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\IQuery.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:47:34.095Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "ICommandHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommandHandler.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommandHandler.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommandHandler.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommandHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:31:47.959Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "ICommand.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommand.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommand.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommand.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Messaging\\ICommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAABQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T11:24:25.534Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CreateUserCommandHandler.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandHandler.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandHandler.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandHandler.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommandHandler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T10:44:12.986Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "CreateUserCommand.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommand.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommand.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommand.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Users\\CreateUser\\CreateUserCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAcAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T10:42:25.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IDbConnectionFactory.cs",
+              "DocumentMoniker": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Data\\IDbConnectionFactory.cs",
+              "RelativeDocumentMoniker": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Data\\IDbConnectionFactory.cs",
+              "ToolTip": "C:\\Users\\Kuba\\Projects\\PlanWise\\PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Data\\IDbConnectionFactory.cs",
+              "RelativeToolTip": "PlanWise.Modules.IdentityAccess.Application\\Abstractions\\Data\\IDbConnectionFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-25T10:40:55.696Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

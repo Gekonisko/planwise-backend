@@ -1,0 +1,6 @@
+@PlanWise_HostAddress = http://localhost:5070
+
+GET {{PlanWise_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
