@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\..\Common\PlanWise.Common.Presentation\PlanWise.Common.Presentation.csproj" />
+    <ProjectReference Include="..\PlanWise.Modules.WorkspaceManagement.Application\PlanWise.Modules.WorkspaceManagement.Application.csproj" />
+  </ItemGroup>
+
+</Project>

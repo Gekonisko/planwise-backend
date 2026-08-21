@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\PlanWise.Common.Domain\PlanWise.Common.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.8" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Common\PlanWise.Common.Domain\PlanWise.Common.Domain.csproj" />
+	</ItemGroup>
+
+</Project>
