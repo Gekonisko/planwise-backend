@@ -13,6 +13,9 @@ builder.Services.AddUserModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

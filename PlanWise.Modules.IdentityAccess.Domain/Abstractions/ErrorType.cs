@@ -6,5 +6,6 @@ public enum ErrorType
     Validation,
     Problem,
     NotFound,
-    Conflict
+    Conflict,
+    Unauthorized
 }

@@ -13,11 +13,20 @@ public class UserRepository(IdentityAccessDbContext usersDb) : IUserRepository
 
     public async Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await usersDb.Users.SingleOrDefaultAsync(u => u.Email == email, cancellationToken) is not null;
+        return await usersDb.Users.AnyAsync(u => u.Email == email, cancellationToken);
+    }
+
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    {
+        return await usersDb.Users
+            .Include(user => user.Roles)
+            .SingleOrDefaultAsync(user => user.Email == email, cancellationToken);
     }
 
     public async Task<User?> GetAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        return await usersDb.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        return await usersDb.Users
+            .Include(user => user.Roles)
+            .FirstOrDefaultAsync(user => user.Id == userId, cancellationToken);
     }
 }

@@ -9,6 +9,8 @@ namespace PlanWise.Modules.IdentityAccess.Infrastructure.Database;
 public sealed class IdentityAccessDbContext(DbContextOptions<IdentityAccessDbContext> options) : DbContext(options), IUnitOfWork
 {
     internal DbSet<User> Users { get; set; }
+    internal DbSet<RefreshToken> RefreshTokens { get; set; }
+    internal DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -16,5 +18,7 @@ public sealed class IdentityAccessDbContext(DbContextOptions<IdentityAccessDbCon
 
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+        modelBuilder.ApplyConfiguration(new PasswordResetTokenConfiguration());
     }
 }

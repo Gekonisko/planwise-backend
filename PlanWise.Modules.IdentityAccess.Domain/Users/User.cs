@@ -30,8 +30,14 @@ public sealed class User : Entity
             PasswordHash = PasswordHash
         };
 
+        newUser.AddRole(Role.User);
+
         newUser.Raise(new UserCreatedDomainEvent(newUser.Id));
 
         return newUser;
     }
+
+    public void ChangePassword(string passwordHash) => PasswordHash = passwordHash;
+
+    private void AddRole(Role role) => _roles.Add(role);
 }
