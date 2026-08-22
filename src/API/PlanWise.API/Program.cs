@@ -1,6 +1,7 @@
 using PlanWise.Api.Extensions;
 using PlanWise.Modules.IdentityAccess.Infrastructure;
 using PlanWise.Modules.WorkspaceManagement.Infrastructure;
+using PlanWise.Modules.Delivery.Infrastructure;
 using PlanWise.Common.Presentation.Endpoints;
 using PlanWise.Common.Application;
 using PlanWise.Common.Infrastructure;
@@ -16,12 +17,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication(
     [
         PlanWise.Modules.IdentityAccess.Application.AssemblyReference.Assembly,
-        PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference.Assembly
+        PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference.Assembly,
+        PlanWise.Modules.Delivery.Application.AssemblyReference.Assembly
     ]);
 builder.Services.AddCommonInfrastructure(builder.Configuration);
 
 builder.Services.AddUserModule(builder.Configuration);
 builder.Services.AddWorkspaceManagementModule(builder.Configuration);
+builder.Services.AddDeliveryModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -34,6 +37,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.ApplyMigrations();
     app.Services.ApplyMigrations();
+    app.Services.ApplyDeliveryMigrations();
 }
 
 app.MapEndpoints();

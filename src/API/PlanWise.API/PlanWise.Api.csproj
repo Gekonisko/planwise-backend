@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Modules\IdentityAccess\PlanWise.Modules.IdentityAccess.Infrastructure\PlanWise.Modules.IdentityAccess.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\WorkspaceManagement\PlanWise.Modules.WorkspaceManagement.Infrastructure\PlanWise.Modules.WorkspaceManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Delivery\PlanWise.Modules.Delivery.Infrastructure\PlanWise.Modules.Delivery.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

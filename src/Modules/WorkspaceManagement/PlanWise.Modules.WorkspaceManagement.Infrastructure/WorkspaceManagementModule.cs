@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PlanWise.Common.Application.Abstractions;
 using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Authentication;
 using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Data;
 using PlanWise.Modules.WorkspaceManagement.Domain.Projects;
@@ -31,6 +32,7 @@ public static class WorkspaceManagementModule
                     Schemas.WorkspaceManagement))
             .UseSnakeCaseNamingConvention());
         services.AddScoped<IProjectRepository, ProjectRepository>();
+        services.AddScoped<IProjectAccessService, ProjectAccessService>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<WorkspaceManagementDbContext>());
 
         return services;

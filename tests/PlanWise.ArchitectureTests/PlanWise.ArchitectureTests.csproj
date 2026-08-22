@@ -24,6 +24,10 @@
     <ProjectReference Include="..\..\src\Modules\WorkspaceManagement\PlanWise.Modules.WorkspaceManagement.Application\PlanWise.Modules.WorkspaceManagement.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\WorkspaceManagement\PlanWise.Modules.WorkspaceManagement.Infrastructure\PlanWise.Modules.WorkspaceManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\WorkspaceManagement\PlanWise.Modules.WorkspaceManagement.Presentation\PlanWise.Modules.WorkspaceManagement.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Domain\PlanWise.Modules.Delivery.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Application\PlanWise.Modules.Delivery.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Infrastructure\PlanWise.Modules.Delivery.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Presentation\PlanWise.Modules.Delivery.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

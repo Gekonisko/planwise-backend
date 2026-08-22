@@ -8,6 +8,10 @@ using PlanWise.Modules.WorkspaceManagement.Application;
 using PlanWise.Modules.WorkspaceManagement.Domain.Projects;
 using PlanWise.Modules.WorkspaceManagement.Infrastructure;
 using PlanWise.Modules.WorkspaceManagement.Presentation;
+using PlanWise.Modules.Delivery.Application;
+using PlanWise.Modules.Delivery.Domain.Sprints;
+using PlanWise.Modules.Delivery.Infrastructure;
+using PlanWise.Modules.Delivery.Presentation;
 
 namespace PlanWise.ArchitectureTests;
 
@@ -40,10 +44,21 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void Delivery_layers_point_inward()
+    {
+        AssertLayerDirection(
+            typeof(Sprint).Assembly,
+            typeof(PlanWise.Modules.Delivery.Application.AssemblyReference).Assembly,
+            typeof(DeliveryEndpoints).Assembly,
+            typeof(DeliveryModule).Assembly);
+    }
+
+    [Fact]
     public void Modules_do_not_reference_each_other()
     {
         string identityAccessNamespace = "PlanWise.Modules.IdentityAccess";
         string workspaceNamespace = "PlanWise.Modules.WorkspaceManagement";
+        string deliveryNamespace = "PlanWise.Modules.Delivery";
 
         Assembly[] identityAccessAssemblies =
         [
@@ -61,15 +76,47 @@ public sealed class ArchitectureTests
             typeof(WorkspaceManagementModule).Assembly
         ];
 
+        Assembly[] deliveryAssemblies =
+        [
+            typeof(Sprint).Assembly,
+            typeof(PlanWise.Modules.Delivery.Application.AssemblyReference).Assembly,
+            typeof(DeliveryEndpoints).Assembly,
+            typeof(DeliveryModule).Assembly
+        ];
+
         Types.InAssemblies(identityAccessAssemblies)
             .Should()
             .NotHaveDependencyOn(workspaceNamespace)
             .GetResult()
             .ShouldBeSuccessful();
 
+        Types.InAssemblies(identityAccessAssemblies)
+            .Should()
+            .NotHaveDependencyOn(deliveryNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
         Types.InAssemblies(workspaceAssemblies)
             .Should()
             .NotHaveDependencyOn(identityAccessNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(workspaceAssemblies)
+            .Should()
+            .NotHaveDependencyOn(deliveryNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(deliveryAssemblies)
+            .Should()
+            .NotHaveDependencyOn(identityAccessNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(deliveryAssemblies)
+            .Should()
+            .NotHaveDependencyOn(workspaceNamespace)
             .GetResult()
             .ShouldBeSuccessful();
     }
