@@ -1,4 +1,4 @@
-﻿using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Application.Messaging;
 
 namespace PlanWise.Modules.IdentityAccess.Application.Users.CreateUser;
 public sealed record CreateUserCommand(

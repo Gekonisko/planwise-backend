@@ -13,15 +13,17 @@ public sealed class AuthenticationService(
 {
     public async Task<Result<AuthenticationResponse>> CreateSessionAsync(
         User user,
+        bool rememberMe,
         CancellationToken cancellationToken)
     {
         AccessToken accessToken = tokenService.CreateAccessToken(user);
-        RefreshTokenData refreshToken = tokenService.CreateRefreshToken();
+        RefreshTokenData refreshToken = tokenService.CreateRefreshToken(rememberMe);
 
         refreshTokenRepository.Add(RefreshToken.Create(
             user.Id,
             tokenService.HashToken(refreshToken.Value),
-            refreshToken.ExpiresAtUtc));
+            refreshToken.ExpiresAtUtc,
+            rememberMe));
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -59,7 +61,7 @@ public sealed class AuthenticationService(
 
         refreshToken.Revoke(DateTime.UtcNow);
 
-        return await CreateSessionAsync(user, cancellationToken);
+        return await CreateSessionAsync(user, refreshToken.RememberMe, cancellationToken);
     }
 
     public async Task<Result> RevokeSessionAsync(

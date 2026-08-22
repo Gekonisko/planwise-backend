@@ -1,5 +1,5 @@
-using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Application.Messaging;
 
 namespace PlanWise.Modules.WorkspaceManagement.Application.Projects.Members;
 
-public sealed record RemoveProjectMemberCommand(Guid ProjectId, Guid UserId) : ICommand;
+public sealed record RemoveProjectMemberCommand(Guid ProjectId, Guid MemberId) : ICommand;

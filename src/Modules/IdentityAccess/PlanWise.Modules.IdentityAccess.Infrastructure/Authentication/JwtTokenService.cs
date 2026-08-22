@@ -38,7 +38,8 @@ internal sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenServ
         return new AccessToken(new JwtSecurityTokenHandler().WriteToken(token), expiresAtUtc);
     }
 
-    public RefreshTokenData CreateRefreshToken() => CreateOpaqueToken(options.RefreshTokenDays);
+    public RefreshTokenData CreateRefreshToken(bool rememberMe) =>
+        CreateOpaqueToken(rememberMe ? options.RefreshTokenDays : options.SessionRefreshTokenDays);
 
     public RefreshTokenData CreatePasswordResetToken() => CreateOpaqueToken(0, options.PasswordResetMinutes);
 

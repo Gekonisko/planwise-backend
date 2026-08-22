@@ -1,6 +1,7 @@
-using PlanWise.Common.Domain;
+﻿using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Abstractions.Authentication;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+using PlanWise.Common.Application.Messaging;
+using PlanWise.Modules.IdentityAccess.Domain.Roles;
 using PlanWise.Modules.IdentityAccess.Domain.Users;
 
 namespace PlanWise.Modules.IdentityAccess.Application.Users.GetCurrentUser;
@@ -26,11 +27,14 @@ internal sealed class GetCurrentUserQueryHandler(
             return Result.Failure<CurrentUserResponse>(UserErrors.NotFound(userId));
         }
 
+        string[] roleNames = user.Roles.Select(role => role.Name).ToArray();
+
         return new CurrentUserResponse(
             user.Id,
             user.Email,
             user.FirstName,
             user.LastName,
-            user.Roles.Select(role => role.Name).ToArray());
+            roleNames,
+            RolePermissions.For(roleNames));
     }
 }

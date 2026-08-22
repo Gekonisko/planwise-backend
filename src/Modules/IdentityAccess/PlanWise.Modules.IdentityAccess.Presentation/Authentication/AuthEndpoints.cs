@@ -12,7 +12,7 @@ using PlanWise.Modules.IdentityAccess.Application.Users.Refresh;
 using PlanWise.Modules.IdentityAccess.Application.Users.Register;
 using PlanWise.Modules.IdentityAccess.Application.Users.ResetPassword;
 using PlanWise.Modules.IdentityAccess.Domain.Users;
-using PlanWise.Modules.IdentityAccess.Presentation.ApiResults;
+using PlanWise.Common.Presentation.Results;
 
 namespace PlanWise.Modules.IdentityAccess.Presentation.Authentication;
 
@@ -39,7 +39,8 @@ public static class AuthEndpoints
         {
             Result<AuthenticationResponse> result = await sender.Send(new LoginCommand(
                 request.Email,
-                request.Password));
+                request.Password,
+                request.RememberMe));
 
             return WriteAuthenticationResult(result, response);
         });
@@ -50,7 +51,7 @@ public static class AuthEndpoints
 
             if (string.IsNullOrWhiteSpace(token))
             {
-                return ApiResults.ApiResults.Problem(Result.Failure(UserErrors.InvalidRefreshToken()));
+                return ApiResults.Problem(Result.Failure(UserErrors.InvalidRefreshToken()));
             }
 
             Result<AuthenticationResponse> result = await sender.Send(new RefreshTokenCommand(token));
@@ -68,25 +69,25 @@ public static class AuthEndpoints
             }
 
             Result result = await sender.Send(new LogoutCommand(token));
-            return result.Match(() => Results.NoContent(), ApiResults.ApiResults.Problem);
+            return result.Match(() => Results.NoContent(), ApiResults.Problem);
         });
 
         group.MapPost("/password/forgot", async (ForgotPasswordRequest request, ISender sender) =>
         {
             Result result = await sender.Send(new ForgotPasswordCommand(request.Email));
-            return result.Match(() => Results.Accepted(), ApiResults.ApiResults.Problem);
+            return result.Match(() => Results.Accepted(), ApiResults.Problem);
         });
 
         group.MapPost("/password/reset", async (ResetPasswordRequest request, ISender sender) =>
         {
             Result result = await sender.Send(new ResetPasswordCommand(request.Token, request.Password));
-            return result.Match(() => Results.NoContent(), ApiResults.ApiResults.Problem);
+            return result.Match(() => Results.NoContent(), ApiResults.Problem);
         });
 
         group.MapGet("/me", async (ISender sender) =>
         {
             Result<CurrentUserResponse> result = await sender.Send(new GetCurrentUserQuery());
-            return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+            return result.Match(Results.Ok, ApiResults.Problem);
         }).RequireAuthorization();
     }
 
@@ -96,7 +97,7 @@ public static class AuthEndpoints
     {
         if (result.IsFailure)
         {
-            return ApiResults.ApiResults.Problem(result);
+            return ApiResults.Problem(result);
         }
 
         AuthenticationResponse value = result.Value;
@@ -128,7 +129,7 @@ public static class AuthEndpoints
 
     public sealed record RegisterRequest(string Email, string FirstName, string LastName, string Password);
 
-    public sealed record LoginRequest(string Email, string Password);
+    public sealed record LoginRequest(string Email, string Password, bool RememberMe = false);
 
     public sealed record ForgotPasswordRequest(string Email);
 

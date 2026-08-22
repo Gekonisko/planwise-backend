@@ -15,4 +15,6 @@ internal sealed class UserContext(IHttpContextAccessor httpContextAccessor) : IU
             return Guid.TryParse(value, out Guid userId) ? userId : null;
         }
     }
+
+    public string? Email => httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 }

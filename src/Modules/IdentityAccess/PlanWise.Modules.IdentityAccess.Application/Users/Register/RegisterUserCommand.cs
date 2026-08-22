@@ -1,4 +1,4 @@
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.IdentityAccess.Application.Abstractions.Authentication;
 
 namespace PlanWise.Modules.IdentityAccess.Application.Users.Register;

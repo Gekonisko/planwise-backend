@@ -21,6 +21,7 @@ public sealed class WorkspaceManagementDbContext(DbContextOptions<WorkspaceManag
             builder.Property(project => project.Name).HasMaxLength(200).IsRequired();
             builder.Property(project => project.KeyPrefix).HasMaxLength(10).IsRequired();
             builder.Property(project => project.Process).HasMaxLength(20).IsRequired();
+            builder.Property(project => project.ClientName).HasMaxLength(200);
             builder.Property(project => project.Status).HasConversion<string>().HasMaxLength(20).IsRequired();
             builder.HasIndex(project => project.KeyPrefix).IsUnique();
             builder.HasMany(project => project.Members).WithOne().HasForeignKey(member => member.ProjectId);

@@ -1,8 +1,6 @@
-﻿using PlanWise.Common.Domain;
+﻿namespace PlanWise.Modules.IdentityAccess.Domain.Roles;
 
-namespace PlanWise.Modules.IdentityAccess.Domain.Roles;
-
-public sealed class Role : Entity
+public sealed class Role
 {
     public static readonly Role Admin = new Role("Admin");
     public static readonly Role User = new Role("User");

@@ -6,7 +6,7 @@ public interface ITokenService
 {
     AccessToken CreateAccessToken(User user);
 
-    RefreshTokenData CreateRefreshToken();
+    RefreshTokenData CreateRefreshToken(bool rememberMe);
 
     RefreshTokenData CreatePasswordResetToken();
 

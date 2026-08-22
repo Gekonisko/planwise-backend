@@ -17,9 +17,7 @@ builder.Services.AddApplication(
     [
         PlanWise.Modules.IdentityAccess.Application.AssemblyReference.Assembly,
         PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference.Assembly
-    ],
-    typeof(PlanWise.Modules.IdentityAccess.Application.Behaviors.ValidationBehavior<,>),
-    typeof(PlanWise.Modules.WorkspaceManagement.Application.Behaviors.ValidationBehavior<,>));
+    ]);
 builder.Services.AddCommonInfrastructure(builder.Configuration);
 
 builder.Services.AddUserModule(builder.Configuration);

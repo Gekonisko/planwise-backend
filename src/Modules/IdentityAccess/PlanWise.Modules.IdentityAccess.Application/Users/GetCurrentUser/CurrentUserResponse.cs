@@ -5,4 +5,5 @@ public sealed record CurrentUserResponse(
     string Email,
     string FirstName,
     string LastName,
-    string[] Roles);
+    string[] Roles,
+    string[] Permissions);

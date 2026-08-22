@@ -67,7 +67,7 @@ public sealed class UserCommandHandlerTests
             new AuthenticationService(users, new FakeRefreshTokenRepository(), new FakeUnitOfWork(), new FakeTokenService()));
 
         Result<AuthenticationResponse> result = await handler.Handle(
-            new LoginCommand("ada@example.com", "wrong"),
+            new LoginCommand("ada@example.com", "wrong", false),
             CancellationToken.None);
 
         Assert.False(result.IsSuccess);

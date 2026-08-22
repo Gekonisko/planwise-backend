@@ -15,7 +15,7 @@ public sealed class AuthenticationServiceTests
         FakeUnitOfWork unitOfWork = new();
         AuthenticationService service = CreateService(new FakeUserRepository(), refreshTokens, unitOfWork);
 
-        Result<AuthenticationResponse> result = await service.CreateSessionAsync(user, CancellationToken.None);
+        Result<AuthenticationResponse> result = await service.CreateSessionAsync(user, rememberMe: true, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Single(refreshTokens.Tokens);
@@ -31,7 +31,7 @@ public sealed class AuthenticationServiceTests
         FakeUserRepository users = new();
         users.Add(user);
         FakeRefreshTokenRepository refreshTokens = new();
-        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:old-token", DateTime.UtcNow.AddMinutes(5)));
+        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:old-token", DateTime.UtcNow.AddMinutes(5), true));
         AuthenticationService service = CreateService(users, refreshTokens, new FakeUnitOfWork());
 
         Result<AuthenticationResponse> result = await service.RotateSessionAsync("old-token", CancellationToken.None);
@@ -48,7 +48,7 @@ public sealed class AuthenticationServiceTests
     {
         FakeRefreshTokenRepository refreshTokens = new();
         var user = User.Create("user@example.com", "Ada", "Lovelace", "password-hash");
-        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:expired", DateTime.UtcNow.AddMinutes(-1)));
+        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:expired", DateTime.UtcNow.AddMinutes(-1), true));
         AuthenticationService service = CreateService(new FakeUserRepository(), refreshTokens, new FakeUnitOfWork());
 
         Result<AuthenticationResponse> result = await service.RotateSessionAsync("expired", CancellationToken.None);
@@ -62,7 +62,7 @@ public sealed class AuthenticationServiceTests
     {
         FakeRefreshTokenRepository refreshTokens = new();
         var user = User.Create("user@example.com", "Ada", "Lovelace", "password-hash");
-        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:logout", DateTime.UtcNow.AddMinutes(5)));
+        refreshTokens.Add(RefreshToken.Create(user.Id, "hash:logout", DateTime.UtcNow.AddMinutes(5), true));
         AuthenticationService service = CreateService(new FakeUserRepository(), refreshTokens, new FakeUnitOfWork());
 
         Result result = await service.RevokeSessionAsync("logout", CancellationToken.None);

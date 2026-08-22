@@ -20,7 +20,7 @@ public static class WorkspaceManagementModule
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddEndpoints(typeof(WorkspaceManagementEndpoints));
+        services.AddEndpoints(typeof(WorkspaceManagementEndpoints).Assembly);
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
         services.AddDbContext<WorkspaceManagementDbContext>((_, options) => options

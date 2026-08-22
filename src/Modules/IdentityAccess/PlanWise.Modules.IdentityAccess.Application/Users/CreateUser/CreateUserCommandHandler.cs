@@ -1,6 +1,6 @@
 ﻿using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Abstractions.Data;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.IdentityAccess.Domain.Users;
 using PlanWise.Modules.IdentityAccess.Domain.Abstractions;
 

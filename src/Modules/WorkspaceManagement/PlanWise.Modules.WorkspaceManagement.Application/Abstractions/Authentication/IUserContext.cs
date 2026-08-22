@@ -3,4 +3,6 @@ namespace PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Authenti
 public interface IUserContext
 {
     Guid? UserId { get; }
+
+    string? Email { get; }
 }

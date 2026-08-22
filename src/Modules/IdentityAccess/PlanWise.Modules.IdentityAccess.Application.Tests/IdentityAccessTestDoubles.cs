@@ -81,8 +81,8 @@ internal sealed class FakeTokenService : ITokenService
     public AccessToken CreateAccessToken(User user) =>
         new($"access-{user.Id}", DateTime.UtcNow.AddMinutes(15));
 
-    public RefreshTokenData CreateRefreshToken() =>
-        new($"refresh-{++tokenNumber}", DateTime.UtcNow.AddDays(30));
+    public RefreshTokenData CreateRefreshToken(bool rememberMe) =>
+        new($"refresh-{++tokenNumber}", DateTime.UtcNow.AddDays(rememberMe ? 30 : 1));
 
     public RefreshTokenData CreatePasswordResetToken() =>
         new($"reset-{++tokenNumber}", DateTime.UtcNow.AddMinutes(30));

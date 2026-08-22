@@ -1,6 +1,6 @@
-using PlanWise.Common.Domain;
+﻿using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Abstractions.Authentication;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.IdentityAccess.Application.Services;
 using PlanWise.Modules.IdentityAccess.Domain.Users;
 using PlanWise.Modules.IdentityAccess.Domain.Abstractions;
@@ -30,6 +30,6 @@ internal sealed class RegisterUserCommandHandler(
 
         userRepository.Create(user);
 
-        return await authenticationService.CreateSessionAsync(user, cancellationToken);
+        return await authenticationService.CreateSessionAsync(user, rememberMe: true, cancellationToken);
     }
 }

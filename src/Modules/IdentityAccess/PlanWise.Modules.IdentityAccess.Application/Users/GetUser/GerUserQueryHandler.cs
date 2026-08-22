@@ -2,7 +2,7 @@
 using Dapper;
 using PlanWise.Common.Application.Data;
 using PlanWise.Common.Domain;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.IdentityAccess.Domain.Users;
 
 namespace PlanWise.Modules.IdentityAccess.Application.Users.GetUser;

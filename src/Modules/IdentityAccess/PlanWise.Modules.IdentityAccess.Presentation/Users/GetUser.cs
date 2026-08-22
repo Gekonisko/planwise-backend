@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Users.GetUser;
-using PlanWise.Modules.IdentityAccess.Presentation.ApiResults;
+using PlanWise.Common.Presentation.Results;
 
 namespace PlanWise.Modules.IdentityAccess.Presentation.Users;
 
@@ -16,7 +16,7 @@ internal static class GetUser
         {
             Result<UserResponse> result = await sender.Send(new GetUserQuery(id));
 
-            return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+            return result.Match(Results.Ok, ApiResults.Problem);
         });
     }
 }

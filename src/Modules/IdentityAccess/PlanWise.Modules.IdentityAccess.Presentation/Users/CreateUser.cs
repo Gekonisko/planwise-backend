@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Users.CreateUser;
-using PlanWise.Modules.IdentityAccess.Presentation.ApiResults;
+using PlanWise.Common.Presentation.Results;
 
 namespace PlanWise.Modules.IdentityAccess.Presentation.Users;
 
@@ -20,7 +20,7 @@ internal static class CreateUser
                 request.LastName,
                 request.Password));
 
-            return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+            return result.Match(Results.Ok, ApiResults.Problem);
         });
     }
 

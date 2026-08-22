@@ -27,7 +27,7 @@ public static class UsersModule
 {
     public static IServiceCollection AddUserModule(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddEndpoints(typeof(IdentityAccessEndpoints));
+        services.AddEndpoints(typeof(IdentityAccessEndpoints).Assembly);
 
         services.AddOptions<JwtOptions>()
             .BindConfiguration(JwtOptions.SectionName)

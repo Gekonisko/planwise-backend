@@ -30,6 +30,11 @@ namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Database.Migration
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("ClientName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("client_name");
+
                     b.Property<string>("KeyPrefix")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -91,15 +96,8 @@ namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Database.Migration
                         .HasColumnType("uuid")
                         .HasColumnName("project_id");
 
-                    b.Property<Guid?>("ProjectId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id1");
-
                     b.HasKey("Id")
                         .HasName("pk_project_labels");
-
-                    b.HasIndex("ProjectId1")
-                        .HasDatabaseName("ix_project_labels_project_id1");
 
                     b.HasIndex("ProjectId", "Name")
                         .IsUnique()
@@ -135,25 +133,18 @@ namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Database.Migration
                         .HasColumnType("uuid")
                         .HasColumnName("project_id");
 
-                    b.Property<Guid?>("ProjectId1")
-                        .HasColumnType("uuid")
-                        .HasColumnName("project_id1");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("role");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_project_members");
-
-                    b.HasIndex("ProjectId1")
-                        .HasDatabaseName("ix_project_members_project_id1");
 
                     b.HasIndex("ProjectId", "UserId")
                         .IsUnique()
@@ -165,31 +156,21 @@ namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Database.Migration
             modelBuilder.Entity("PlanWise.Modules.WorkspaceManagement.Domain.Projects.ProjectLabel", b =>
                 {
                     b.HasOne("PlanWise.Modules.WorkspaceManagement.Domain.Projects.Project", null)
-                        .WithMany()
+                        .WithMany("Labels")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_project_labels_projects_project_id");
-
-                    b.HasOne("PlanWise.Modules.WorkspaceManagement.Domain.Projects.Project", null)
-                        .WithMany("Labels")
-                        .HasForeignKey("ProjectId1")
-                        .HasConstraintName("fk_project_labels_projects_project_id1");
                 });
 
             modelBuilder.Entity("PlanWise.Modules.WorkspaceManagement.Domain.Projects.ProjectMember", b =>
                 {
                     b.HasOne("PlanWise.Modules.WorkspaceManagement.Domain.Projects.Project", null)
-                        .WithMany()
+                        .WithMany("Members")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_project_members_projects_project_id");
-
-                    b.HasOne("PlanWise.Modules.WorkspaceManagement.Domain.Projects.Project", null)
-                        .WithMany("Members")
-                        .HasForeignKey("ProjectId1")
-                        .HasConstraintName("fk_project_members_projects_project_id1");
                 });
 
             modelBuilder.Entity("PlanWise.Modules.WorkspaceManagement.Domain.Projects.Project", b =>

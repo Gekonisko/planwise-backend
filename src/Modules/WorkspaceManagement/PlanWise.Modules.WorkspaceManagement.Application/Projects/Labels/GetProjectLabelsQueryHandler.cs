@@ -1,4 +1,4 @@
-using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Authentication;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.WorkspaceManagement.Domain.Projects;
@@ -11,7 +11,7 @@ internal sealed class GetProjectLabelsQueryHandler(IProjectRepository projectRep
     public async Task<Result<IReadOnlyList<LabelResponse>>> Handle(GetProjectLabelsQuery request, CancellationToken cancellationToken)
     {
         Project? project = userContext.UserId is Guid userId
-            ? await projectRepository.GetForUserAsync(request.ProjectId, userId, cancellationToken)
+            ? await projectRepository.GetForUserAsync(request.ProjectId, userId, userContext.Email, cancellationToken)
             : null;
         if (project is null)
         {

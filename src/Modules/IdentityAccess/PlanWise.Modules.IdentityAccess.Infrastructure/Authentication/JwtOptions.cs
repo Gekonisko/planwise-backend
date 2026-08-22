@@ -9,5 +9,6 @@ public sealed class JwtOptions
     public string Audience { get; set; } = "PlanWise.Web";
     public int AccessTokenMinutes { get; set; } = 15;
     public int RefreshTokenDays { get; set; } = 30;
+    public int SessionRefreshTokenDays { get; set; } = 1;
     public int PasswordResetMinutes { get; set; } = 30;
 }

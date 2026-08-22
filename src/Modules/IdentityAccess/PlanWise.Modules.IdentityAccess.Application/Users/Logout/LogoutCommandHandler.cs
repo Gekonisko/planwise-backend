@@ -1,5 +1,5 @@
-using PlanWise.Common.Domain;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Domain;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.IdentityAccess.Application.Services;
 
 namespace PlanWise.Modules.IdentityAccess.Application.Users.Logout;

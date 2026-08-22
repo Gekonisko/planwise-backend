@@ -1,6 +1,6 @@
-using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Authentication;
+﻿using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Authentication;
 using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Data;
-using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Messaging;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Modules.WorkspaceManagement.Application.Projects;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.WorkspaceManagement.Domain.Projects;
@@ -25,7 +25,7 @@ internal sealed class CreateProjectCommandHandler(
             return Result.Failure<ProjectResponse>(ProjectErrors.KeyPrefixNotUnique(request.KeyPrefix));
         }
 
-        var project = Project.Create(request.Name.Trim(), request.KeyPrefix, request.Process, ownerId);
+        var project = Project.Create(request.Name.Trim(), request.KeyPrefix, request.Process, ownerId, request.ClientName?.Trim());
         project.AddMember(ownerId, "", "Owner", 1m, 0m);
         projectRepository.Add(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);

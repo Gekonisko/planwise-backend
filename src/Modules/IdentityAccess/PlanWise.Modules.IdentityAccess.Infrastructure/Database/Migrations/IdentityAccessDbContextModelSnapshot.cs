@@ -95,6 +95,10 @@ namespace PlanWise.Modules.IdentityAccess.Infrastructure.Database.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expires_on_utc");
 
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("boolean")
+                        .HasColumnName("remember_me");
+
                     b.Property<DateTime?>("RevokedOnUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("revoked_on_utc");

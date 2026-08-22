@@ -5,6 +5,7 @@ public sealed record ProjectResponse(
     string Name,
     string KeyPrefix,
     string Process,
+    string? ClientName,
     string Status,
     Guid OwnerId,
     int MemberCount,

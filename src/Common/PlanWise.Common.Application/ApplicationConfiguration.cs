@@ -1,4 +1,5 @@
 using System.Reflection;
+using PlanWise.Common.Application.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,20 +10,19 @@ public static class ApplicationConfiguration
 {
     public static IServiceCollection AddApplication(
         this IServiceCollection services,
-        Assembly[] moduleAssemblies,
-        params Type[] pipelineBehaviors)
+        Assembly[] moduleAssemblies)
     {
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssemblies(moduleAssemblies);
 
-            foreach (Type pipelineBehavior in pipelineBehaviors)
-            {
-                config.AddOpenBehavior(pipelineBehavior);
-            }
+            config.AddOpenBehavior(typeof(ExceptionHandlingPipelineBehavior<,>));
+            config.AddOpenBehavior(typeof(RequestLoggingPipelineBehavior<,>));
+            config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });
 
         services.AddValidatorsFromAssemblies(moduleAssemblies, includeInternalTypes: true);
+
         return services;
     }
 }

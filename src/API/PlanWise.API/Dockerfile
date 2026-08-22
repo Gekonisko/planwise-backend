@@ -12,6 +12,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "."]
 COPY ["src/API/PlanWise.API/PlanWise.Api.csproj", "src/API/PlanWise.API/"]
 COPY ["src/Modules/IdentityAccess/PlanWise.Modules.IdentityAccess.Infrastructure/PlanWise.Modules.IdentityAccess.Infrastructure.csproj", "src/Modules/IdentityAccess/PlanWise.Modules.IdentityAccess.Infrastructure/"]
 COPY ["src/Modules/IdentityAccess/PlanWise.Modules.IdentityAccess.Application/PlanWise.Modules.IdentityAccess.Application.csproj", "src/Modules/IdentityAccess/PlanWise.Modules.IdentityAccess.Application/"]

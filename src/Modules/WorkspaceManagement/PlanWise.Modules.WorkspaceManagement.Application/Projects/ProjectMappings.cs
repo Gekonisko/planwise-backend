@@ -9,6 +9,7 @@ internal static class ProjectMappings
         project.Name,
         project.KeyPrefix,
         project.Process,
+        project.ClientName,
         project.Status.ToString(),
         project.OwnerId,
         project.Members.Count,

@@ -1,4 +1,4 @@
-using PlanWise.Modules.WorkspaceManagement.Application.Abstractions.Messaging;
+﻿using PlanWise.Common.Application.Messaging;
 
 namespace PlanWise.Modules.WorkspaceManagement.Application.Projects.Labels;
 

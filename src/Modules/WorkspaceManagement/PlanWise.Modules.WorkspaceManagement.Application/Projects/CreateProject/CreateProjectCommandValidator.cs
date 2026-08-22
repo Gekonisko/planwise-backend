@@ -9,5 +9,6 @@ internal sealed class CreateProjectCommandValidator : AbstractValidator<CreatePr
         RuleFor(command => command.Name).NotEmpty().MaximumLength(200);
         RuleFor(command => command.KeyPrefix).NotEmpty().Matches("^[A-Z][A-Z0-9]{1,9}$");
         RuleFor(command => command.Process).Must(process => process is "scrum" or "kanban");
+        RuleFor(command => command.ClientName).MaximumLength(200);
     }
 }

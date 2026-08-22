@@ -1,5 +1,5 @@
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Authentication;
-using PlanWise.Modules.IdentityAccess.Application.Abstractions.Messaging;
+﻿using PlanWise.Modules.IdentityAccess.Application.Abstractions.Authentication;
+using PlanWise.Common.Application.Messaging;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.IdentityAccess.Application.Services;
 
