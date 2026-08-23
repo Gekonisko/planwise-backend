@@ -11,6 +11,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -27,6 +28,11 @@ builder.Services.AddWorkspaceManagementModule(builder.Configuration);
 builder.Services.AddDeliveryModule(builder.Configuration);
 
 WebApplication app = builder.Build();
+
+if (app.Environment.IsProduction())
+{
+    app.UseProblemDetailsExceptionHandler();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
