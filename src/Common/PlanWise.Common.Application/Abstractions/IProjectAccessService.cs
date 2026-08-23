@@ -7,6 +7,10 @@ public interface IProjectAccessService
     Task<string?> GetKeyPrefixAsync(Guid projectId, CancellationToken cancellationToken = default);
 
     Task<ProjectInfo?> GetProjectInfoAsync(Guid projectId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<ProjectSearchSummary>> GetAccessibleProjectsAsync(Guid userId, CancellationToken cancellationToken = default);
 }
 
 public sealed record ProjectInfo(string Name, string? ClientName);
+
+public sealed record ProjectSearchSummary(Guid ProjectId, string Name, string KeyPrefix);

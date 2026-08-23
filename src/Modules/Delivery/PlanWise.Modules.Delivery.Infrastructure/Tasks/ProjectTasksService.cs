@@ -99,6 +99,18 @@ internal sealed class ProjectTasksService(DeliveryDbContext dbContext) : IProjec
         return true;
     }
 
+    public async Task<IReadOnlyList<TaskSearchSummary>> SearchTasksAsync(Guid projectId, string query, CancellationToken cancellationToken = default)
+    {
+        string pattern = $"%{query}%";
+
+        List<ProjectTask> tasks = await dbContext.Tasks
+            .Where(task => task.ProjectId == projectId &&
+                (EF.Functions.ILike(task.Title, pattern) || EF.Functions.ILike(task.Key, pattern)))
+            .ToListAsync(cancellationToken);
+
+        return tasks.Select(task => new TaskSearchSummary(task.Id, task.ProjectId, task.Key, task.Title)).ToList();
+    }
+
     // Links are stored unidirectionally (see TaskLink): a "Blocks" link on the predecessor and a
     // "BlockedBy" link on the dependent are not auto-mirrored, so both directions must be reconciled
     // here to recover the full predecessor set for a task.

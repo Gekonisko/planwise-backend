@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\PlanWise.Common.Application\PlanWise.Common.Application.csproj" />
+    <ProjectReference Include="..\PlanWise.Modules.Notifications.Domain\PlanWise.Modules.Notifications.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

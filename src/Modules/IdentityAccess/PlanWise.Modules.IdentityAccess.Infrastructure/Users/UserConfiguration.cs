@@ -16,6 +16,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.LastName).HasMaxLength(200);
 
+        builder.Property(u => u.BoardGrouping).HasMaxLength(20);
+
         builder.HasIndex(u => u.Email).IsUnique();
     }
 }

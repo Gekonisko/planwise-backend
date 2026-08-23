@@ -13,6 +13,8 @@ public interface IProjectTasksService
     Task<IReadOnlyList<TaskInsightSummary>> GetInsightTasksAsync(Guid projectId, CancellationToken cancellationToken = default);
 
     Task<bool> ReorderBacklogAsync(Guid projectId, IReadOnlyList<Guid> orderedTaskIds, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<TaskSearchSummary>> SearchTasksAsync(Guid projectId, string query, CancellationToken cancellationToken = default);
 }
 
 public sealed record ScheduleTaskSummary(
@@ -55,3 +57,5 @@ public sealed record TaskInsightSummary(
     int SubtaskDone,
     IReadOnlyList<Guid> PredecessorTaskIds,
     int BlocksCount);
+
+public sealed record TaskSearchSummary(Guid TaskId, Guid ProjectId, string Key, string Title);

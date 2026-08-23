@@ -31,4 +31,10 @@ internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContex
             .Where(member => member.ProjectId == projectId)
             .Select(member => new ProjectMemberSummary(member.UserId, member.Email, member.Capacity))
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ProjectSearchSummary>> GetAccessibleProjectsAsync(Guid userId, CancellationToken cancellationToken = default) =>
+        await dbContext.Projects
+            .Where(project => project.OwnerId == userId || project.Members.Any(member => member.UserId == userId))
+            .Select(project => new ProjectSearchSummary(project.Id, project.Name, project.KeyPrefix))
+            .ToListAsync(cancellationToken);
 }

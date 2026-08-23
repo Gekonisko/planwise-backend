@@ -44,6 +44,10 @@
     <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Application\PlanWise.Modules.BacklogPrioritisation.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Infrastructure\PlanWise.Modules.BacklogPrioritisation.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Presentation\PlanWise.Modules.BacklogPrioritisation.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Notifications\PlanWise.Modules.Notifications.Domain\PlanWise.Modules.Notifications.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Notifications\PlanWise.Modules.Notifications.Application\PlanWise.Modules.Notifications.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Notifications\PlanWise.Modules.Notifications.Infrastructure\PlanWise.Modules.Notifications.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Notifications\PlanWise.Modules.Notifications.Presentation\PlanWise.Modules.Notifications.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

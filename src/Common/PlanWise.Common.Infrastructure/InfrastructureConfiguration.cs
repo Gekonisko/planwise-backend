@@ -14,6 +14,7 @@ using PlanWise.Common.Infrastructure.Clock;
 using PlanWise.Common.Infrastructure.Data;
 using PlanWise.Common.Infrastructure.Database;
 using PlanWise.Common.Infrastructure.Jobs;
+using PlanWise.Common.Infrastructure.Realtime;
 using PlanWise.Common.Presentation.Endpoints;
 using PlanWise.Common.Presentation.Jobs;
 
@@ -44,6 +45,9 @@ public static class InfrastructureConfiguration
             .UseSnakeCaseNamingConvention());
         services.AddScoped<IAsyncJobService, AsyncJobService>();
         services.AddAsyncJobRunner();
+
+        services.AddSignalR();
+        services.AddScoped<IProjectRealtimeNotifier, ProjectRealtimeNotifier>();
 
         return services;
     }

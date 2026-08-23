@@ -28,6 +28,10 @@ using PlanWise.Modules.BacklogPrioritisation.Application;
 using PlanWise.Modules.BacklogPrioritisation.Domain;
 using PlanWise.Modules.BacklogPrioritisation.Infrastructure;
 using PlanWise.Modules.BacklogPrioritisation.Presentation;
+using PlanWise.Modules.Notifications.Application;
+using PlanWise.Modules.Notifications.Domain;
+using PlanWise.Modules.Notifications.Infrastructure;
+using PlanWise.Modules.Notifications.Presentation;
 
 namespace PlanWise.ArchitectureTests;
 
@@ -94,6 +98,13 @@ public sealed class ArchitectureTests
             typeof(PlanWise.Modules.BacklogPrioritisation.Application.AssemblyReference).Assembly,
             typeof(BacklogPrioritisationEndpoints).Assembly,
             typeof(BacklogPrioritisationModule).Assembly
+        ],
+        ["PlanWise.Modules.Notifications"] =
+        [
+            typeof(NotificationErrors).Assembly,
+            typeof(PlanWise.Modules.Notifications.Application.AssemblyReference).Assembly,
+            typeof(NotificationsEndpoints).Assembly,
+            typeof(NotificationsModule).Assembly
         ]
     };
 
@@ -117,6 +128,9 @@ public sealed class ArchitectureTests
 
     [Fact]
     public void BacklogPrioritisation_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.BacklogPrioritisation"]);
+
+    [Fact]
+    public void Notifications_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.Notifications"]);
 
     [Fact]
     public void Modules_do_not_reference_each_other()

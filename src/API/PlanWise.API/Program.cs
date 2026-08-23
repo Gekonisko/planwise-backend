@@ -6,6 +6,7 @@ using PlanWise.Modules.Scheduling.Infrastructure;
 using PlanWise.Modules.CostEstimation.Infrastructure;
 using PlanWise.Modules.RiskPrediction.Infrastructure;
 using PlanWise.Modules.BacklogPrioritisation.Infrastructure;
+using PlanWise.Modules.Notifications.Infrastructure;
 using PlanWise.Common.Presentation.Endpoints;
 using PlanWise.Common.Application;
 using PlanWise.Common.Infrastructure;
@@ -28,7 +29,8 @@ builder.Services.AddApplication(
         PlanWise.Modules.Scheduling.Application.AssemblyReference.Assembly,
         PlanWise.Modules.CostEstimation.Application.AssemblyReference.Assembly,
         PlanWise.Modules.RiskPrediction.Application.AssemblyReference.Assembly,
-        PlanWise.Modules.BacklogPrioritisation.Application.AssemblyReference.Assembly
+        PlanWise.Modules.BacklogPrioritisation.Application.AssemblyReference.Assembly,
+        PlanWise.Modules.Notifications.Application.AssemblyReference.Assembly
     ]);
 builder.Services.AddCommonInfrastructure(builder.Configuration);
 
@@ -39,6 +41,7 @@ builder.Services.AddSchedulingModule(builder.Configuration);
 builder.Services.AddCostEstimationModule(builder.Configuration);
 builder.Services.AddRiskPredictionModule(builder.Configuration);
 builder.Services.AddBacklogPrioritisationModule(builder.Configuration);
+builder.Services.AddNotificationsModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -62,6 +65,7 @@ if (app.Environment.IsDevelopment())
     app.Services.ApplyCostEstimationMigrations();
     app.Services.ApplyRiskPredictionMigrations();
     app.Services.ApplyBacklogPrioritisationMigrations();
+    app.Services.ApplyNotificationsMigrations();
 }
 
 app.MapEndpoints();

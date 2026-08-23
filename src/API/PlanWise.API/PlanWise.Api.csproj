@@ -31,6 +31,7 @@
     <ProjectReference Include="..\..\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Infrastructure\PlanWise.Modules.CostEstimation.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Infrastructure\PlanWise.Modules.RiskPrediction.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Infrastructure\PlanWise.Modules.BacklogPrioritisation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Notifications\PlanWise.Modules.Notifications.Infrastructure\PlanWise.Modules.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using PlanWise.Common.Application.Abstractions;
 using PlanWise.Common.Application.Clock;
 using PlanWise.Modules.RiskPrediction.Application.Abstractions.Data;
@@ -16,12 +17,14 @@ public sealed class RiskAssessmentJobHandler(
     IRiskAssessmentRunRepository runRepository,
     ITaskRiskAssessmentRepository taskRiskAssessmentRepository,
     ISprintForecastRepository sprintForecastRepository,
+    INotificationPublisher notificationPublisher,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider)
     : IAsyncJobHandler
 {
     private const string ModelVersion = "WeightedScorecard v1";
     private const int TrainingWindowDays = 0;
+    private const decimal HighRiskThreshold = 0.5m;
 
     private static readonly string[] Assumptions =
     [
@@ -84,6 +87,23 @@ public sealed class RiskAssessmentJobHandler(
         sprintForecastRepository.AddRange(forecasts);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        foreach (TaskRiskAssessment assessment in assessments.Where(assessment => assessment.ProbabilityOfSlip >= HighRiskThreshold))
+        {
+            if (tasksById[assessment.TaskId].AssigneeId is not Guid assigneeId)
+            {
+                continue;
+            }
+
+            string probabilityText = (assessment.ProbabilityOfSlip * 100).ToString("0", CultureInfo.InvariantCulture) + "%";
+            await notificationPublisher.PublishAsync(
+                assigneeId,
+                projectId,
+                "RiskFlag",
+                $"{assessment.TaskKey} is at high risk of slipping ({probabilityText})",
+                $"/api/v1/tasks/{assessment.TaskId}/risk",
+                cancellationToken);
+        }
 
         return $"/api/v1/projects/{projectId}/risks";
     }

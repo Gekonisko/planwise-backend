@@ -531,7 +531,7 @@ Derived, not stored: every business day (Mon–Fri) in range is reported as avai
 
 ---
 
-## 10. Cross-cutting (partial)
+## 10. Cross-cutting
 
 ### `GET /jobs/{id}`
 Hosted centrally in `Common` (schema `common`), not owned by any one module — every module that runs an async "intelligence" job (Scheduling's optimiser, CostEstimation's LLM run, RiskPrediction's forecast, BacklogPrioritisation's scoring — four so far) writes into the same `async_jobs` table via a shared `IAsyncJobService`/`IAsyncJobHandler` contract, so this one endpoint works regardless of which module started the job.
@@ -542,15 +542,46 @@ Hosted centrally in `Common` (schema `common`), not owned by any one module — 
 ```
 `status`: `0` Queued, `1` Running, `2` Succeeded, `3` Failed. `404` if the job doesn't exist or the caller isn't a member of the project it belongs to.
 
-**Not implemented**: `GET /notifications`, `POST /notifications/read`, `GET /search`, `GET/PUT /me/preferences`, `WS /hubs/project/{id}`.
+### `GET /notifications` / `POST /notifications/read`
+Module: `Notifications` (Postgres schema `notifications`). Not fed by a cross-module domain-event bus — this system's Outbox is deliberately trimmed to in-process, per-module dispatch (see `Common.Infrastructure.Outbox`), so a module that detects a bell-worthy event calls a new shared `INotificationPublisher.PublishAsync` contract directly rather than publishing onto a bus another module subscribes to. Three producers today: RiskPrediction (a task crossing the ≥50% slip-probability threshold, notifies the assignee), Delivery (a sprint starting/completing, notifies every member with a real account; an `@handle` mention in a task comment — matched against project members' email local-parts, since no real mention UI/autocomplete exists — notifies that member, skipping self-mentions and not-yet-registered pending invites).
+```json
+{ "items": [{ "id": "guid", "projectId": "guid", "type": "RiskFlag",
+              "message": "RSK-1 is at high risk of slipping (55%)", "link": "/api/v1/tasks/guid/risk",
+              "createdAtUtc": "2026-08-23T20:48:03Z", "readAtUtc": null }],
+  "unreadCount": 1 }
+```
+`POST /notifications/read` body: `{ "notificationIds": ["guid", "..."] }` — omit or send `null`/`[]` to mark every currently-unread notification read instead. `204 No Content`. Ids that don't belong to the caller are silently ignored rather than erroring.
+
+### `GET /search?q=`
+Also `Notifications`. No search index: queries every project the caller can access (name/key-prefix match) plus, within each of those, every task (title/key match) — one round trip per accessible project, a stated simplification rather than something micro-tuned, since a real cross-project index would replace this outright.
+```json
+{ "results": [
+    { "type": "project", "id": "guid", "projectId": "guid", "title": "Risk Test Project", "subtitle": "RSK", "link": "/api/v1/projects/guid" },
+    { "type": "task", "id": "guid", "projectId": "guid", "title": "Overdue big task", "subtitle": "RSK-1", "link": "/api/v1/tasks/guid" }
+] }
+```
+
+### `GET /reference/rates`
+Built in `CostEstimation` — see section 6.
+
+### `GET /me/preferences` / `PUT /me/preferences`
+Owned by `IdentityAccess`, directly on the `User` aggregate (three nullable columns) rather than a separate entity — a per-user settings blob with no independent lifecycle of its own.
+```json
+{ "boardGrouping": "assignee", "wipDisplay": false, "defaultProjectId": "guid" }
+```
+`boardGrouping` must be one of `status` / `assignee` / `priority` (`400` otherwise). Defaults (`"status"`, `true`, `null`) are returned if a user has never set preferences, rather than `404`. `PUT` fully replaces all three fields (not a partial patch).
+
+### `WS /hubs/project/{id}`
+Hosted centrally in `Common` (`ProjectHub`, mapped at `/hubs/project/{id:guid}`), not owned by any one module, for the same reason `GET /jobs/{id}` is centralised — task-moved/updated events originate in Delivery, job-finished events originate in the shared job runner, and a per-module hub would fragment the "one connection per board" model the spec describes. Modules push events through a shared `IProjectRealtimeNotifier` contract (`TaskMovedAsync`/`TaskUpdatedAsync`/`JobFinishedAsync`) rather than depending on SignalR types directly. On connect, the hub checks the caller has access to the project (`403`-equivalent: the connection is aborted, not a normal HTTP error) and joins a `project:{id}` group; events are broadcast to that group only. Browsers can't set an `Authorization` header on a WebSocket upgrade, so the JWT is instead accepted as an `?access_token=` query string param — but only on `/hubs/*` paths, every other endpoint still requires a real bearer header. Events sent: `taskMoved { taskId, taskKey, fromStatus, toStatus }`, `taskUpdated { taskId, taskKey }`, `jobFinished { jobId, jobType, status }`.
 
 ---
 
 ## What's not implemented at all
 
-All seven planned modules (sections 1–9, minus the pure-read parts of section 5 noted above) now exist. What's genuinely missing:
-- The rest of section 10: Notifications, Search, `/me/preferences`, and the `WS /hubs/project/{id}` SignalR hub.
-- `GET /members/{id}/skills` from section 9 — no skills/competency data model exists anywhere yet, and the schedule optimiser doesn't consume skills either.
-- Real burndown/velocity (section 3) — sections 7 and 9's forecasts both use simplified proxies (member `Capacity` at a constant rate) in its place, stated explicitly in each section above rather than silently assumed.
+All seven planned modules plus the Notifications/Search/Preferences/realtime cross-cutting layer now exist — every endpoint in the spec is built. What's genuinely simplified or stated as a gap rather than silently assumed:
+- `GET /members/{id}/skills` (section 9) — no skills/competency data model exists anywhere yet, and the schedule optimiser doesn't consume skills either.
+- Real burndown/velocity (section 3) — sections 7 and 9's forecasts both use simplified proxies (member `Capacity` at a constant rate) in its place.
+- Search has no real index (see section 10 above) and mentions are a best-effort `@handle` regex scan, not a real mention system.
+- A live WebSocket end-to-end round trip (a client actually receiving a pushed `taskMoved` event) was not exercised in this pass — the hub's HTTP-level handshake (`/negotiate`, auth enforcement, 401 when unauthenticated) was live-verified, but a full transport-level test needs a WebSocket-capable client, not `curl`.
 
 See `PlanWise API.pdf` for the target shape of each.

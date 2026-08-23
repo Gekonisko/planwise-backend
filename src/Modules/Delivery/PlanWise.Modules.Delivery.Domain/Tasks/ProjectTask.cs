@@ -79,6 +79,9 @@ public sealed class ProjectTask : Entity
         DateOnly? dueDate,
         Guid? sprintId)
     {
+        bool changed = title is not null || description is not null || priority is not null ||
+                       points is not null || assigneeId is not null || dueDate is not null || sprintId is not null;
+
         if (title is not null)
         {
             Title = title;
@@ -112,6 +115,11 @@ public sealed class ProjectTask : Entity
         if (sprintId is not null)
         {
             SprintId = sprintId;
+        }
+
+        if (changed)
+        {
+            Raise(new ProjectTaskUpdatedDomainEvent(Id, ProjectId, Key));
         }
     }
 
@@ -166,7 +174,7 @@ public sealed class ProjectTask : Entity
     {
         var comment = TaskComment.Create(Id, authorUserId, body, createdAtUtc);
         comments.Add(comment);
-        Raise(new ProjectTaskCommentAddedDomainEvent(Id, ProjectId, Key, authorUserId));
+        Raise(new ProjectTaskCommentAddedDomainEvent(Id, ProjectId, Key, authorUserId, body));
         return comment;
     }
 

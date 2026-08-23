@@ -55,10 +55,11 @@ internal sealed class AsyncJobRunner(
         }
 
         var handlersByType = scope.ServiceProvider.GetServices<IAsyncJobHandler>().ToDictionary(handler => handler.JobType);
+        IProjectRealtimeNotifier realtimeNotifier = scope.ServiceProvider.GetRequiredService<IProjectRealtimeNotifier>();
 
         foreach (AsyncJob job in jobs)
         {
-            await ProcessJobAsync(job, handlersByType, dateTimeProvider, cancellationToken);
+            await ProcessJobAsync(job, handlersByType, dateTimeProvider, realtimeNotifier, cancellationToken);
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -68,6 +69,7 @@ internal sealed class AsyncJobRunner(
         AsyncJob job,
         Dictionary<string, IAsyncJobHandler> handlersByType,
         IDateTimeProvider dateTimeProvider,
+        IProjectRealtimeNotifier realtimeNotifier,
         CancellationToken cancellationToken)
     {
         job.MarkRunning();
@@ -75,6 +77,7 @@ internal sealed class AsyncJobRunner(
         if (!handlersByType.TryGetValue(job.JobType, out IAsyncJobHandler? handler))
         {
             job.MarkFailed($"No handler registered for job type '{job.JobType}'", dateTimeProvider.UtcNow);
+            await realtimeNotifier.JobFinishedAsync(job.ProjectId, job.Id, job.JobType, "Failed", cancellationToken);
             return;
         }
 
@@ -82,11 +85,13 @@ internal sealed class AsyncJobRunner(
         {
             string resultLocation = await handler.ExecuteAsync(job.Id, job.ProjectId, cancellationToken);
             job.MarkSucceeded(resultLocation, dateTimeProvider.UtcNow);
+            await realtimeNotifier.JobFinishedAsync(job.ProjectId, job.Id, job.JobType, "Succeeded", cancellationToken);
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Error processing async job {JobId} of type {JobType}", job.Id, job.JobType);
             job.MarkFailed(exception.Message, dateTimeProvider.UtcNow);
+            await realtimeNotifier.JobFinishedAsync(job.ProjectId, job.Id, job.JobType, "Failed", cancellationToken);
         }
     }
 }

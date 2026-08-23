@@ -133,6 +133,15 @@ namespace PlanWise.Modules.IdentityAccess.Infrastructure.Database.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("BoardGrouping")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("board_grouping");
+
+                    b.Property<Guid?>("DefaultProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("default_project_id");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -155,6 +164,10 @@ namespace PlanWise.Modules.IdentityAccess.Infrastructure.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("password_hash");
+
+                    b.Property<bool?>("WipDisplay")
+                        .HasColumnType("boolean")
+                        .HasColumnName("wip_display");
 
                     b.HasKey("Id")
                         .HasName("pk_users");

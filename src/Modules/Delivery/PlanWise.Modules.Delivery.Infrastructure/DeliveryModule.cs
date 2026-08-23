@@ -8,6 +8,8 @@ using PlanWise.Modules.Delivery.Application;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
 using PlanWise.Modules.Delivery.Application.Abstractions.Data;
 using PlanWise.Modules.Delivery.Application.Activity.EventHandlers;
+using PlanWise.Modules.Delivery.Application.Notifications.EventHandlers;
+using PlanWise.Modules.Delivery.Application.Realtime.EventHandlers;
 using PlanWise.Modules.Delivery.Domain.Activity;
 using PlanWise.Modules.Delivery.Domain.Sprints;
 using PlanWise.Modules.Delivery.Domain.Tasks;
@@ -50,6 +52,11 @@ public static class DeliveryModule
         services.AddScoped<ProjectTaskCreatedActivityHandler>();
         services.AddScoped<ProjectTaskMovedActivityHandler>();
         services.AddScoped<ProjectTaskCommentAddedActivityHandler>();
+        services.AddScoped<ProjectTaskCommentAddedMentionHandler>();
+        services.AddScoped<SprintStartedNotificationHandler>();
+        services.AddScoped<SprintCompletedNotificationHandler>();
+        services.AddScoped<ProjectTaskMovedRealtimeHandler>();
+        services.AddScoped<ProjectTaskUpdatedRealtimeHandler>();
         services.AddOutboxProcessor<DeliveryDbContext>(AssemblyReference.Assembly);
 
         return services;
