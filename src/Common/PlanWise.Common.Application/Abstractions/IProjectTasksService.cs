@@ -9,6 +9,10 @@ public interface IProjectTasksService
     Task<bool> AssignTaskAsync(Guid taskId, Guid assigneeId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<CostEstimationTaskSummary>> GetCostEstimationTasksAsync(Guid projectId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<TaskInsightSummary>> GetInsightTasksAsync(Guid projectId, CancellationToken cancellationToken = default);
+
+    Task<bool> ReorderBacklogAsync(Guid projectId, IReadOnlyList<Guid> orderedTaskIds, CancellationToken cancellationToken = default);
 }
 
 public sealed record ScheduleTaskSummary(
@@ -30,3 +34,24 @@ public sealed record CostEstimationTaskSummary(
     string Priority,
     int? Points,
     bool IsDone);
+
+// Shared by RiskPrediction (due-date/dependency/size heuristics) and BacklogPrioritisation
+// (value/dependency/complexity scoring) — both read the same underlying task shape, just weight
+// different fields, so one summary avoids two near-identical cross-module contracts.
+public sealed record TaskInsightSummary(
+    Guid TaskId,
+    Guid ProjectId,
+    string Key,
+    string Title,
+    string Status,
+    string Priority,
+    int? Points,
+    int? BusinessValue,
+    DateOnly? DueDate,
+    Guid? AssigneeId,
+    Guid? SprintId,
+    decimal Rank,
+    int SubtaskTotal,
+    int SubtaskDone,
+    IReadOnlyList<Guid> PredecessorTaskIds,
+    int BlocksCount);

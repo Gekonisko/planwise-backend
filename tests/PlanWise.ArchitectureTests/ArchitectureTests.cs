@@ -20,6 +20,14 @@ using PlanWise.Modules.CostEstimation.Application;
 using PlanWise.Modules.CostEstimation.Domain;
 using PlanWise.Modules.CostEstimation.Infrastructure;
 using PlanWise.Modules.CostEstimation.Presentation;
+using PlanWise.Modules.RiskPrediction.Application;
+using PlanWise.Modules.RiskPrediction.Domain;
+using PlanWise.Modules.RiskPrediction.Infrastructure;
+using PlanWise.Modules.RiskPrediction.Presentation;
+using PlanWise.Modules.BacklogPrioritisation.Application;
+using PlanWise.Modules.BacklogPrioritisation.Domain;
+using PlanWise.Modules.BacklogPrioritisation.Infrastructure;
+using PlanWise.Modules.BacklogPrioritisation.Presentation;
 
 namespace PlanWise.ArchitectureTests;
 
@@ -31,232 +39,113 @@ internal static class TestResultExtensions
 
 public sealed class ArchitectureTests
 {
-    [Fact]
-    public void IdentityAccess_layers_point_inward()
+    // Namespace prefix -> every assembly (Domain/Application/Infrastructure/Presentation) that makes
+    // up that module. Used both for the layer-direction checks below and for the pairwise
+    // cross-module isolation check: with 7 modules a hand-written NxN matrix (42 checks) is exactly
+    // the kind of boilerplate a copy-paste mistake hides in, so Modules_do_not_reference_each_other
+    // iterates this table instead of repeating each pair by hand.
+    private static readonly Dictionary<string, Assembly[]> ModuleAssembliesByNamespace = new()
     {
-        AssertLayerDirection(
-            typeof(User).Assembly,
-            typeof(PlanWise.Modules.IdentityAccess.Application.AssemblyReference).Assembly,
-            typeof(IdentityAccessEndpoints).Assembly,
-            typeof(UsersModule).Assembly);
-    }
-
-    [Fact]
-    public void WorkspaceManagement_layers_point_inward()
-    {
-        AssertLayerDirection(
-            typeof(Project).Assembly,
-            typeof(PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference).Assembly,
-            typeof(WorkspaceManagementEndpoints).Assembly,
-            typeof(WorkspaceManagementModule).Assembly);
-    }
-
-    [Fact]
-    public void Delivery_layers_point_inward()
-    {
-        AssertLayerDirection(
-            typeof(Sprint).Assembly,
-            typeof(PlanWise.Modules.Delivery.Application.AssemblyReference).Assembly,
-            typeof(DeliveryEndpoints).Assembly,
-            typeof(DeliveryModule).Assembly);
-    }
-
-    [Fact]
-    public void Scheduling_layers_point_inward()
-    {
-        AssertLayerDirection(
-            typeof(ScheduleErrors).Assembly,
-            typeof(PlanWise.Modules.Scheduling.Application.AssemblyReference).Assembly,
-            typeof(SchedulingEndpoints).Assembly,
-            typeof(SchedulingModule).Assembly);
-    }
-
-    [Fact]
-    public void CostEstimation_layers_point_inward()
-    {
-        AssertLayerDirection(
-            typeof(CostEstimateErrors).Assembly,
-            typeof(PlanWise.Modules.CostEstimation.Application.AssemblyReference).Assembly,
-            typeof(CostEstimationEndpoints).Assembly,
-            typeof(CostEstimationModule).Assembly);
-    }
-
-    [Fact]
-    public void Modules_do_not_reference_each_other()
-    {
-        string identityAccessNamespace = "PlanWise.Modules.IdentityAccess";
-        string workspaceNamespace = "PlanWise.Modules.WorkspaceManagement";
-        string deliveryNamespace = "PlanWise.Modules.Delivery";
-        string schedulingNamespace = "PlanWise.Modules.Scheduling";
-        string costEstimationNamespace = "PlanWise.Modules.CostEstimation";
-
-        Assembly[] identityAccessAssemblies =
+        ["PlanWise.Modules.IdentityAccess"] =
         [
             typeof(User).Assembly,
             typeof(PlanWise.Modules.IdentityAccess.Application.AssemblyReference).Assembly,
             typeof(IdentityAccessEndpoints).Assembly,
             typeof(UsersModule).Assembly
-        ];
-
-        Assembly[] workspaceAssemblies =
+        ],
+        ["PlanWise.Modules.WorkspaceManagement"] =
         [
             typeof(Project).Assembly,
             typeof(PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference).Assembly,
             typeof(WorkspaceManagementEndpoints).Assembly,
             typeof(WorkspaceManagementModule).Assembly
-        ];
-
-        Assembly[] deliveryAssemblies =
+        ],
+        ["PlanWise.Modules.Delivery"] =
         [
             typeof(Sprint).Assembly,
             typeof(PlanWise.Modules.Delivery.Application.AssemblyReference).Assembly,
             typeof(DeliveryEndpoints).Assembly,
             typeof(DeliveryModule).Assembly
-        ];
-
-        Assembly[] schedulingAssemblies =
+        ],
+        ["PlanWise.Modules.Scheduling"] =
         [
             typeof(ScheduleErrors).Assembly,
             typeof(PlanWise.Modules.Scheduling.Application.AssemblyReference).Assembly,
             typeof(SchedulingEndpoints).Assembly,
             typeof(SchedulingModule).Assembly
-        ];
-
-        Assembly[] costEstimationAssemblies =
+        ],
+        ["PlanWise.Modules.CostEstimation"] =
         [
             typeof(CostEstimateErrors).Assembly,
             typeof(PlanWise.Modules.CostEstimation.Application.AssemblyReference).Assembly,
             typeof(CostEstimationEndpoints).Assembly,
             typeof(CostEstimationModule).Assembly
-        ];
+        ],
+        ["PlanWise.Modules.RiskPrediction"] =
+        [
+            typeof(RiskErrors).Assembly,
+            typeof(PlanWise.Modules.RiskPrediction.Application.AssemblyReference).Assembly,
+            typeof(RiskPredictionEndpoints).Assembly,
+            typeof(RiskPredictionModule).Assembly
+        ],
+        ["PlanWise.Modules.BacklogPrioritisation"] =
+        [
+            typeof(PriorityErrors).Assembly,
+            typeof(PlanWise.Modules.BacklogPrioritisation.Application.AssemblyReference).Assembly,
+            typeof(BacklogPrioritisationEndpoints).Assembly,
+            typeof(BacklogPrioritisationModule).Assembly
+        ]
+    };
 
-        Types.InAssemblies(identityAccessAssemblies)
-            .Should()
-            .NotHaveDependencyOn(workspaceNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void IdentityAccess_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.IdentityAccess"]);
 
-        Types.InAssemblies(identityAccessAssemblies)
-            .Should()
-            .NotHaveDependencyOn(deliveryNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void WorkspaceManagement_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.WorkspaceManagement"]);
 
-        Types.InAssemblies(identityAccessAssemblies)
-            .Should()
-            .NotHaveDependencyOn(schedulingNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void Delivery_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.Delivery"]);
 
-        Types.InAssemblies(identityAccessAssemblies)
-            .Should()
-            .NotHaveDependencyOn(costEstimationNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void Scheduling_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.Scheduling"]);
 
-        Types.InAssemblies(workspaceAssemblies)
-            .Should()
-            .NotHaveDependencyOn(identityAccessNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void CostEstimation_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.CostEstimation"]);
 
-        Types.InAssemblies(workspaceAssemblies)
-            .Should()
-            .NotHaveDependencyOn(deliveryNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void RiskPrediction_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.RiskPrediction"]);
 
-        Types.InAssemblies(workspaceAssemblies)
-            .Should()
-            .NotHaveDependencyOn(schedulingNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void BacklogPrioritisation_layers_point_inward() => AssertLayerDirection(ModuleAssembliesByNamespace["PlanWise.Modules.BacklogPrioritisation"]);
 
-        Types.InAssemblies(workspaceAssemblies)
-            .Should()
-            .NotHaveDependencyOn(costEstimationNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+    [Fact]
+    public void Modules_do_not_reference_each_other()
+    {
+        foreach ((string moduleNamespace, Assembly[] assemblies) in ModuleAssembliesByNamespace)
+        {
+            foreach (string otherNamespace in ModuleAssembliesByNamespace.Keys)
+            {
+                if (otherNamespace == moduleNamespace)
+                {
+                    continue;
+                }
 
-        Types.InAssemblies(deliveryAssemblies)
-            .Should()
-            .NotHaveDependencyOn(identityAccessNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(deliveryAssemblies)
-            .Should()
-            .NotHaveDependencyOn(workspaceNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(deliveryAssemblies)
-            .Should()
-            .NotHaveDependencyOn(schedulingNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(deliveryAssemblies)
-            .Should()
-            .NotHaveDependencyOn(costEstimationNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(schedulingAssemblies)
-            .Should()
-            .NotHaveDependencyOn(identityAccessNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(schedulingAssemblies)
-            .Should()
-            .NotHaveDependencyOn(workspaceNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(schedulingAssemblies)
-            .Should()
-            .NotHaveDependencyOn(deliveryNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(schedulingAssemblies)
-            .Should()
-            .NotHaveDependencyOn(costEstimationNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(costEstimationAssemblies)
-            .Should()
-            .NotHaveDependencyOn(identityAccessNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(costEstimationAssemblies)
-            .Should()
-            .NotHaveDependencyOn(workspaceNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(costEstimationAssemblies)
-            .Should()
-            .NotHaveDependencyOn(deliveryNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
-
-        Types.InAssemblies(costEstimationAssemblies)
-            .Should()
-            .NotHaveDependencyOn(schedulingNamespace)
-            .GetResult()
-            .ShouldBeSuccessful();
+                Types.InAssemblies(assemblies)
+                    .Should()
+                    .NotHaveDependencyOn(otherNamespace)
+                    .GetResult()
+                    .ShouldBeSuccessful();
+            }
+        }
     }
 
-    private static void AssertLayerDirection(
-        Assembly domain,
-        Assembly application,
-        Assembly presentation,
-        Assembly infrastructure)
+    private static void AssertLayerDirection(Assembly[] moduleAssemblies)
     {
+        Assembly domain = moduleAssemblies[0];
+        Assembly application = moduleAssemblies[1];
+        Assembly presentation = moduleAssemblies[2];
+        Assembly infrastructure = moduleAssemblies[3];
+
         Types.InAssembly(domain)
             .Should()
             .NotHaveDependencyOn(application.GetName().Name!)

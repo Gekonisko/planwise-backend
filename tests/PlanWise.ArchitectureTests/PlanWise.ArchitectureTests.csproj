@@ -36,6 +36,14 @@
     <ProjectReference Include="..\..\src\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Application\PlanWise.Modules.CostEstimation.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Infrastructure\PlanWise.Modules.CostEstimation.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Presentation\PlanWise.Modules.CostEstimation.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Domain\PlanWise.Modules.RiskPrediction.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Application\PlanWise.Modules.RiskPrediction.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Infrastructure\PlanWise.Modules.RiskPrediction.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Presentation\PlanWise.Modules.RiskPrediction.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Domain\PlanWise.Modules.BacklogPrioritisation.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Application\PlanWise.Modules.BacklogPrioritisation.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Infrastructure\PlanWise.Modules.BacklogPrioritisation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Presentation\PlanWise.Modules.BacklogPrioritisation.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

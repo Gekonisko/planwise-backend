@@ -400,6 +400,87 @@ A fixed, hardcoded role→rate table (`DefaultRateCardProvider`) — no `PUT` ex
 
 ---
 
+## 7. Risk and delay prediction
+
+Module: `RiskPrediction` (Postgres schema `risk_prediction`). Labelled `ML` in the spec, but — like the Scheduling optimiser — this is a deterministic weighted heuristic (`WeightedScorecard v1`), not a trained statistical or ML model: there is no historical slip-outcome data anywhere in this system to fit or backtest a real model against, and every result's `explanation` says so explicitly rather than implying otherwise. Uses the same shared `common.async_jobs` job contract: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
+
+**Scoring, stated plainly**: each open task is scored 0–1 by summing fixed weights for whichever risk factors apply — overdue (0.35) or due within 3 days (0.20), open blocking dependencies (0.10 each, capped at 0.30), no assignee (0.15), and large scope ≥8 points (up to 0.20). `dayImpact` is `probability × max(1, points/2)` (or 3 days if unestimated). Sprint forecasts assume each member's configured `Capacity` (points) is available at a constant daily rate across the sprint — there's no real velocity history to project from (burndown/velocity aren't built yet either), so this is a proxy, not a trend.
+
+### `POST /projects/{id}/forecasts/run`
+`202 Accepted`: `{ "jobId": "guid" }`. Scores every not-done task in the project and forecasts every currently `Active` sprint; persists a `RiskAssessmentRun` plus one `TaskRiskAssessment` per task and one `SprintForecast` per active sprint — every run is kept (not just the latest), same "predictions vs what actually happened" rationale as CostEstimation's run history.
+
+### `GET /sprints/{id}/forecast`
+```json
+{ "sprintId": "guid", "completionProbability": 0.39, "expectedPoints": 2.7,
+  "p50DeliveryDate": "2026-10-12", "p90DeliveryDate": "2026-11-01", "createdAtUtc": "2026-08-23T17:16:39Z" }
+```
+Latest forecast for the sprint, across any run. `404 Risk.NoForecastForSprint` if the sprint's project has never had a forecast run.
+
+### `GET /projects/{id}/risks`
+```json
+[{ "id": "guid", "taskId": "guid", "taskKey": "RSK-1", "probabilityOfSlip": 0.70, "dayImpact": 4,
+   "reason": "Due date was 13 day(s) ago; 13 points", "createdAtUtc": "2026-08-23T17:15:03Z", "dismissed": false }]
+```
+Latest run's assessments, dismissed ones excluded. `[]` (not `404`) if no run has ever happened — this is a list endpoint, not a singular "latest" resource. Sorted by `probabilityOfSlip` descending.
+
+### `GET /tasks/{id}/risk`
+Same shape as one item above — the task's single latest assessment across any run, regardless of dismissed state. `404 Risk.NoAssessmentForTask` if the task has never been scored.
+
+### `GET /risks/{id}/explanation`
+```json
+{ "id": "guid", "modelVersion": "WeightedScorecard v1", "trainingWindowDays": 0,
+  "drivers": [{ "feature": "Overdue", "weight": 0.35, "detail": "Due date was 13 day(s) ago" }, "..."],
+  "assumptions": ["Risk is scored by a deterministic weighted heuristic ...", "..."],
+  "createdAtUtc": "2026-08-23T17:15:03Z" }
+```
+`trainingWindowDays` is always `0` — reported for schema compatibility with the "Why?" drawer, not a real training window, since there's nothing to train on (see `assumptions`).
+
+### `POST /risks/{id}/dismiss`
+Body optional: `{ "reason": "already tracked" }`. `204 No Content`. Marks that specific assessment dismissed so it stops appearing in `GET /projects/{id}/risks`; recorded with a timestamp and optional reason as feedback. The next `forecasts/run` creates a fresh (non-dismissed) row for the same task, so a still-risky task can be re-flagged later — dismiss doesn't suppress it forever.
+
+**Not implemented / gaps, stated plainly**:
+- No trained model of any kind — every number here is a transparent, hand-weighted scorecard, not a prediction from historical patterns.
+- Sprint forecast capacity is today's member `Capacity` figure applied uniformly across the whole sprint, not a per-sprint snapshot or a real burndown trend (burndown/velocity aren't built — see section 3/5 gaps).
+
+---
+
+## 8. Backlog prioritisation
+
+Module: `BacklogPrioritisation` (Postgres schema `backlog_prioritisation`). Also `ML` in the spec, also a deterministic weighted scorecard (`WeightedScorecard v1`) rather than a trained model, for the same reason as section 7. Composes directly on top of RiskPrediction's output through a narrow cross-module contract (`IRiskInsightsService.GetLatestRiskScoresAsync`) rather than a project reference — if the project has never had a risk forecast run, every task's risk component falls back to a neutral `0.5` rather than erroring.
+
+**Scoring, stated plainly**: only `Status == Backlog` tasks are ranked (this is the backlog screen's own ordering, not a whole-project ranking). Four components, each normalised 0–1 against the current backlog's own range: `valueScore` (task's `businessValue` ÷ the backlog's max, `0.5` if unset), `dependencyScore` (how many other backlog tasks this one blocks, ÷ the max), `complexityScore` (`points` ÷ the max — "bigger = more complex"), `riskScore` (latest slip probability from RiskPrediction, `0.5` if none). Combined as `0.40·value + 0.25·dependency + 0.15·(1 − complexity) + 0.20·risk` — complexity is weighted *against* (a small quick win beats a sprawling task, all else equal) and risk *for* (de-risking early is deliberate triage). Both directions are judgement calls a real model would learn, not something this heuristic derives — stated here rather than left implicit.
+
+### `POST /projects/{id}/priorities/run`
+`202 Accepted`: `{ "jobId": "guid" }`. Scores the current backlog and persists one `PriorityRun` (status `Pending`) with one `PriorityItem` per backlog task, capturing each task's *current* rank-order position (`currentPosition`) alongside the *proposed* one, so `apply` later has something to diff against.
+
+### `GET /projects/{id}/priorities`
+```json
+{ "runId": "guid", "status": "Pending",
+  "items": [{ "taskId": "guid", "taskKey": "RSK-1", "currentPosition": 1, "proposedPosition": 1, "deltaFromCurrent": 0,
+              "valueScore": 1.0, "dependencyScore": 0.0, "complexityScore": 1.0, "riskScore": 0.70,
+              "reason": "high business value, elevated slip risk" }],
+  "createdAtUtc": "2026-08-23T17:15:37Z" }
+```
+Latest run for the project, items ordered by `proposedPosition`. `404 Priority.NoRun` if nothing has ever been run.
+
+### `POST /projects/{id}/priorities/apply`
+Commits the latest run's proposed order to the real backlog: reassigns every item's task a fresh sparse rank (same `(index+1) × 1024` scheme as the existing bulk-reorder command) via a cross-module write (`IProjectTasksService.ReorderBacklogAsync`), marks the run `Applied`, and returns the same shape as `GET /projects/{id}/priorities` with the updated status. `400 Priority.InvalidStateTransition` if the latest run was already applied or dismissed — call `priorities/run` again first.
+
+### `POST /projects/{id}/priorities/dismiss`
+Body optional: `{ "reason": "not now" }`. `204 No Content`. Marks the latest `Pending` run `Dismissed` with an optional reason, recorded as the only labelled feedback these models get (per the spec's own implementation note). `400 Priority.InvalidStateTransition` if the latest run isn't `Pending`.
+
+### `GET /priorities/{id}/explanation`
+Same items shape as `GET /projects/{id}/priorities`, keyed by run id directly (not project-scoped in the URL) — the per-item component-score breakdown *is* the explanation here, there's no separate driver list like section 7's.
+
+### `PUT /tasks/{id}/business-value`
+Lives on `Delivery`, not this module — see section 4. A manager-supplied model *input*, not an output of this module.
+
+**Not implemented / gaps, stated plainly**:
+- No trained model — see section 7's equivalent note; same reasoning applies.
+- Complexity-weighted-against and risk-weighted-for are both deliberate heuristic choices, not derived from data.
+
+---
+
 ## 9. Schedule optimisation
 
 Module: `Scheduling`. Follows the spec's shared "intelligence endpoint" shape: `POST .../optimise` returns `202` with a job id, poll `GET /jobs/{id}` (below) until `Succeeded`, then read the result at `resultLocation`. Unlike a real ML/LLM model, today's optimiser is a fast deterministic heuristic, so in practice a job is usually already `Succeeded` by the time a client's first poll lands — the async contract is honoured regardless.
@@ -453,7 +534,7 @@ Derived, not stored: every business day (Mon–Fri) in range is reported as avai
 ## 10. Cross-cutting (partial)
 
 ### `GET /jobs/{id}`
-Hosted centrally in `Common` (schema `common`), not owned by any one module — every module that runs an async "intelligence" job (today, only Scheduling's optimiser) writes into the same `async_jobs` table via a shared `IAsyncJobService`/`IAsyncJobHandler` contract, so this one endpoint works regardless of which module started the job.
+Hosted centrally in `Common` (schema `common`), not owned by any one module — every module that runs an async "intelligence" job (Scheduling's optimiser, CostEstimation's LLM run, RiskPrediction's forecast, BacklogPrioritisation's scoring — four so far) writes into the same `async_jobs` table via a shared `IAsyncJobService`/`IAsyncJobHandler` contract, so this one endpoint works regardless of which module started the job.
 ```json
 { "id": "guid", "projectId": "guid", "jobType": "ScheduleOptimisation", "status": 2,
   "resultLocation": "/api/v1/schedule/proposals/guid", "error": null,
@@ -467,4 +548,9 @@ Hosted centrally in `Common` (schema `common`), not owned by any one module — 
 
 ## What's not implemented at all
 
-Sections 7 (Risk prediction) and 8 (Backlog prioritisation) — the two remaining ML modules; `common.async_jobs`/`IAsyncJobHandler` currently has two consumers (Scheduling's optimiser, CostEstimation's LLM run) and either would register the same way. The rest of section 10 (Notifications, Search, Preferences, SignalR hub) and `GET /members/{id}/skills` from section 9. See `PlanWise API.pdf` for the target shape of each.
+All seven planned modules (sections 1–9, minus the pure-read parts of section 5 noted above) now exist. What's genuinely missing:
+- The rest of section 10: Notifications, Search, `/me/preferences`, and the `WS /hubs/project/{id}` SignalR hub.
+- `GET /members/{id}/skills` from section 9 — no skills/competency data model exists anywhere yet, and the schedule optimiser doesn't consume skills either.
+- Real burndown/velocity (section 3) — sections 7 and 9's forecasts both use simplified proxies (member `Capacity` at a constant rate) in its place, stated explicitly in each section above rather than silently assumed.
+
+See `PlanWise API.pdf` for the target shape of each.

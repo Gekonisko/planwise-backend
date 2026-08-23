@@ -29,6 +29,8 @@
     <ProjectReference Include="..\..\Modules\Delivery\PlanWise.Modules.Delivery.Infrastructure\PlanWise.Modules.Delivery.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Scheduling\PlanWise.Modules.Scheduling.Infrastructure\PlanWise.Modules.Scheduling.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Infrastructure\PlanWise.Modules.CostEstimation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\RiskPrediction\PlanWise.Modules.RiskPrediction.Infrastructure\PlanWise.Modules.RiskPrediction.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Infrastructure\PlanWise.Modules.BacklogPrioritisation.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

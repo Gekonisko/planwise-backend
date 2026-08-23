@@ -67,6 +67,38 @@ internal sealed class ProjectTasksService(DeliveryDbContext dbContext) : IProjec
             .ToList();
     }
 
+    public async Task<IReadOnlyList<TaskInsightSummary>> GetInsightTasksAsync(Guid projectId, CancellationToken cancellationToken = default)
+    {
+        List<ProjectTask> tasks = await dbContext.Tasks
+            .Include(task => task.Links)
+            .Include(task => task.Subtasks)
+            .Where(task => task.ProjectId == projectId)
+            .ToListAsync(cancellationToken);
+
+        return tasks.Select(task => ToInsightSummary(task, tasks)).ToList();
+    }
+
+    public async Task<bool> ReorderBacklogAsync(Guid projectId, IReadOnlyList<Guid> orderedTaskIds, CancellationToken cancellationToken = default)
+    {
+        List<ProjectTask> tasks = await dbContext.Tasks
+            .Where(task => task.ProjectId == projectId && orderedTaskIds.Contains(task.Id))
+            .ToListAsync(cancellationToken);
+
+        if (tasks.Count != orderedTaskIds.Count)
+        {
+            return false;
+        }
+
+        var tasksById = tasks.ToDictionary(task => task.Id);
+        for (int i = 0; i < orderedTaskIds.Count; i++)
+        {
+            tasksById[orderedTaskIds[i]].Reorder((i + 1) * 1024m);
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     // Links are stored unidirectionally (see TaskLink): a "Blocks" link on the predecessor and a
     // "BlockedBy" link on the dependent are not auto-mirrored, so both directions must be reconciled
     // here to recover the full predecessor set for a task.
@@ -93,5 +125,44 @@ internal sealed class ProjectTasksService(DeliveryDbContext dbContext) : IProjec
             task.DueDate,
             predecessorIds.ToList(),
             task.AssigneeId);
+    }
+
+    private static TaskInsightSummary ToInsightSummary(ProjectTask task, IReadOnlyList<ProjectTask> allProjectTasks)
+    {
+        var predecessorIds = new HashSet<Guid>(
+            task.Links.Where(link => link.Type == TaskLinkType.BlockedBy).Select(link => link.LinkedTaskId));
+        int blocksCount = 0;
+
+        foreach (ProjectTask other in allProjectTasks)
+        {
+            if (other.Links.Any(link => link.Type == TaskLinkType.Blocks && link.LinkedTaskId == task.Id))
+            {
+                predecessorIds.Add(other.Id);
+            }
+
+            if (task.Links.Any(link => link.Type == TaskLinkType.Blocks && link.LinkedTaskId == other.Id) ||
+                other.Links.Any(link => link.Type == TaskLinkType.BlockedBy && link.LinkedTaskId == task.Id))
+            {
+                blocksCount++;
+            }
+        }
+
+        return new TaskInsightSummary(
+            task.Id,
+            task.ProjectId,
+            task.Key,
+            task.Title,
+            task.Status.ToString(),
+            task.Priority.ToString(),
+            task.Points,
+            task.BusinessValue,
+            task.DueDate,
+            task.AssigneeId,
+            task.SprintId,
+            task.Rank,
+            task.Subtasks.Count,
+            task.Subtasks.Count(subtask => subtask.IsDone),
+            predecessorIds.ToList(),
+            blocksCount);
     }
 }

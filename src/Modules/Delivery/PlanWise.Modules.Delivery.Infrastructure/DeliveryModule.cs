@@ -42,6 +42,7 @@ public static class DeliveryModule
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
         services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
         services.AddScoped<IProjectTasksService, ProjectTasksService>();
+        services.AddScoped<ISprintInsightsService, SprintInsightsService>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DeliveryDbContext>());
 
         services.AddScoped<SprintStartedActivityHandler>();
