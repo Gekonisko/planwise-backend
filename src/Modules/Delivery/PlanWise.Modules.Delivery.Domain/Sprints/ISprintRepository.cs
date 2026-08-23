@@ -6,5 +6,7 @@ public interface ISprintRepository
     Task<Sprint?> GetForProjectAsync(Guid sprintId, Guid projectId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Sprint>> GetByProjectAsync(Guid projectId, CancellationToken cancellationToken = default);
     Task<bool> HasActiveSprintAsync(Guid projectId, CancellationToken cancellationToken = default);
+    Task<Sprint?> GetActiveAsync(Guid projectId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Sprint>> GetOverlappingAsync(Guid projectId, DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
     void Add(Sprint sprint);
 }

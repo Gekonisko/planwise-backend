@@ -21,5 +21,14 @@ internal sealed class SprintRepository(DeliveryDbContext dbContext) : ISprintRep
     public Task<bool> HasActiveSprintAsync(Guid projectId, CancellationToken cancellationToken = default) =>
         dbContext.Sprints.AnyAsync(sprint => sprint.ProjectId == projectId && sprint.State == SprintState.Active, cancellationToken);
 
+    public Task<Sprint?> GetActiveAsync(Guid projectId, CancellationToken cancellationToken = default) =>
+        dbContext.Sprints.SingleOrDefaultAsync(sprint => sprint.ProjectId == projectId && sprint.State == SprintState.Active, cancellationToken);
+
+    public async Task<IReadOnlyList<Sprint>> GetOverlappingAsync(Guid projectId, DateOnly from, DateOnly to, CancellationToken cancellationToken = default) =>
+        await dbContext.Sprints
+            .Where(sprint => sprint.ProjectId == projectId && sprint.StartDate <= to && sprint.EndDate >= from)
+            .OrderBy(sprint => sprint.StartDate)
+            .ToListAsync(cancellationToken);
+
     public void Add(Sprint sprint) => dbContext.Sprints.Add(sprint);
 }

@@ -60,6 +60,12 @@ internal sealed class ProjectTaskRepository(DeliveryDbContext dbContext) : IProj
             .OrderBy(task => task.Rank)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<ProjectTask>> GetDueBetweenAsync(Guid projectId, DateOnly from, DateOnly to, CancellationToken cancellationToken = default) =>
+        await Include(dbContext.Tasks)
+            .Where(task => task.ProjectId == projectId && task.DueDate != null && task.DueDate >= from && task.DueDate <= to)
+            .OrderBy(task => task.DueDate)
+            .ToListAsync(cancellationToken);
+
     public async Task<decimal> GetMaxRankAsync(Guid projectId, ProjectTaskStatus status, CancellationToken cancellationToken = default)
     {
         IQueryable<ProjectTask> tasks = dbContext.Tasks.Where(task => task.ProjectId == projectId && task.Status == status);

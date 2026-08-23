@@ -10,7 +10,19 @@ public sealed class OutboxMessage
 
     public DateTime OccurredOnUtc { get; init; }
 
-    public DateTime? ProcessedOnUtc { get; init; }
+    public DateTime? ProcessedOnUtc { get; private set; }
 
-    public string? Error { get; init; }
+    public string? Error { get; private set; }
+
+    public void MarkProcessed(DateTime processedOnUtc)
+    {
+        ProcessedOnUtc = processedOnUtc;
+        Error = null;
+    }
+
+    public void MarkFailed(DateTime processedOnUtc, string error)
+    {
+        ProcessedOnUtc = processedOnUtc;
+        Error = error;
+    }
 }

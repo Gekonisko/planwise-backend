@@ -33,6 +33,7 @@ public static class WorkspaceManagementModule
             .UseSnakeCaseNamingConvention());
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectAccessService, ProjectAccessService>();
+        services.AddScoped<IProjectMembersService, ProjectAccessService>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<WorkspaceManagementDbContext>());
 
         return services;

@@ -60,6 +60,7 @@ public sealed class Sprint : Entity
         }
 
         State = SprintState.Active;
+        Raise(new SprintStartedDomainEvent(Id, ProjectId, Name));
         return Result.Success();
     }
 
@@ -71,6 +72,7 @@ public sealed class Sprint : Entity
         }
 
         State = SprintState.Completed;
+        Raise(new SprintCompletedDomainEvent(Id, ProjectId, Name));
         return Result.Success();
     }
 }

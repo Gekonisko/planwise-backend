@@ -63,8 +63,12 @@ public sealed class ProjectTask : Entity
         int? points,
         Guid? assigneeId,
         DateOnly? dueDate,
-        decimal rank) =>
-        new(projectId, key, title, description, priority, points, assigneeId, dueDate, rank);
+        decimal rank)
+    {
+        var task = new ProjectTask(projectId, key, title, description, priority, points, assigneeId, dueDate, rank);
+        task.Raise(new ProjectTaskCreatedDomainEvent(task.Id, task.ProjectId, task.Key, task.Title));
+        return task;
+    }
 
     public void Update(
         string? title,
@@ -124,6 +128,11 @@ public sealed class ProjectTask : Entity
 
     public void Move(ProjectTaskStatus status, decimal rank)
     {
+        if (Status != status)
+        {
+            Raise(new ProjectTaskMovedDomainEvent(Id, ProjectId, Key, Title, Status, status));
+        }
+
         Status = status;
         Rank = rank;
     }
@@ -157,6 +166,7 @@ public sealed class ProjectTask : Entity
     {
         var comment = TaskComment.Create(Id, authorUserId, body, createdAtUtc);
         comments.Add(comment);
+        Raise(new ProjectTaskCommentAddedDomainEvent(Id, ProjectId, Key, authorUserId));
         return comment;
     }
 

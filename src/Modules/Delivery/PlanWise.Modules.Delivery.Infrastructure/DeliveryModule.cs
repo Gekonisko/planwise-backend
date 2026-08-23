@@ -2,10 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PlanWise.Common.Infrastructure.Outbox;
+using PlanWise.Modules.Delivery.Application;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
 using PlanWise.Modules.Delivery.Application.Abstractions.Data;
+using PlanWise.Modules.Delivery.Application.Activity.EventHandlers;
+using PlanWise.Modules.Delivery.Domain.Activity;
 using PlanWise.Modules.Delivery.Domain.Sprints;
 using PlanWise.Modules.Delivery.Domain.Tasks;
+using PlanWise.Modules.Delivery.Infrastructure.Activity;
 using PlanWise.Modules.Delivery.Infrastructure.Authentication;
 using PlanWise.Modules.Delivery.Infrastructure.Database;
 using PlanWise.Modules.Delivery.Infrastructure.Sprints;
@@ -30,10 +35,19 @@ public static class DeliveryModule
                 npgsql => npgsql.MigrationsHistoryTable(
                     HistoryRepository.DefaultTableName,
                     Schemas.Delivery))
-            .UseSnakeCaseNamingConvention());
+            .UseSnakeCaseNamingConvention()
+            .AddInterceptors(new InsertOutboxMessagesInterceptor()));
         services.AddScoped<ISprintRepository, SprintRepository>();
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
+        services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DeliveryDbContext>());
+
+        services.AddScoped<SprintStartedActivityHandler>();
+        services.AddScoped<SprintCompletedActivityHandler>();
+        services.AddScoped<ProjectTaskCreatedActivityHandler>();
+        services.AddScoped<ProjectTaskMovedActivityHandler>();
+        services.AddScoped<ProjectTaskCommentAddedActivityHandler>();
+        services.AddOutboxProcessor<DeliveryDbContext>(AssemblyReference.Assembly);
 
         return services;
     }

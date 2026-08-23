@@ -17,6 +17,8 @@ public interface IProjectTaskRepository
 
     Task<IReadOnlyList<ProjectTask>> GetByStatusAsync(Guid projectId, ProjectTaskStatus status, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<ProjectTask>> GetDueBetweenAsync(Guid projectId, DateOnly from, DateOnly to, CancellationToken cancellationToken = default);
+
     Task<decimal> GetMaxRankAsync(Guid projectId, ProjectTaskStatus status, CancellationToken cancellationToken = default);
 
     Task<int> GetNextTaskNumberAsync(Guid projectId, CancellationToken cancellationToken = default);

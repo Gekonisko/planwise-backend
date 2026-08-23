@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using PlanWise.Common.Infrastructure.Outbox;
 using PlanWise.Modules.Delivery.Application.Abstractions.Data;
+using PlanWise.Modules.Delivery.Domain.Activity;
 using PlanWise.Modules.Delivery.Domain.Sprints;
 using PlanWise.Modules.Delivery.Domain.Tasks;
 
@@ -11,6 +13,8 @@ public sealed class DeliveryDbContext(DbContextOptions<DeliveryDbContext> option
     internal DbSet<Sprint> Sprints { get; set; }
     internal DbSet<ProjectTask> Tasks { get; set; }
     internal DbSet<ProjectTaskSequence> TaskSequences { get; set; }
+    internal DbSet<ActivityLogEntry> ActivityLogEntries { get; set; }
+    internal DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -70,5 +74,14 @@ public sealed class DeliveryDbContext(DbContextOptions<DeliveryDbContext> option
         {
             builder.HasKey(sequence => sequence.ProjectId);
         });
+
+        modelBuilder.Entity<ActivityLogEntry>(builder =>
+        {
+            builder.HasKey(entry => entry.Id);
+            builder.Property(entry => entry.Description).HasMaxLength(500).IsRequired();
+            builder.HasIndex(entry => new { entry.ProjectId, entry.OccurredAtUtc });
+        });
+
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
     }
 }

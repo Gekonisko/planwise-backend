@@ -4,7 +4,7 @@ using PlanWise.Modules.WorkspaceManagement.Infrastructure.Database;
 
 namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Projects;
 
-internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContext) : IProjectAccessService
+internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContext) : IProjectAccessService, IProjectMembersService
 {
     public Task<bool> HasAccessAsync(Guid projectId, Guid userId, string? email, CancellationToken cancellationToken = default) =>
         dbContext.Projects.AnyAsync(
@@ -19,4 +19,10 @@ internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContex
             .Where(project => project.Id == projectId)
             .Select(project => project.KeyPrefix)
             .SingleOrDefaultAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ProjectMemberSummary>> GetMembersAsync(Guid projectId, CancellationToken cancellationToken = default) =>
+        await dbContext.ProjectMembers
+            .Where(member => member.ProjectId == projectId)
+            .Select(member => new ProjectMemberSummary(member.UserId, member.Email, member.Capacity))
+            .ToListAsync(cancellationToken);
 }

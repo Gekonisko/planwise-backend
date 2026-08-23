@@ -9,5 +9,6 @@ public sealed class DeliveryEndpoints : IEndpoint
     {
         SprintEndpoints.MapEndpoints(app);
         TaskEndpoints.MapEndpoints(app);
+        DashboardEndpoints.MapEndpoints(app);
     }
 }

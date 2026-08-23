@@ -29,7 +29,9 @@ public sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                IReadOnlyCollection<IDomainEvent> domainEvents = entity.DomainEvent;
+                // entity.DomainEvent exposes the entity's own backing list, not a copy: it must be
+                // snapshotted with ToList() before ClearDomainEvents() empties that same list in place.
+                var domainEvents = entity.DomainEvent.ToList();
 
                 entity.ClearDomainEvents();
 

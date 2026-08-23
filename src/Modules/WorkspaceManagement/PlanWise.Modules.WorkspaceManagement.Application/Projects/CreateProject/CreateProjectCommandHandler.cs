@@ -26,7 +26,7 @@ internal sealed class CreateProjectCommandHandler(
         }
 
         var project = Project.Create(request.Name.Trim(), request.KeyPrefix, request.Process, ownerId, request.ClientName?.Trim());
-        project.AddMember(ownerId, "", "Owner", 1m, 0m);
+        project.AddMember(ownerId, userContext.Email ?? string.Empty, "Owner", 1m, 0m);
         projectRepository.Add(project);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
