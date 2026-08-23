@@ -1,6 +1,6 @@
 # PlanWise Backend — Implemented API Reference
 
-This documents what is actually implemented in the backend today, as opposed to `PlanWise API.pdf` at the repo root, which is the full target spec (10 sections). Only sections 1–4 exist; sections 5–10 (overview/schedule, cost estimation, risk prediction, backlog prioritisation, schedule optimisation, cross-cutting) have no backend code yet.
+This documents what is actually implemented in the backend today, as opposed to `PlanWise API.pdf` at the repo root, which is the full target spec (10 sections). Sections 1–5 exist (section 5's Gantt/milestones half included), plus section 9 (Schedule optimisation) and the `GET /jobs/{id}` half of section 10; sections 6–8 (cost estimation, risk prediction, backlog prioritisation) and the rest of section 10 (notifications, search, preferences, SignalR hub) have no backend code yet.
 
 Live, interactive docs (Scalar/OpenAPI) are also available at `/scalar/v1` when the API runs in the `Development` environment.
 
@@ -267,10 +267,150 @@ Ordered oldest-first.
 ### `DELETE /tasks/{id}/links/{linkId}`
 `204`.
 
-**Not implemented**: `GET /projects/{id}/overview`, `/activity`, `/workload`, `/calendar`, `/schedule` (spec section 5) — no backend code for any of these yet.
+---
+
+## 5. Overview, timeline and schedule
+
+Dashboard/activity/workload/calendar are hosted on `Delivery` (they're pure reads over Delivery's own tables). Gantt/milestones are a separate module, `Scheduling` (Postgres schema `scheduling`), which reads task data from `Delivery` through an in-process cross-module contract (`IProjectTasksService`) rather than referencing it directly — see "Cross-module contracts" below.
+
+### `GET /projects/{id}/overview`
+```json
+{ "taskCounts": { "backlog": 2, "todo": 1, "inProgress": 0, "done": 3 },
+  "totalPoints": 20, "completedPoints": 8,
+  "needsAttention": [ /* TaskResponse[] — overdue and incomplete */ ],
+  "activeSprint": null }
+```
+
+### `GET /projects/{id}/activity?limit=&offset=`
+Paginated, newest first. Defaults: `limit=20`, `offset=0`.
+```json
+[{ "id": "guid", "projectId": "guid", "description": "Sprint 1 started", "occurredAtUtc": "2026-08-23T07:00:00Z" }]
+```
+Backed by real domain events (`SprintStarted`/`SprintCompleted`/`ProjectTaskCreated`/`ProjectTaskMoved`/`ProjectTaskCommentAdded`), captured via an outbox table and drained in-process by a background poller (no message bus) into `delivery.activity_log_entries`. Only these five events exist today — other actions (e.g. editing a task's title) don't appear here.
+
+### `GET /projects/{id}/workload?sprintId=`
+```json
+{ "members": [{ "userId": "guid", "email": "a@b.com", "capacity": 1.0, "assignedPoints": 8 }] }
+```
+`sprintId` optional — omit for all-time assigned points, or scope to one sprint. Only members with a linked `userId` (not pending-by-email invites) appear.
+
+### `GET /projects/{id}/calendar?from=&to=`
+```json
+{ "tasks": [{ "id": "guid", "key": "APL-1", "title": "...", "dueDate": "2026-08-25", "status": 1 }],
+  "sprints": [{ "id": "guid", "name": "Sprint 1", "startDate": "2026-08-24", "endDate": "2026-09-07", "state": 0 }] }
+```
+Tasks with a due date in range, plus sprints overlapping the range at all (not just fully contained).
+
+### `GET /projects/{id}/schedule`
+Module: `Scheduling`. Gantt rows for every task in the project, plus milestones, plus the computed critical path.
+```json
+{ "tasks": [{ "taskId": "guid", "key": "APL-1", "title": "...", "isDone": false,
+              "startDate": "2026-08-23", "endDate": "2026-08-26",
+              "slackDays": 0, "isCritical": true, "isManuallyScheduled": false,
+              "predecessorTaskIds": [] }],
+  "milestones": [{ "milestoneId": "guid", "name": "Beta", "dueDate": "2026-09-10", "status": "Upcoming" }],
+  "criticalPathTaskIds": ["guid", "..."] }
+```
+Dates are computed with a real critical-path (CPM) algorithm — forward pass from today (or from a task's predecessors' finish dates), backward pass from the project end date, `slackDays = latestStart - earliestStart`, `isCritical = slackDays <= 0`. A task that has never been manually rescheduled has no persisted row anywhere; its dates are computed fresh on every request. **Duration model**: since `ProjectTask` has no dedicated estimate field, duration is derived from story points — 1 point ≈ 1 day, minimum 1 day for unpointed tasks. Predecessors are read from `blocks`/`blockedBy` task links (both directions reconciled, since links aren't auto-mirrored). **Known gap**: "epics" (mentioned in the spec's row types) don't exist as an entity anywhere in the codebase — the Gantt only has tasks and milestones.
+
+### `PATCH /schedule/items/{taskId}`
+Persists a manually dragged bar. `{taskId}` is the task's own id (there's no separate "schedule item" id to look up first — a task that's never been scheduled yet still has an addressable id).
+```json
+{ "startDate": "2026-08-26", "endDate": "2026-08-31" }
+```
+Rejects the move with `400 Schedule.DependencyViolation` if the new start date is before any predecessor's (computed or manually-set) finish date — the server does **not** silently allow a task to start before its dependencies are done. Only the predecessor-side constraint is enforced (not the reverse — moving a task later doesn't currently check whether that invalidates an already-fixed successor). On success, returns the affected task's row with freshly recomputed slack/critical-path flags.
+
+### `POST /projects/{id}/schedule/validate`
+Dry run: check a batch of proposed moves against the dependency graph without saving anything.
+```json
+{ "moves": [{ "taskId": "guid", "startDate": "2026-08-23", "endDate": "2026-08-24" }] }
+```
+Response: `{ "violations": [{ "taskId": "guid", "reason": "Task APL-2 cannot start on 2026-08-23 before predecessor APL-1 finishes on 2026-08-26" }] }` — empty array means the whole batch is valid. Moves are validated against each other as a set (so moving two dependent tasks together in one call doesn't false-flag).
+
+### `GET /projects/{id}/milestones`
+```json
+[{ "id": "guid", "projectId": "guid", "name": "Kickoff", "dueDate": "2026-08-01", "status": "Achieved" }]
+```
+Ordered by due date. `status` is derived, not stored: `"Achieved"` if `dueDate` is in the past, `"Upcoming"` otherwise — there's no explicit completion flag.
+
+### `POST /projects/{id}/milestones`
+```json
+{ "name": "Beta Release", "dueDate": "2026-09-10" }
+```
+**Deviation from the spec**: the spec's table only lists `GET /projects/{id}/milestones`, with no creation endpoint. Without one, milestones could never exist, so this was added as the minimal completion of the feature rather than a speculative addition. There's no `PATCH`/`DELETE` yet.
+
+**Not implemented**: the rest of section 9 (Schedule optimisation — `POST /projects/{id}/schedule/optimise`, proposals, `apply`/`apply-partial`, `explanation`) and its supporting reads (`GET /projects/{id}/availability`, `GET /members/{id}/skills`).
+
+### Cross-module contracts (new in this pass)
+`Scheduling` needs richer data from `Delivery` than a yes/no access check (the full task graph: points, due dates, dependencies), so it consumes a second Common abstraction, `IProjectTasksService` (`PlanWise.Common.Application.Abstractions`), implemented by `Delivery.Infrastructure`. Same pattern as `IProjectAccessService`/`IProjectMembersService` from section 5's Delivery-hosted half — a narrow, DTO-only interface, currently in-process DI, deliberately kept serialization-friendly so it can become a real network call if `Scheduling` is ever split into its own service.
+
+---
+
+## 9. Schedule optimisation
+
+Module: `Scheduling`. Follows the spec's shared "intelligence endpoint" shape: `POST .../optimise` returns `202` with a job id, poll `GET /jobs/{id}` (below) until `Succeeded`, then read the result at `resultLocation`. Unlike a real ML/LLM model, today's optimiser is a fast deterministic heuristic, so in practice a job is usually already `Succeeded` by the time a client's first poll lands — the async contract is honoured regardless.
+
+**v1 scope, stated plainly**: the optimiser only proposes an **assignee** for currently-unassigned, not-done tasks, balancing load by remaining member capacity. It never touches dates, never reassigns already-assigned work, and does not do competency/skill matching (no task carries a required-skill signal yet) — every member with spare capacity is treated as eligible for every task. Both relaxations are reported honestly in every proposal's `constraintsRelaxed`, not silently assumed away.
+
+### `POST /projects/{id}/schedule/optimise`
+Anonymous body (none required). `202 Accepted`:
+```json
+{ "jobId": "guid" }
+```
+
+### `GET /projects/{id}/schedule/proposals/latest`
+```json
+{ "id": "guid", "projectId": "guid", "jobId": "guid", "status": "Pending",
+  "assignments": [{ "id": "guid", "taskId": "guid", "taskKey": "APL-4", "currentAssigneeId": null,
+                     "proposedAssigneeId": "guid", "proposedAssigneeEmail": "a@b.com", "isApplied": false }],
+  "createdAtUtc": "2026-08-23T12:36:53Z" }
+```
+`status`: `Pending` / `Applied` / `PartiallyApplied`. `404` if no optimisation has ever been run for the project.
+
+### `POST /schedule/proposals/{id}/apply`
+Commits every not-yet-applied assignment in the proposal — pushes each `proposedAssigneeId` to the real task in `Delivery` via a cross-module write (`IProjectTasksService.AssignTaskAsync`) — then returns the updated `GET /projects/{id}/schedule` payload (`ScheduleResponse`, section 5). Calling `apply` again on an already-applied proposal is a safe no-op.
+
+### `POST /schedule/proposals/{id}/apply-partial`
+```json
+{ "assignmentIds": ["guid1", "guid2"] }
+```
+Same as `apply`, but only for the listed assignment ids (from the proposal's `assignments[].id`, not task ids). `400 Schedule.InvalidAssignmentSet` if any id doesn't belong to the proposal. Also returns the updated schedule. Proposal `status` becomes `PartiallyApplied` unless every assignment ends up applied.
+
+### `GET /schedule/proposals/{id}/explanation`
+```json
+{ "id": "guid", "modelName": "GreedyCapacityBalancer v1",
+  "objective": "Balance workload for unassigned backlog tasks across project members by remaining capacity",
+  "constraintsHonoured": ["Existing assignments on already-assigned tasks were not changed", "..."],
+  "constraintsRelaxed": ["Competency/skill matching not yet implemented — ...", "..."],
+  "expectedGain": "Reduces max/min assigned-points imbalance across members from 4 to 0",
+  "generatedAtUtc": "2026-08-23T12:36:53Z" }
+```
+
+### `GET /projects/{id}/availability?from=&to=`
+```json
+[{ "userId": "guid", "email": "a@b.com", "capacity": 1.0, "availableDates": ["2026-08-24", "2026-08-25", "..."] }]
+```
+Derived, not stored: every business day (Mon–Fri) in range is reported as available at the member's flat `Capacity` — there's no per-day calendar (holidays/leave) yet. Pending-by-email members (no `userId`) are excluded, same as Workload.
+
+**Not implemented**: `GET /members/{id}/skills` — no skills/competency data model exists anywhere in the codebase yet (would need a new field on `ProjectMember` in `WorkspaceManagement`), and v1's optimiser doesn't consume skills anyway, so it was deferred rather than built unused.
+
+---
+
+## 10. Cross-cutting (partial)
+
+### `GET /jobs/{id}`
+Hosted centrally in `Common` (schema `common`), not owned by any one module — every module that runs an async "intelligence" job (today, only Scheduling's optimiser) writes into the same `async_jobs` table via a shared `IAsyncJobService`/`IAsyncJobHandler` contract, so this one endpoint works regardless of which module started the job.
+```json
+{ "id": "guid", "projectId": "guid", "jobType": "ScheduleOptimisation", "status": 2,
+  "resultLocation": "/api/v1/schedule/proposals/guid", "error": null,
+  "createdAtUtc": "2026-08-23T12:36:52Z", "completedAtUtc": "2026-08-23T12:36:53Z" }
+```
+`status`: `0` Queued, `1` Running, `2` Succeeded, `3` Failed. `404` if the job doesn't exist or the caller isn't a member of the project it belongs to.
+
+**Not implemented**: `GET /notifications`, `POST /notifications/read`, `GET /search`, `GET /reference/rates`, `GET/PUT /me/preferences`, `WS /hubs/project/{id}`.
 
 ---
 
 ## What's not implemented at all
 
-Sections 5 (Gantt/schedule — the overview/activity/workload/calendar reads exist nowhere yet either), 6 (Cost estimation), 7 (Risk prediction), 8 (Backlog prioritisation), 9 (Schedule optimisation), 10 (Jobs, Notifications, Search, Preferences, SignalR hub). See `PlanWise API.pdf` for the target shape of each.
+Sections 6 (Cost estimation), 7 (Risk prediction), 8 (Backlog prioritisation) — none of the three ML/LLM modules exist yet, so `common.async_jobs`/`IAsyncJobHandler` currently has exactly one consumer (Scheduling). The rest of section 10 (Notifications, Search, Preferences, SignalR hub) and `GET /members/{id}/skills` from section 9. See `PlanWise API.pdf` for the target shape of each.

@@ -28,6 +28,10 @@
     <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Application\PlanWise.Modules.Delivery.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Infrastructure\PlanWise.Modules.Delivery.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Delivery\PlanWise.Modules.Delivery.Presentation\PlanWise.Modules.Delivery.Presentation.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Domain\PlanWise.Modules.Scheduling.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Application\PlanWise.Modules.Scheduling.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Infrastructure\PlanWise.Modules.Scheduling.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Presentation\PlanWise.Modules.Scheduling.Presentation.csproj" />
   </ItemGroup>
 
   <ItemGroup>

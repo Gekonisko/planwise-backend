@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PlanWise.Common.Application.Abstractions;
 using PlanWise.Common.Infrastructure.Outbox;
 using PlanWise.Modules.Delivery.Application;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
@@ -40,6 +41,7 @@ public static class DeliveryModule
         services.AddScoped<ISprintRepository, SprintRepository>();
         services.AddScoped<IProjectTaskRepository, ProjectTaskRepository>();
         services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
+        services.AddScoped<IProjectTasksService, ProjectTasksService>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<DeliveryDbContext>());
 
         services.AddScoped<SprintStartedActivityHandler>();

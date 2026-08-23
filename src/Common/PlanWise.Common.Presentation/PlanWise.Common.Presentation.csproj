@@ -3,6 +3,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\PlanWise.Common.Domain\PlanWise.Common.Domain.csproj" />
+    <ProjectReference Include="..\PlanWise.Common.Application\PlanWise.Common.Application.csproj" />
   </ItemGroup>
 
 </Project>

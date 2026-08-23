@@ -12,6 +12,10 @@ using PlanWise.Modules.Delivery.Application;
 using PlanWise.Modules.Delivery.Domain.Sprints;
 using PlanWise.Modules.Delivery.Infrastructure;
 using PlanWise.Modules.Delivery.Presentation;
+using PlanWise.Modules.Scheduling.Application;
+using PlanWise.Modules.Scheduling.Domain.Schedule;
+using PlanWise.Modules.Scheduling.Infrastructure;
+using PlanWise.Modules.Scheduling.Presentation;
 
 namespace PlanWise.ArchitectureTests;
 
@@ -54,11 +58,22 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void Scheduling_layers_point_inward()
+    {
+        AssertLayerDirection(
+            typeof(ScheduleErrors).Assembly,
+            typeof(PlanWise.Modules.Scheduling.Application.AssemblyReference).Assembly,
+            typeof(SchedulingEndpoints).Assembly,
+            typeof(SchedulingModule).Assembly);
+    }
+
+    [Fact]
     public void Modules_do_not_reference_each_other()
     {
         string identityAccessNamespace = "PlanWise.Modules.IdentityAccess";
         string workspaceNamespace = "PlanWise.Modules.WorkspaceManagement";
         string deliveryNamespace = "PlanWise.Modules.Delivery";
+        string schedulingNamespace = "PlanWise.Modules.Scheduling";
 
         Assembly[] identityAccessAssemblies =
         [
@@ -84,6 +99,14 @@ public sealed class ArchitectureTests
             typeof(DeliveryModule).Assembly
         ];
 
+        Assembly[] schedulingAssemblies =
+        [
+            typeof(ScheduleErrors).Assembly,
+            typeof(PlanWise.Modules.Scheduling.Application.AssemblyReference).Assembly,
+            typeof(SchedulingEndpoints).Assembly,
+            typeof(SchedulingModule).Assembly
+        ];
+
         Types.InAssemblies(identityAccessAssemblies)
             .Should()
             .NotHaveDependencyOn(workspaceNamespace)
@@ -93,6 +116,12 @@ public sealed class ArchitectureTests
         Types.InAssemblies(identityAccessAssemblies)
             .Should()
             .NotHaveDependencyOn(deliveryNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(identityAccessAssemblies)
+            .Should()
+            .NotHaveDependencyOn(schedulingNamespace)
             .GetResult()
             .ShouldBeSuccessful();
 
@@ -108,6 +137,12 @@ public sealed class ArchitectureTests
             .GetResult()
             .ShouldBeSuccessful();
 
+        Types.InAssemblies(workspaceAssemblies)
+            .Should()
+            .NotHaveDependencyOn(schedulingNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
         Types.InAssemblies(deliveryAssemblies)
             .Should()
             .NotHaveDependencyOn(identityAccessNamespace)
@@ -117,6 +152,30 @@ public sealed class ArchitectureTests
         Types.InAssemblies(deliveryAssemblies)
             .Should()
             .NotHaveDependencyOn(workspaceNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(deliveryAssemblies)
+            .Should()
+            .NotHaveDependencyOn(schedulingNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(schedulingAssemblies)
+            .Should()
+            .NotHaveDependencyOn(identityAccessNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(schedulingAssemblies)
+            .Should()
+            .NotHaveDependencyOn(workspaceNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(schedulingAssemblies)
+            .Should()
+            .NotHaveDependencyOn(deliveryNamespace)
             .GetResult()
             .ShouldBeSuccessful();
     }
