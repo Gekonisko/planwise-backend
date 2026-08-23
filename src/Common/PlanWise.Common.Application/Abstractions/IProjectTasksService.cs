@@ -7,6 +7,8 @@ public interface IProjectTasksService
     Task<ScheduleTaskSummary?> GetScheduleTaskAsync(Guid taskId, CancellationToken cancellationToken = default);
 
     Task<bool> AssignTaskAsync(Guid taskId, Guid assigneeId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<CostEstimationTaskSummary>> GetCostEstimationTasksAsync(Guid projectId, CancellationToken cancellationToken = default);
 }
 
 public sealed record ScheduleTaskSummary(
@@ -19,3 +21,12 @@ public sealed record ScheduleTaskSummary(
     DateOnly? DueDate,
     IReadOnlyList<Guid> PredecessorTaskIds,
     Guid? AssigneeId);
+
+public sealed record CostEstimationTaskSummary(
+    Guid TaskId,
+    string Key,
+    string Title,
+    string? Description,
+    string Priority,
+    int? Points,
+    bool IsDone);

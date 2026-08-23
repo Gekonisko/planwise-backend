@@ -20,6 +20,12 @@ internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContex
             .Select(project => project.KeyPrefix)
             .SingleOrDefaultAsync(cancellationToken);
 
+    public Task<ProjectInfo?> GetProjectInfoAsync(Guid projectId, CancellationToken cancellationToken = default) =>
+        dbContext.Projects
+            .Where(project => project.Id == projectId)
+            .Select(project => new ProjectInfo(project.Name, project.ClientName))
+            .SingleOrDefaultAsync(cancellationToken);
+
     public async Task<IReadOnlyList<ProjectMemberSummary>> GetMembersAsync(Guid projectId, CancellationToken cancellationToken = default) =>
         await dbContext.ProjectMembers
             .Where(member => member.ProjectId == projectId)

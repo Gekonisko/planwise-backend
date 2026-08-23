@@ -28,6 +28,7 @@
     <ProjectReference Include="..\..\Modules\WorkspaceManagement\PlanWise.Modules.WorkspaceManagement.Infrastructure\PlanWise.Modules.WorkspaceManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Delivery\PlanWise.Modules.Delivery.Infrastructure\PlanWise.Modules.Delivery.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Scheduling\PlanWise.Modules.Scheduling.Infrastructure\PlanWise.Modules.Scheduling.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Infrastructure\PlanWise.Modules.CostEstimation.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

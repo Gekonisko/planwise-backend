@@ -3,6 +3,7 @@ using PlanWise.Modules.IdentityAccess.Infrastructure;
 using PlanWise.Modules.WorkspaceManagement.Infrastructure;
 using PlanWise.Modules.Delivery.Infrastructure;
 using PlanWise.Modules.Scheduling.Infrastructure;
+using PlanWise.Modules.CostEstimation.Infrastructure;
 using PlanWise.Common.Presentation.Endpoints;
 using PlanWise.Common.Application;
 using PlanWise.Common.Infrastructure;
@@ -22,7 +23,8 @@ builder.Services.AddApplication(
         PlanWise.Modules.IdentityAccess.Application.AssemblyReference.Assembly,
         PlanWise.Modules.WorkspaceManagement.Application.AssemblyReference.Assembly,
         PlanWise.Modules.Delivery.Application.AssemblyReference.Assembly,
-        PlanWise.Modules.Scheduling.Application.AssemblyReference.Assembly
+        PlanWise.Modules.Scheduling.Application.AssemblyReference.Assembly,
+        PlanWise.Modules.CostEstimation.Application.AssemblyReference.Assembly
     ]);
 builder.Services.AddCommonInfrastructure(builder.Configuration);
 
@@ -30,6 +32,7 @@ builder.Services.AddUserModule(builder.Configuration);
 builder.Services.AddWorkspaceManagementModule(builder.Configuration);
 builder.Services.AddDeliveryModule(builder.Configuration);
 builder.Services.AddSchedulingModule(builder.Configuration);
+builder.Services.AddCostEstimationModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -50,6 +53,7 @@ if (app.Environment.IsDevelopment())
     app.Services.ApplyCommonMigrations();
     app.Services.ApplyDeliveryMigrations();
     app.Services.ApplySchedulingMigrations();
+    app.Services.ApplyCostEstimationMigrations();
 }
 
 app.MapEndpoints();

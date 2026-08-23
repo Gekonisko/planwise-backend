@@ -1,6 +1,8 @@
 # PlanWise Backend — Implemented API Reference
 
-This documents what is actually implemented in the backend today, as opposed to `PlanWise API.pdf` at the repo root, which is the full target spec (10 sections). Sections 1–5 exist (section 5's Gantt/milestones half included), plus section 9 (Schedule optimisation) and the `GET /jobs/{id}` half of section 10; sections 6–8 (cost estimation, risk prediction, backlog prioritisation) and the rest of section 10 (notifications, search, preferences, SignalR hub) have no backend code yet.
+This documents what is actually implemented in the backend today, as opposed to `PlanWise API.pdf` at the repo root, which is the full target spec (10 sections). Sections 1–5 exist (section 5's Gantt/milestones half included), plus section 6 (Cost estimation), section 9 (Schedule optimisation), and the `GET /jobs/{id}` half of section 10; sections 7–8 (risk prediction, backlog prioritisation) and the rest of section 10 (notifications, search, preferences, SignalR hub) have no backend code yet.
+
+**Section 6 needs a real secret to run**: `POST /projects/{id}/cost-estimates/run` calls the Anthropic API and requires `CostEstimation:Anthropic:ApiKey` set via `dotnet user-secrets set "CostEstimation:Anthropic:ApiKey" "sk-ant-..." --project src/API/PlanWise.API`, then a container restart (`docker compose up -d --build planwise.api`) to pick it up. Without it, runs fail cleanly (`GET /jobs/{id}` shows `Failed` with the real Anthropic error) rather than crashing the app.
 
 Live, interactive docs (Scalar/OpenAPI) are also available at `/scalar/v1` when the API runs in the `Development` environment.
 
@@ -346,6 +348,58 @@ Ordered by due date. `status` is derived, not stored: `"Achieved"` if `dueDate` 
 
 ---
 
+## 6. Cost estimation
+
+Module: `CostEstimation` (Postgres schema `cost_estimation`). The only section that calls a real external model — everything else "intelligence"-shaped in this codebase (the Scheduling optimiser, below) is a deterministic heuristic. Uses the same shared `common.async_jobs` job contract as section 9: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
+
+**Setup**: needs `CostEstimation:Anthropic:ApiKey` — see the note at the top of this document. Model defaults to `claude-sonnet-5` (`CostEstimation:Anthropic:Model`), calling the real Anthropic Messages API directly over `HttpClient` (no SDK dependency) with a forced tool-use call so the response is reliably structured JSON rather than parsed out of prose. One retry is built in for the rare case where the model's output doesn't strictly match the declared schema on the first attempt (observed live during development — not hypothetical); a second miss surfaces as a real job failure.
+
+### `POST /projects/{id}/cost-estimates/run`
+`202 Accepted`: `{ "jobId": "guid" }`. **Caches on a hash of backlog + rate card** (per the spec's implementation note) — if neither changed since the last run, the job resolves near-instantly to the *existing* run's location instead of calling the LLM again; no duplicate row is created. Change any task's title/description/priority/points (or the rate card) and the next run genuinely re-estimates.
+
+### `GET /projects/{id}/cost-estimates/latest`
+```json
+{ "id": "guid", "projectId": "guid", "jobId": "guid", "modelName": "claude-sonnet-5", "currency": "USD",
+  "result": { "scenarios": [{ "name": "Expected Case", "percentile": 80, "total": 19700, "confidence": "Medium: ..." }],
+              "labourLines": [{ "role": "Developer", "hours": 160, "hourlyRate": 75, "cost": 12000 }],
+              "nonLabourLines": [{ "description": "Contingency buffer (15%)", "amount": 3400 }],
+              "priorityBreakdown": [{ "priority": "Medium", "total": 22640 }],
+              "assumptions": ["No historical actuals are available for this project; ...", "..."],
+              "reasoning": "Free-text methodology explanation" },
+  "createdAtUtc": "2026-08-23T15:12:25Z" }
+```
+`404 CostEstimate.NoRun` if nothing has ever been run for the project. **`priorityBreakdown` stands in for the spec's "epic breakdown"** — there's no epic/grouping concept above individual tasks anywhere in the codebase (same gap as the Scheduling Gantt), so priority is the closest existing dimension.
+
+### `GET /cost-estimates/{id}`
+Same `CostEstimateResponse` shape, by run id directly (not project-scoped in the URL — access is checked via the run's own `projectId`).
+
+### `GET /projects/{id}/cost-estimates`
+Full run history, newest first — every run is persisted (cache hits are *not* re-persisted, only genuinely new estimates), so this is what shows estimate drift over time.
+
+### `GET /cost-estimates/{id}/explanation`
+```json
+{ "id": "guid", "modelName": "claude-sonnet-5", "assumptions": ["..."], "reasoning": "...", "generatedAtUtc": "2026-08-23T15:12:25Z" }
+```
+
+### `GET /projects/{id}/budget` / `PUT /projects/{id}/budget`
+```json
+{ "projectId": "guid", "amount": 50000, "currency": "USD", "updatedAtUtc": "2026-08-23T14:52:41Z" }
+```
+`PUT` body: `{ "amount": 50000, "currency": "USD" }`. `GET` on a project with no budget set returns a zero default (`amount: 0`, `updatedAtUtc: null`) rather than `404`. Owned by `CostEstimation`, not `WorkspaceManagement` — reverses an earlier roadmap note; the endpoint lives with the screen it serves (same reasoning as Workload living in Delivery), not with the `Project` entity.
+
+### `GET /reference/rates`
+```json
+[{ "role": "Developer", "hourlyRate": 75, "currency": "USD" }]
+```
+A fixed, hardcoded role→rate table (`DefaultRateCardProvider`) — no `PUT` exists in the spec for it, and none is built. Five roles seeded: Developer, Lead Developer, Designer, QA Engineer, Project Manager.
+
+**Not implemented / gaps, stated plainly**:
+- No genuine "historical actuals" (real spend/time-tracking data) exist anywhere in the system — the prompt tells the model this explicitly rather than inventing figures, and the model's own `assumptions` reflect it.
+- `GET /reference/rates` has no write endpoint (matches the literal spec, which also has none).
+- Rate card is global, not per-project or per-org configurable.
+
+---
+
 ## 9. Schedule optimisation
 
 Module: `Scheduling`. Follows the spec's shared "intelligence endpoint" shape: `POST .../optimise` returns `202` with a job id, poll `GET /jobs/{id}` (below) until `Succeeded`, then read the result at `resultLocation`. Unlike a real ML/LLM model, today's optimiser is a fast deterministic heuristic, so in practice a job is usually already `Succeeded` by the time a client's first poll lands — the async contract is honoured regardless.
@@ -407,10 +461,10 @@ Hosted centrally in `Common` (schema `common`), not owned by any one module — 
 ```
 `status`: `0` Queued, `1` Running, `2` Succeeded, `3` Failed. `404` if the job doesn't exist or the caller isn't a member of the project it belongs to.
 
-**Not implemented**: `GET /notifications`, `POST /notifications/read`, `GET /search`, `GET /reference/rates`, `GET/PUT /me/preferences`, `WS /hubs/project/{id}`.
+**Not implemented**: `GET /notifications`, `POST /notifications/read`, `GET /search`, `GET/PUT /me/preferences`, `WS /hubs/project/{id}`.
 
 ---
 
 ## What's not implemented at all
 
-Sections 6 (Cost estimation), 7 (Risk prediction), 8 (Backlog prioritisation) — none of the three ML/LLM modules exist yet, so `common.async_jobs`/`IAsyncJobHandler` currently has exactly one consumer (Scheduling). The rest of section 10 (Notifications, Search, Preferences, SignalR hub) and `GET /members/{id}/skills` from section 9. See `PlanWise API.pdf` for the target shape of each.
+Sections 7 (Risk prediction) and 8 (Backlog prioritisation) — the two remaining ML modules; `common.async_jobs`/`IAsyncJobHandler` currently has two consumers (Scheduling's optimiser, CostEstimation's LLM run) and either would register the same way. The rest of section 10 (Notifications, Search, Preferences, SignalR hub) and `GET /members/{id}/skills` from section 9. See `PlanWise API.pdf` for the target shape of each.

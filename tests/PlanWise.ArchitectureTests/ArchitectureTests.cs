@@ -16,6 +16,10 @@ using PlanWise.Modules.Scheduling.Application;
 using PlanWise.Modules.Scheduling.Domain.Schedule;
 using PlanWise.Modules.Scheduling.Infrastructure;
 using PlanWise.Modules.Scheduling.Presentation;
+using PlanWise.Modules.CostEstimation.Application;
+using PlanWise.Modules.CostEstimation.Domain;
+using PlanWise.Modules.CostEstimation.Infrastructure;
+using PlanWise.Modules.CostEstimation.Presentation;
 
 namespace PlanWise.ArchitectureTests;
 
@@ -68,12 +72,23 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void CostEstimation_layers_point_inward()
+    {
+        AssertLayerDirection(
+            typeof(CostEstimateErrors).Assembly,
+            typeof(PlanWise.Modules.CostEstimation.Application.AssemblyReference).Assembly,
+            typeof(CostEstimationEndpoints).Assembly,
+            typeof(CostEstimationModule).Assembly);
+    }
+
+    [Fact]
     public void Modules_do_not_reference_each_other()
     {
         string identityAccessNamespace = "PlanWise.Modules.IdentityAccess";
         string workspaceNamespace = "PlanWise.Modules.WorkspaceManagement";
         string deliveryNamespace = "PlanWise.Modules.Delivery";
         string schedulingNamespace = "PlanWise.Modules.Scheduling";
+        string costEstimationNamespace = "PlanWise.Modules.CostEstimation";
 
         Assembly[] identityAccessAssemblies =
         [
@@ -107,6 +122,14 @@ public sealed class ArchitectureTests
             typeof(SchedulingModule).Assembly
         ];
 
+        Assembly[] costEstimationAssemblies =
+        [
+            typeof(CostEstimateErrors).Assembly,
+            typeof(PlanWise.Modules.CostEstimation.Application.AssemblyReference).Assembly,
+            typeof(CostEstimationEndpoints).Assembly,
+            typeof(CostEstimationModule).Assembly
+        ];
+
         Types.InAssemblies(identityAccessAssemblies)
             .Should()
             .NotHaveDependencyOn(workspaceNamespace)
@@ -122,6 +145,12 @@ public sealed class ArchitectureTests
         Types.InAssemblies(identityAccessAssemblies)
             .Should()
             .NotHaveDependencyOn(schedulingNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(identityAccessAssemblies)
+            .Should()
+            .NotHaveDependencyOn(costEstimationNamespace)
             .GetResult()
             .ShouldBeSuccessful();
 
@@ -143,6 +172,12 @@ public sealed class ArchitectureTests
             .GetResult()
             .ShouldBeSuccessful();
 
+        Types.InAssemblies(workspaceAssemblies)
+            .Should()
+            .NotHaveDependencyOn(costEstimationNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
         Types.InAssemblies(deliveryAssemblies)
             .Should()
             .NotHaveDependencyOn(identityAccessNamespace)
@@ -161,6 +196,12 @@ public sealed class ArchitectureTests
             .GetResult()
             .ShouldBeSuccessful();
 
+        Types.InAssemblies(deliveryAssemblies)
+            .Should()
+            .NotHaveDependencyOn(costEstimationNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
         Types.InAssemblies(schedulingAssemblies)
             .Should()
             .NotHaveDependencyOn(identityAccessNamespace)
@@ -176,6 +217,36 @@ public sealed class ArchitectureTests
         Types.InAssemblies(schedulingAssemblies)
             .Should()
             .NotHaveDependencyOn(deliveryNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(schedulingAssemblies)
+            .Should()
+            .NotHaveDependencyOn(costEstimationNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(costEstimationAssemblies)
+            .Should()
+            .NotHaveDependencyOn(identityAccessNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(costEstimationAssemblies)
+            .Should()
+            .NotHaveDependencyOn(workspaceNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(costEstimationAssemblies)
+            .Should()
+            .NotHaveDependencyOn(deliveryNamespace)
+            .GetResult()
+            .ShouldBeSuccessful();
+
+        Types.InAssemblies(costEstimationAssemblies)
+            .Should()
+            .NotHaveDependencyOn(schedulingNamespace)
             .GetResult()
             .ShouldBeSuccessful();
     }
