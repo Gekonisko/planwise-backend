@@ -105,6 +105,6 @@ public sealed class RiskAssessmentJobHandler(
                 cancellationToken);
         }
 
-        return $"/api/v1/projects/{projectId}/risks";
+        return $"/api/v1/projects/{projectId}/forecasts/latest";
     }
 }

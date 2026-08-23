@@ -12,5 +12,10 @@ internal sealed class SprintForecastRepository(RiskPredictionDbContext dbContext
             .OrderByDescending(forecast => forecast.CreatedAtUtc)
             .FirstOrDefaultAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<SprintForecast>> GetForRunAsync(Guid runId, CancellationToken cancellationToken = default) =>
+        await dbContext.SprintForecasts
+            .Where(forecast => forecast.RunId == runId)
+            .ToListAsync(cancellationToken);
+
     public void AddRange(IEnumerable<SprintForecast> forecasts) => dbContext.SprintForecasts.AddRange(forecasts);
 }

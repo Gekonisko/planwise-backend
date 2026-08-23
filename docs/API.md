@@ -407,7 +407,15 @@ Module: `RiskPrediction` (Postgres schema `risk_prediction`). Labelled `ML` in t
 **Scoring, stated plainly**: each open task is scored 0–1 by summing fixed weights for whichever risk factors apply — overdue (0.35) or due within 3 days (0.20), open blocking dependencies (0.10 each, capped at 0.30), no assignee (0.15), and large scope ≥8 points (up to 0.20). `dayImpact` is `probability × max(1, points/2)` (or 3 days if unestimated). Sprint forecasts assume each member's configured `Capacity` (points) is available at a constant daily rate across the sprint — there's no real velocity history to project from (burndown/velocity aren't built yet either), so this is a proxy, not a trend.
 
 ### `POST /projects/{id}/forecasts/run`
-`202 Accepted`: `{ "jobId": "guid" }`. Scores every not-done task in the project and forecasts every currently `Active` sprint; persists a `RiskAssessmentRun` plus one `TaskRiskAssessment` per task and one `SprintForecast` per active sprint — every run is kept (not just the latest), same "predictions vs what actually happened" rationale as CostEstimation's run history.
+`202 Accepted`: `{ "jobId": "guid" }`. Scores every not-done task in the project and forecasts every currently `Active` sprint; persists a `RiskAssessmentRun` plus one `TaskRiskAssessment` per task and one `SprintForecast` per active sprint — every run is kept (not just the latest), same "predictions vs what actually happened" rationale as CostEstimation's run history. `resultLocation` on the completed job points at `forecasts/latest` below.
+
+### `GET /projects/{id}/forecasts/latest`
+Not in the original spec's endpoint list — added because, unlike `CostEstimateRun`/`ScheduleProposal`, a `RiskAssessmentRun` had no addressable resource of its own: `GET /projects/{id}/risks` (a list) and `GET /sprints/{id}/forecast` (needs a sprint id you may not have) both existed, but neither answers "what did the run I just kicked off actually produce, and what's its id" the way `cost-estimates/latest` or a proposal's own id does.
+```json
+{ "runId": "guid", "modelVersion": "WeightedScorecard v1", "trainingWindowDays": 0,
+  "taskCount": 2, "forecastedSprintIds": ["guid", "..."], "createdAtUtc": "2026-08-23T21:09:59Z" }
+```
+`404 Risk.NoRun` if nothing has ever been run for the project. `taskCount`/`forecastedSprintIds` are counts/pointers only — drill into `GET /projects/{id}/risks` and `GET /sprints/{id}/forecast` for the actual numbers.
 
 ### `GET /sprints/{id}/forecast`
 ```json

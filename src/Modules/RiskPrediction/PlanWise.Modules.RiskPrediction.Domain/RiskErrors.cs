@@ -21,4 +21,7 @@ public static class RiskErrors
 
     public static Error NoForecastForSprint(Guid sprintId) =>
         Error.NotFound("Risk.NoForecastForSprint", $"No forecast has been run yet for sprint {sprintId}");
+
+    public static Error NoRunForProject(Guid projectId) =>
+        Error.NotFound("Risk.NoRun", $"No risk forecast has been run yet for project {projectId}");
 }

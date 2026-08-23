@@ -6,6 +6,7 @@ using PlanWise.Common.Application.Abstractions;
 using PlanWise.Common.Domain;
 using PlanWise.Common.Presentation.Results;
 using PlanWise.Modules.RiskPrediction.Application.Risks;
+using PlanWise.Modules.RiskPrediction.Application.Risks.GetLatestForecast;
 using PlanWise.Modules.RiskPrediction.Application.Risks.GetSprintForecast;
 using PlanWise.Modules.RiskPrediction.Application.Risks.RunForecast;
 
@@ -24,6 +25,9 @@ public static class ForecastEndpoints
                 ? Results.Accepted(value: new JobEnqueuedResponse(result.Value))
                 : ApiResults.Problem(result);
         });
+
+        group.MapGet("/projects/{projectId:guid}/forecasts/latest", async (Guid projectId, ISender sender) =>
+            ToHttp(await sender.Send(new GetLatestForecastQuery(projectId))));
 
         group.MapGet("/sprints/{sprintId:guid}/forecast", async (Guid sprintId, ISender sender) =>
             ToHttp(await sender.Send(new GetSprintForecastQuery(sprintId))));
