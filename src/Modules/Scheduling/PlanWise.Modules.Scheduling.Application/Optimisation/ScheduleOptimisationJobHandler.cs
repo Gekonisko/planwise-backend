@@ -8,8 +8,10 @@ namespace PlanWise.Modules.Scheduling.Application.Optimisation;
 
 // v1 optimiser: a deterministic greedy load-balancer, not a real ML/optimisation model. It only
 // proposes assignees for currently-unassigned, not-done tasks — it never touches dates or reassigns
-// already-assigned work. Competency/skill matching isn't modelled yet (no task carries a required-skill
-// signal), so every member with spare capacity is treated as eligible for every task; that relaxation
+// already-assigned work. Skill matching is a heuristic, not true competency matching: no task carries
+// a structured required-skill field, so a member's skill tags are matched as a case-insensitive
+// substring of the task's title (e.g. a member tagged "React" is preferred for "Fix React hydration
+// bug"). Among members tied on skill match, load-balance-by-capacity still decides — that relaxation
 // is reported honestly in the proposal's explanation rather than silently assumed away.
 public sealed class ScheduleOptimisationJobHandler(
     IProjectTasksService projectTasksService,
@@ -54,6 +56,7 @@ public sealed class ScheduleOptimisationJobHandler(
             .ToList();
 
         var proposedAssignments = new List<(ScheduleTaskSummary Task, ProjectMemberSummary Member)>();
+        int skillMatchedAssignments = 0;
 
         foreach (ScheduleTaskSummary task in unassignedTasks)
         {
@@ -63,20 +66,26 @@ public sealed class ScheduleOptimisationJobHandler(
             }
 
             ProjectMemberSummary chosen = eligibleMembers
-                .OrderBy(member => load[member.UserId!.Value] / member.Capacity)
+                .OrderByDescending(member => SkillMatchCount(member, task))
+                .ThenBy(member => load[member.UserId!.Value] / member.Capacity)
                 .First();
+
+            if (SkillMatchCount(chosen, task) > 0)
+            {
+                skillMatchedAssignments++;
+            }
 
             proposedAssignments.Add((task, chosen));
             load[chosen.UserId!.Value] += task.Points ?? 0;
         }
 
-        string expectedGain = BuildExpectedGain(unassignedTasks.Count, eligibleMembers.Count, loadBefore, load);
+        string expectedGain = BuildExpectedGain(unassignedTasks.Count, eligibleMembers.Count, loadBefore, load, skillMatchedAssignments);
 
         var proposal = ScheduleProposal.Create(
             projectId,
             jobId,
             Model,
-            "Balance workload for unassigned backlog tasks across project members by remaining capacity",
+            "Balance workload for unassigned backlog tasks across project members by remaining capacity, preferring a member whose skill tags match the task's title",
             BuildConstraintsHonoured(),
             BuildConstraintsRelaxed(),
             expectedGain,
@@ -93,16 +102,23 @@ public sealed class ScheduleOptimisationJobHandler(
         return $"/api/v1/schedule/proposals/{proposal.Id}";
     }
 
+    // A member's skill tag counts as a match if it appears as a substring of the task's title — the
+    // only per-task text available to match against, since no task carries a structured
+    // required-skill field. Case-insensitive; an unskilled member (no tags set) never matches.
+    private static int SkillMatchCount(ProjectMemberSummary member, ScheduleTaskSummary task) =>
+        member.Skills.Count(skill => task.Title.Contains(skill, StringComparison.OrdinalIgnoreCase));
+
     private static string[] BuildConstraintsHonoured() =>
     [
         "Existing assignments on already-assigned tasks were not changed",
         "Completed tasks were not reassigned",
-        "Dependency ordering and dates from the current schedule were not altered"
+        "Dependency ordering and dates from the current schedule were not altered",
+        "A member whose skill tags matched the task's title was preferred over one with no match"
     ];
 
     private static string[] BuildConstraintsRelaxed() =>
     [
-        "Competency/skill matching not yet implemented — every member with spare capacity was treated as eligible for every task",
+        "Skill matching is a title-substring heuristic, not true competency matching — no task carries a structured required-skill field",
         "Member calendar-specific availability (holidays, leave) not modelled — capacity is treated as a constant figure"
     ];
 
@@ -110,7 +126,8 @@ public sealed class ScheduleOptimisationJobHandler(
         int unassignedTaskCount,
         int eligibleMemberCount,
         IReadOnlyDictionary<Guid, int> before,
-        IReadOnlyDictionary<Guid, int> after)
+        IReadOnlyDictionary<Guid, int> after,
+        int skillMatchedAssignments)
     {
         if (unassignedTaskCount == 0)
         {
@@ -125,6 +142,7 @@ public sealed class ScheduleOptimisationJobHandler(
         int beforeImbalance = before.Count == 0 ? 0 : before.Values.Max() - before.Values.Min();
         int afterImbalance = after.Count == 0 ? 0 : after.Values.Max() - after.Values.Min();
 
-        return $"Reduces max/min assigned-points imbalance across members from {beforeImbalance} to {afterImbalance}";
+        return $"Reduces max/min assigned-points imbalance across members from {beforeImbalance} to {afterImbalance}; " +
+               $"{skillMatchedAssignments} of {unassignedTaskCount} assignment(s) matched on skill tags";
     }
 }

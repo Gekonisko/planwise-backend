@@ -8,11 +8,11 @@ using PlanWise.Modules.CostEstimation.Infrastructure.Database;
 
 #nullable disable
 
-namespace PlanWise.Modules.CostEstimation.Infrastructure.Database.Migrations;
-
-[DbContext(typeof(CostEstimationDbContext))]
-partial class CostEstimationDbContextModelSnapshot : ModelSnapshot
+namespace PlanWise.Modules.CostEstimation.Infrastructure.Database.Migrations
 {
+    [DbContext(typeof(CostEstimationDbContext))]
+    partial class CostEstimationDbContextModelSnapshot : ModelSnapshot
+    {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -53,6 +53,35 @@ partial class CostEstimationDbContextModelSnapshot : ModelSnapshot
                         .HasName("pk_budgets");
 
                     b.ToTable("budgets", "cost_estimation");
+                });
+
+            modelBuilder.Entity("PlanWise.Modules.CostEstimation.Domain.Estimates.AppliedReduction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("AppliedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("applied_at_utc");
+
+                    b.Property<Guid>("ReductionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reduction_id");
+
+                    b.Property<Guid>("RunId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("run_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_applied_reductions");
+
+                    b.HasIndex("RunId", "ReductionId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_applied_reductions_run_id_reduction_id");
+
+                    b.ToTable("applied_reductions", "cost_estimation");
                 });
 
             modelBuilder.Entity("PlanWise.Modules.CostEstimation.Domain.Estimates.CostEstimateRun", b =>
@@ -107,4 +136,5 @@ partial class CostEstimationDbContextModelSnapshot : ModelSnapshot
                 });
 #pragma warning restore 612, 618
         }
+    }
 }

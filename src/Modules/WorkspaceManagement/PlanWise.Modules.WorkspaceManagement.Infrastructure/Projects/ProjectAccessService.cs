@@ -29,7 +29,7 @@ internal sealed class ProjectAccessService(WorkspaceManagementDbContext dbContex
     public async Task<IReadOnlyList<ProjectMemberSummary>> GetMembersAsync(Guid projectId, CancellationToken cancellationToken = default) =>
         await dbContext.ProjectMembers
             .Where(member => member.ProjectId == projectId)
-            .Select(member => new ProjectMemberSummary(member.UserId, member.Email, member.Capacity))
+            .Select(member => new ProjectMemberSummary(member.UserId, member.Email, member.Capacity, member.Skills))
             .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<ProjectSearchSummary>> GetAccessibleProjectsAsync(Guid userId, CancellationToken cancellationToken = default) =>

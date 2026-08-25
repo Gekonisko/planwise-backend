@@ -4,11 +4,13 @@ using PlanWise.Common.Domain;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
 using PlanWise.Modules.Delivery.Application.Abstractions.Data;
 using PlanWise.Modules.Delivery.Domain.Sprints;
+using PlanWise.Modules.Delivery.Domain.Tasks;
 
 namespace PlanWise.Modules.Delivery.Application.Sprints.UpdateSprint;
 
 internal sealed class UpdateSprintCommandHandler(
     ISprintRepository sprintRepository,
+    IProjectTaskRepository taskRepository,
     IProjectAccessService projectAccessService,
     IUnitOfWork unitOfWork,
     IUserContext userContext)
@@ -31,6 +33,8 @@ internal sealed class UpdateSprintCommandHandler(
         sprint.Update(request.Name?.Trim(), request.Goal?.Trim(), request.StartDate, request.EndDate);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(SprintMappings.ToResponse(sprint));
+        IReadOnlyList<ProjectTask> sprintTasks = await taskRepository.GetByProjectAsync(
+            sprint.ProjectId, sprint.Id, null, null, null, null, cancellationToken);
+        return Result.Success(SprintMappings.ToResponse(sprint, sprintTasks));
     }
 }

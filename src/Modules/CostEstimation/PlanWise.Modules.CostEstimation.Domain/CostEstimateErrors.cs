@@ -12,4 +12,7 @@ public static class CostEstimateErrors
 
     public static Error NoRunForProject(Guid projectId) =>
         Error.NotFound("CostEstimate.NoRun", $"No cost estimate has been run yet for project {projectId}");
+
+    public static Error ReductionNotFound(Guid reductionId) =>
+        Error.NotFound("CostEstimate.ReductionNotFound", $"The reduction recommendation with identifier {reductionId} was not found");
 }

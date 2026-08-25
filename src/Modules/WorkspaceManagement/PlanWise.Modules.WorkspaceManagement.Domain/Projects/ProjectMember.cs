@@ -25,6 +25,7 @@ public sealed class ProjectMember : Entity
     public string Role { get; private set; }
     public decimal Capacity { get; private set; }
     public decimal HourlyRate { get; private set; }
+    public string[] Skills { get; private set; } = [];
 
     public static ProjectMember Create(Guid projectId, Guid? userId, string email, string role, decimal capacity, decimal hourlyRate) =>
         new(projectId, userId, email, role, capacity, hourlyRate);
@@ -37,4 +38,6 @@ public sealed class ProjectMember : Entity
     }
 
     public void LinkUser(Guid userId) => UserId ??= userId;
+
+    public void SetSkills(IReadOnlyList<string> skills) => Skills = skills.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
 }

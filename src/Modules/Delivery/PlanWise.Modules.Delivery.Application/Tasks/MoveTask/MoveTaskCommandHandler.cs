@@ -1,4 +1,5 @@
 using PlanWise.Common.Application.Abstractions;
+using PlanWise.Common.Application.Clock;
 using PlanWise.Common.Application.Messaging;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
@@ -11,7 +12,8 @@ internal sealed class MoveTaskCommandHandler(
     IProjectTaskRepository taskRepository,
     IProjectAccessService projectAccessService,
     IUnitOfWork unitOfWork,
-    IUserContext userContext)
+    IUserContext userContext,
+    IDateTimeProvider dateTimeProvider)
     : ICommandHandler<MoveTaskCommand, TaskResponse>
 {
     public async Task<Result<TaskResponse>> Handle(MoveTaskCommand request, CancellationToken cancellationToken)
@@ -43,7 +45,7 @@ internal sealed class MoveTaskCommandHandler(
             _ => (columnTasks[index - 1].Rank + columnTasks[index].Rank) / 2m
         };
 
-        task.Move(targetStatus, newRank);
+        task.Move(targetStatus, newRank, dateTimeProvider.UtcNow);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(TaskMappings.ToResponse(task));

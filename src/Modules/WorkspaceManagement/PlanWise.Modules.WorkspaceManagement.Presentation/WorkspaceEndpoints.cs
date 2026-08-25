@@ -9,6 +9,7 @@ using PlanWise.Modules.WorkspaceManagement.Application.Projects.GetProject;
 using PlanWise.Modules.WorkspaceManagement.Application.Projects.GetProjects;
 using PlanWise.Modules.WorkspaceManagement.Application.Projects.Labels;
 using PlanWise.Modules.WorkspaceManagement.Application.Projects.Members;
+using PlanWise.Modules.WorkspaceManagement.Application.Projects.Members.Skills;
 using PlanWise.Modules.WorkspaceManagement.Application.Projects.UpdateProject;
 using PlanWise.Common.Domain;
 using PlanWise.Common.Presentation.Results;
@@ -38,6 +39,10 @@ public static class WorkspaceEndpoints
             ToHttp(await sender.Send(new UpdateProjectMemberCommand(id, memberId, request.Role, request.Capacity, request.HourlyRate))));
         group.MapDelete("/projects/{id:guid}/members/{memberId:guid}", async (Guid id, Guid memberId, ISender sender) =>
             ToHttp(await sender.Send(new RemoveProjectMemberCommand(id, memberId))));
+        group.MapGet("/members/{memberId:guid}/skills", async (Guid memberId, ISender sender) =>
+            ToHttp(await sender.Send(new GetMemberSkillsQuery(memberId))));
+        group.MapPut("/members/{memberId:guid}/skills", async (Guid memberId, SkillsRequest request, ISender sender) =>
+            ToHttp(await sender.Send(new SetMemberSkillsCommand(memberId, request.Skills))));
     }
 
     private static IResult ToHttp<T>(Result<T> result) =>
@@ -50,4 +55,5 @@ public static class WorkspaceEndpoints
     public sealed record ProjectUpdateRequest(string? Name, string? Process, string? ClientName = null, string? Status = null);
     public sealed record MemberRequest(Guid? UserId, string Email, string Role, decimal Capacity, decimal HourlyRate);
     public sealed record MemberUpdateRequest(string Role, decimal Capacity, decimal HourlyRate);
+    public sealed record SkillsRequest(IReadOnlyList<string> Skills);
 }

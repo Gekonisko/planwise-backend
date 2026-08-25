@@ -3,11 +3,13 @@ using PlanWise.Common.Application.Messaging;
 using PlanWise.Common.Domain;
 using PlanWise.Modules.Delivery.Application.Abstractions.Authentication;
 using PlanWise.Modules.Delivery.Domain.Sprints;
+using PlanWise.Modules.Delivery.Domain.Tasks;
 
 namespace PlanWise.Modules.Delivery.Application.Sprints.GetSprint;
 
 internal sealed class GetSprintQueryHandler(
     ISprintRepository sprintRepository,
+    IProjectTaskRepository taskRepository,
     IProjectAccessService projectAccessService,
     IUserContext userContext)
     : IQueryHandler<GetSprintQuery, SprintResponse>
@@ -26,6 +28,9 @@ internal sealed class GetSprintQueryHandler(
             return Result.Failure<SprintResponse>(SprintErrors.NotFound(request.SprintId));
         }
 
-        return Result.Success(SprintMappings.ToResponse(sprint));
+        IReadOnlyList<ProjectTask> sprintTasks = await taskRepository.GetByProjectAsync(
+            sprint.ProjectId, sprint.Id, null, null, null, null, cancellationToken);
+
+        return Result.Success(SprintMappings.ToResponse(sprint, sprintTasks));
     }
 }

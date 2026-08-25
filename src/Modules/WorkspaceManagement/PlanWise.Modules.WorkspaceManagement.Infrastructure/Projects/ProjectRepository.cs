@@ -23,6 +23,12 @@ internal sealed class ProjectRepository(WorkspaceManagementDbContext dbContext) 
                          member.UserId == null && email != null && member.Email == email)),
                 cancellationToken);
 
+    public async Task<Project?> GetByMemberIdAsync(Guid memberId, CancellationToken cancellationToken = default) =>
+        await dbContext.Projects
+            .Include(project => project.Members)
+            .Include(project => project.Labels)
+            .SingleOrDefaultAsync(project => project.Members.Any(member => member.Id == memberId), cancellationToken);
+
     public async Task<IReadOnlyList<Project>> GetForUserAsync(Guid userId, string? email, CancellationToken cancellationToken = default) =>
         await dbContext.Projects
             .Include(project => project.Members)

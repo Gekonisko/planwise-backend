@@ -49,6 +49,7 @@ public sealed class ProjectTask : Entity
     public DateOnly? DueDate { get; private set; }
     public decimal Rank { get; private set; }
     public int? BusinessValue { get; private set; }
+    public DateTime? CompletedAtUtc { get; private set; }
     public IReadOnlyCollection<Subtask> Subtasks => subtasks;
     public IReadOnlyCollection<TaskComment> Comments => comments;
     public IReadOnlyCollection<TaskLink> Links => links;
@@ -134,13 +135,17 @@ public sealed class ProjectTask : Entity
         return newLabels;
     }
 
-    public void Move(ProjectTaskStatus status, decimal rank)
+    // completedAtUtc is stamped the moment a task first lands on Done and cleared if it's ever moved
+    // back off Done — the only historical signal the burndown chart has for "when did this task's
+    // points actually leave the remaining total," since no separate status-change history exists.
+    public void Move(ProjectTaskStatus status, decimal rank, DateTime nowUtc)
     {
         if (Status != status)
         {
             Raise(new ProjectTaskMovedDomainEvent(Id, ProjectId, Key, Title, Status, status));
         }
 
+        CompletedAtUtc = status == ProjectTaskStatus.Done ? CompletedAtUtc ?? nowUtc : null;
         Status = status;
         Rank = rank;
     }

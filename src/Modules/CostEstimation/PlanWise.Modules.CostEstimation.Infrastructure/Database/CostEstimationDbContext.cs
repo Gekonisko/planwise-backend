@@ -10,6 +10,7 @@ public sealed class CostEstimationDbContext(DbContextOptions<CostEstimationDbCon
 {
     internal DbSet<ProjectBudget> Budgets { get; set; }
     internal DbSet<CostEstimateRun> CostEstimateRuns { get; set; }
+    internal DbSet<AppliedReduction> AppliedReductions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,6 +31,12 @@ public sealed class CostEstimationDbContext(DbContextOptions<CostEstimationDbCon
             builder.Property(run => run.Currency).HasMaxLength(3).IsRequired();
             builder.Property(run => run.ResultJson).HasColumnType("jsonb").IsRequired();
             builder.HasIndex(run => run.ProjectId);
+        });
+
+        modelBuilder.Entity<AppliedReduction>(builder =>
+        {
+            builder.HasKey(applied => applied.Id);
+            builder.HasIndex(applied => new { applied.RunId, applied.ReductionId }).IsUnique();
         });
     }
 }

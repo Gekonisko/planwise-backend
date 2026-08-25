@@ -5,10 +5,14 @@ using Microsoft.AspNetCore.Routing;
 using PlanWise.Common.Application.Abstractions;
 using PlanWise.Common.Domain;
 using PlanWise.Common.Presentation.Results;
+using PlanWise.Modules.CostEstimation.Application.Estimates.GetBurn;
 using PlanWise.Modules.CostEstimation.Application.Estimates.GetCostEstimate;
 using PlanWise.Modules.CostEstimation.Application.Estimates.GetCostEstimateExplanation;
 using PlanWise.Modules.CostEstimation.Application.Estimates.GetCostEstimateHistory;
 using PlanWise.Modules.CostEstimation.Application.Estimates.GetLatestCostEstimate;
+using PlanWise.Modules.CostEstimation.Application.Estimates.Reductions.ApplyReduction;
+using PlanWise.Modules.CostEstimation.Application.Estimates.Reductions.GetReductions;
+using PlanWise.Modules.CostEstimation.Application.Estimates.Reductions.UnapplyReduction;
 using PlanWise.Modules.CostEstimation.Application.Estimates.RunCostEstimate;
 
 namespace PlanWise.Modules.CostEstimation.Presentation;
@@ -38,6 +42,18 @@ public static class CostEstimateEndpoints
 
         group.MapGet("/cost-estimates/{id:guid}/explanation", async (Guid id, ISender sender) =>
             ToHttp(await sender.Send(new GetCostEstimateExplanationQuery(id))));
+
+        group.MapGet("/cost-estimates/{id:guid}/burn", async (Guid id, ISender sender) =>
+            ToHttp(await sender.Send(new GetCostEstimateBurnQuery(id))));
+
+        group.MapGet("/cost-estimates/{id:guid}/reductions", async (Guid id, ISender sender) =>
+            ToHttp(await sender.Send(new GetReductionsQuery(id))));
+
+        group.MapPost("/cost-estimates/{id:guid}/reductions/{rid:guid}/apply", async (Guid id, Guid rid, ISender sender) =>
+            ToHttp(await sender.Send(new ApplyReductionCommand(id, rid))));
+
+        group.MapDelete("/cost-estimates/{id:guid}/reductions/{rid:guid}/apply", async (Guid id, Guid rid, ISender sender) =>
+            ToHttp(await sender.Send(new UnapplyReductionCommand(id, rid))));
     }
 
     private static IResult ToHttp<T>(Result<T> result) =>

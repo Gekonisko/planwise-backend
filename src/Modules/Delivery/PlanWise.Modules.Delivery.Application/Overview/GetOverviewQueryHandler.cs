@@ -46,7 +46,9 @@ internal sealed class GetOverviewQueryHandler(
             .ToList();
 
         Sprint? activeSprint = await sprintRepository.GetActiveAsync(request.ProjectId, cancellationToken);
-        SprintResponse? activeSprintResponse = activeSprint is null ? null : SprintMappings.ToResponse(activeSprint);
+        SprintResponse? activeSprintResponse = activeSprint is null
+            ? null
+            : SprintMappings.ToResponse(activeSprint, tasks.Where(task => task.SprintId == activeSprint.Id).ToList());
 
         return Result.Success(new OverviewResponse(counts, totalPoints, completedPoints, needsAttention, activeSprintResponse));
     }

@@ -145,9 +145,9 @@ Module: `Delivery` (Postgres schema `delivery`). Lifecycle: `Planned(0) → Acti
 ```json
 [{ "id": "guid", "projectId": "guid", "name": "Sprint 1", "goal": null,
    "startDate": "2026-08-24", "endDate": "2026-09-07", "state": 0,
-   "committedPoints": 0, "completedPoints": 0 }]
+   "committedPoints": 7, "completedPoints": 2 }]
 ```
-`committedPoints`/`completedPoints` are **always 0** — not wired to task data yet.
+`committedPoints` = sum of `Points` across every task currently assigned to the sprint (regardless of status); `completedPoints` = the same sum restricted to `Done` tasks. Both are live — recomputed from the sprint's current tasks on every read, not snapshotted at sprint start, so moving a task in or out of the sprint changes them immediately.
 
 `state`: `0` = Planned, `1` = Active, `2` = Completed.
 
@@ -166,7 +166,22 @@ Same `SprintResponse` shape. PATCH body: `{ "name": null, "goal": null, "startDa
 ### `POST /sprints/{id}/complete`
 `400` if this sprint isn't `Active`.
 
-**Not implemented**: `GET /sprints/{id}/burndown`, `GET /projects/{id}/velocity` (need real point aggregation across tasks).
+### `GET /sprints/{id}/burndown`
+```json
+{ "sprintId": "guid", "committedPoints": 7,
+  "points": [
+    { "date": "2026-08-24", "idealRemainingPoints": 7.0, "actualRemainingPoints": 7 },
+    { "date": "2026-08-25", "idealRemainingPoints": 6.5, "actualRemainingPoints": 5 },
+    { "date": "2026-09-07", "idealRemainingPoints": 0.0, "actualRemainingPoints": null }
+  ] }
+```
+One point per calendar day in the sprint's date range. `idealRemainingPoints` is a straight-line interpolation from `committedPoints` to `0` — the spec's own "ideal line". `actualRemainingPoints` is real, read from each task's `completedAtUtc` (stamped the moment a task first reaches `Done`, see `ProjectTask.Move`); it's `null` for any day after today, since there's no actual data yet for days that haven't happened. Tasks that reached `Done` before this tracking existed have no real completion date — they're treated as completed on the sprint's start date rather than left unaccounted for, a stated best-effort backfill for pre-existing data, not a gap in newly-completed tasks going forward.
+
+### `GET /projects/{id}/velocity`
+```json
+{ "sprints": [{ "sprintId": "guid", "sprintName": "Sprint 1", "endDate": "2026-09-07", "committedPoints": 7, "completedPoints": 5 }] }
+```
+One entry per `Completed` sprint, oldest first — the series behind the forecast chart. Sprints still `Planned` or `Active` are excluded (a sprint isn't "velocity" until it's actually finished).
 
 ---
 
@@ -341,7 +356,7 @@ Ordered by due date. `status` is derived, not stored: `"Achieved"` if `dueDate` 
 ```
 **Deviation from the spec**: the spec's table only lists `GET /projects/{id}/milestones`, with no creation endpoint. Without one, milestones could never exist, so this was added as the minimal completion of the feature rather than a speculative addition. There's no `PATCH`/`DELETE` yet.
 
-**Not implemented**: the rest of section 9 (Schedule optimisation — `POST /projects/{id}/schedule/optimise`, proposals, `apply`/`apply-partial`, `explanation`) and its supporting reads (`GET /projects/{id}/availability`, `GET /members/{id}/skills`).
+Section 9 (Schedule optimisation) is built separately — see below, including `GET/PUT /members/{id}/skills`.
 
 ### Cross-module contracts (new in this pass)
 `Scheduling` needs richer data from `Delivery` than a yes/no access check (the full task graph: points, due dates, dependencies), so it consumes a second Common abstraction, `IProjectTasksService` (`PlanWise.Common.Application.Abstractions`), implemented by `Delivery.Infrastructure`. Same pattern as `IProjectAccessService`/`IProjectMembersService` from section 5's Delivery-hosted half — a narrow, DTO-only interface, currently in-process DI, deliberately kept serialization-friendly so it can become a real network call if `Scheduling` is ever split into its own service.
@@ -393,8 +408,28 @@ Full run history, newest first — every run is persisted (cache hits are *not* 
 ```
 A fixed, hardcoded role→rate table (`DefaultRateCardProvider`) — no `PUT` exists in the spec for it, and none is built. Five roles seeded: Developer, Lead Developer, Designer, QA Engineer, Project Manager.
 
+### `GET /cost-estimates/{id}/burn`
+```json
+{ "costEstimateId": "guid", "budget": 50000, "currency": "USD",
+  "actualSpendSeries": [{ "date": "2026-08-20", "actualSpend": 0 }, { "date": "2026-08-24", "actualSpend": 5628.57 }],
+  "forecast": { "p50Total": 19700, "p90Total": 24100 },
+  "asOfUtc": "2026-08-24T15:24:00Z" }
+```
+`forecast` is real — `p50Total`/`p90Total` are the run's own scenario totals, picked by nearest percentile to 50/90 (not fabricated for this endpoint). `actualSpendSeries` is a **stated proxy**, not real time-tracking data (none exists anywhere in this system, same gap as the estimate's own `assumptions`): each day's figure is `(cumulative completed points that day ÷ total backlog points) × p50Total`, using each task's real `completedAtUtc`. One point per day from the run's creation date to today.
+
+### `GET /cost-estimates/{id}/reductions`
+```json
+{ "runId": "guid", "currency": "USD", "baselineTotal": 19700, "projectedTotal": 16700,
+  "reductions": [{ "id": "guid", "description": "Descope the reporting export to a follow-up phase",
+                    "saving": 3000, "effect": "Removes ~40 hours of Developer time", "confidence": "Medium", "applied": true }] }
+```
+Reductions are generated by the same LLM call as the estimate itself (the tool schema was extended with a `reductions` array) — not a second model invocation, and not fabricated separately from the estimate they apply to. `id` is assigned locally after the model responds, not by the model: LLMs aren't reliable at producing valid, stable identifiers. `baselineTotal` is the same p50 scenario total `burn` forecasts against; `projectedTotal` subtracts every currently-**applied** reduction's `saving` from it.
+
+### `POST` / `DELETE /cost-estimates/{id}/reductions/{rid}/apply`
+Both `204`-equivalent (return the updated `ReductionsResponse`, same shape as the `GET` above, so a client doesn't need a follow-up call). Applying is idempotent — accepting an already-applied recommendation is a no-op, not an error; `DELETE` on a never-applied one is likewise a no-op. `404 CostEstimate.ReductionNotFound` if `{rid}` doesn't belong to this run's own reductions list. Which recommendations are applied is tracked in a separate, genuinely mutable table (`applied_reductions`) rather than by mutating `ResultJson` — that blob stays exactly what it's always been: written once by the model, read back, never touched again.
+
 **Not implemented / gaps, stated plainly**:
-- No genuine "historical actuals" (real spend/time-tracking data) exist anywhere in the system — the prompt tells the model this explicitly rather than inventing figures, and the model's own `assumptions` reflect it.
+- No genuine "historical actuals" (real spend/time-tracking data) exist anywhere in the system — both the estimate's own `assumptions` and `burn`'s proxy-based `actualSpendSeries` say so explicitly rather than inventing figures.
 - `GET /reference/rates` has no write endpoint (matches the literal spec, which also has none).
 - Rate card is global, not per-project or per-org configurable.
 
@@ -493,7 +528,7 @@ Lives on `Delivery`, not this module — see section 4. A manager-supplied model
 
 Module: `Scheduling`. Follows the spec's shared "intelligence endpoint" shape: `POST .../optimise` returns `202` with a job id, poll `GET /jobs/{id}` (below) until `Succeeded`, then read the result at `resultLocation`. Unlike a real ML/LLM model, today's optimiser is a fast deterministic heuristic, so in practice a job is usually already `Succeeded` by the time a client's first poll lands — the async contract is honoured regardless.
 
-**v1 scope, stated plainly**: the optimiser only proposes an **assignee** for currently-unassigned, not-done tasks, balancing load by remaining member capacity. It never touches dates, never reassigns already-assigned work, and does not do competency/skill matching (no task carries a required-skill signal yet) — every member with spare capacity is treated as eligible for every task. Both relaxations are reported honestly in every proposal's `constraintsRelaxed`, not silently assumed away.
+**v1 scope, stated plainly**: the optimiser only proposes an **assignee** for currently-unassigned, not-done tasks, balancing load by remaining member capacity. It never touches dates and never reassigns already-assigned work. Skill matching (below) is a heuristic, not true competency matching — that relaxation is reported honestly in every proposal's `constraintsRelaxed`, not silently assumed away.
 
 ### `POST /projects/{id}/schedule/optimise`
 Anonymous body (none required). `202 Accepted`:
@@ -522,10 +557,10 @@ Same as `apply`, but only for the listed assignment ids (from the proposal's `as
 ### `GET /schedule/proposals/{id}/explanation`
 ```json
 { "id": "guid", "modelName": "GreedyCapacityBalancer v1",
-  "objective": "Balance workload for unassigned backlog tasks across project members by remaining capacity",
-  "constraintsHonoured": ["Existing assignments on already-assigned tasks were not changed", "..."],
-  "constraintsRelaxed": ["Competency/skill matching not yet implemented — ...", "..."],
-  "expectedGain": "Reduces max/min assigned-points imbalance across members from 4 to 0",
+  "objective": "Balance workload for unassigned backlog tasks across project members by remaining capacity, preferring a member whose skill tags match the task's title",
+  "constraintsHonoured": ["Existing assignments on already-assigned tasks were not changed", "A member whose skill tags matched the task's title was preferred over one with no match", "..."],
+  "constraintsRelaxed": ["Skill matching is a title-substring heuristic, not true competency matching — no task carries a structured required-skill field", "..."],
+  "expectedGain": "Reduces max/min assigned-points imbalance across members from 4 to 0; 2 of 3 assignment(s) matched on skill tags",
   "generatedAtUtc": "2026-08-23T12:36:53Z" }
 ```
 
@@ -535,7 +570,12 @@ Same as `apply`, but only for the listed assignment ids (from the proposal's `as
 ```
 Derived, not stored: every business day (Mon–Fri) in range is reported as available at the member's flat `Capacity` — there's no per-day calendar (holidays/leave) yet. Pending-by-email members (no `userId`) are excluded, same as Workload.
 
-**Not implemented**: `GET /members/{id}/skills` — no skills/competency data model exists anywhere in the codebase yet (would need a new field on `ProjectMember` in `WorkspaceManagement`), and v1's optimiser doesn't consume skills anyway, so it was deferred rather than built unused.
+### `GET /members/{id}/skills` / `PUT /members/{id}/skills`
+Owned by `WorkspaceManagement` (the data lives on `ProjectMember`, listed under this section only because it's this screen's data), routed by member id alone — no `/projects/{id}` prefix, matching the spec's literal path. The project is resolved from the member id, and the usual owner-or-member access check applied to it.
+```json
+{ "memberId": "guid", "skills": ["React", "Postgres"] }
+```
+`PUT` body: `{ "skills": ["React", "Postgres"] }` — full replace, up to 20 tags, each 1–50 characters, deduplicated case-insensitively. **Deviation from the spec**: only `GET` is listed; `PUT` was added as the minimal completion of the feature, same reasoning as milestones' `POST` in section 5 — without a way to set them, the tags could never exist. The optimiser above actually consumes these tags now (title-substring matching), closing the gap this endpoint used to be deferred alongside.
 
 ---
 
@@ -586,10 +626,11 @@ Hosted centrally in `Common` (`ProjectHub`, mapped at `/hubs/project/{id:guid}`)
 
 ## What's not implemented at all
 
-All seven planned modules plus the Notifications/Search/Preferences/realtime cross-cutting layer now exist — every endpoint in the spec is built. What's genuinely simplified or stated as a gap rather than silently assumed:
-- `GET /members/{id}/skills` (section 9) — no skills/competency data model exists anywhere yet, and the schedule optimiser doesn't consume skills either.
-- Real burndown/velocity (section 3) — sections 7 and 9's forecasts both use simplified proxies (member `Capacity` at a constant rate) in its place.
-- Search has no real index (see section 10 above) and mentions are a best-effort `@handle` regex scan, not a real mention system.
-- A live WebSocket end-to-end round trip (a client actually receiving a pushed `taskMoved` event) was not exercised in this pass — the hub's HTTP-level handshake (`/negotiate`, auth enforcement, 401 when unauthenticated) was live-verified, but a full transport-level test needs a WebSocket-capable client, not `curl`.
+Every endpoint in the literal spec now has a real implementation — nothing is a stub or a placeholder. What's left is deliberate simplification, stated in its own section above rather than silently assumed, plus one methodology gap:
+- RiskPrediction, BacklogPrioritisation, and the Scheduling optimiser are all deterministic heuristics, not trained/real ML models (sections 7, 8, 9).
+- Sprint/velocity forecasts (sections 7, 9) and cost `burn` (section 6) use proxies — a constant-rate member-`Capacity` assumption for forecasts, and a points-completed-so-far proxy for actual spend — in place of real historical burndown/velocity/spend-tracking data, none of which exists anywhere in this system.
+- Skill matching (section 9) is a title-substring heuristic against a member's own tags, not true competency matching — no task carries a structured required-skill field.
+- Search (section 10) has no real index — an N+1 query over every accessible project. Mentions are a best-effort `@handle` regex scan, not a real mention system.
+- The SignalR hub's HTTP-level handshake (`/negotiate`, auth enforcement) was live-verified; a full transport-level round trip (a connected client actually receiving a pushed event) was not — `curl` can't drive a WebSocket.
 
 See `PlanWise API.pdf` for the target shape of each.

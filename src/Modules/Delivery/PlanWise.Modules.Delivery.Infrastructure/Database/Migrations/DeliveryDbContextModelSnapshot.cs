@@ -8,11 +8,11 @@ using PlanWise.Modules.Delivery.Infrastructure.Database;
 
 #nullable disable
 
-namespace PlanWise.Modules.Delivery.Infrastructure.Database.Migrations;
-
-[DbContext(typeof(DeliveryDbContext))]
-partial class DeliveryDbContextModelSnapshot : ModelSnapshot
+namespace PlanWise.Modules.Delivery.Infrastructure.Database.Migrations
 {
+    [DbContext(typeof(DeliveryDbContext))]
+    partial class DeliveryDbContextModelSnapshot : ModelSnapshot
+    {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -148,6 +148,10 @@ partial class DeliveryDbContextModelSnapshot : ModelSnapshot
                     b.Property<int?>("BusinessValue")
                         .HasColumnType("integer")
                         .HasColumnName("business_value");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at_utc");
 
                     b.Property<string>("Description")
                         .HasMaxLength(5000)
@@ -401,3 +405,4 @@ partial class DeliveryDbContextModelSnapshot : ModelSnapshot
 #pragma warning restore 612, 618
         }
     }
+}

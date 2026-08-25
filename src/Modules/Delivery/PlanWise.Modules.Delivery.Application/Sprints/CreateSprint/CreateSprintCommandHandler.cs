@@ -26,6 +26,6 @@ internal sealed class CreateSprintCommandHandler(
         sprintRepository.Add(sprint);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(SprintMappings.ToResponse(sprint));
+        return Result.Success(SprintMappings.ToResponse(sprint, []));
     }
 }

@@ -82,8 +82,10 @@ internal sealed class AnthropicCostEstimationModel(HttpClient httpClient, IOptio
             ["model"] = options.Value.Model,
             ["max_tokens"] = 4096,
             ["system"] = "You are a cost estimation assistant for software delivery projects. Produce a realistic, " +
-                         "well-reasoned cost estimate from the backlog and rate card provided. Always call the " +
-                         "submit_cost_estimate tool with your answer.",
+                         "well-reasoned cost estimate from the backlog and rate card provided, plus a short list of " +
+                         "concrete cost-reduction recommendations (e.g. descoping a low-priority item, reducing a " +
+                         "role's allocated hours, deferring non-labour spend) each with an estimated dollar saving. " +
+                         "Always call the submit_cost_estimate tool with your answer.",
             ["messages"] = new JsonArray
             {
                 new JsonObject
@@ -204,9 +206,25 @@ internal sealed class AnthropicCostEstimationModel(HttpClient httpClient, IOptio
                         ["type"] = "array",
                         ["items"] = new JsonObject { ["type"] = "string" }
                     },
-                    ["reasoning"] = new JsonObject { ["type"] = "string" }
+                    ["reasoning"] = new JsonObject { ["type"] = "string" },
+                    ["reductions"] = new JsonObject
+                    {
+                        ["type"] = "array",
+                        ["items"] = new JsonObject
+                        {
+                            ["type"] = "object",
+                            ["properties"] = new JsonObject
+                            {
+                                ["description"] = new JsonObject { ["type"] = "string" },
+                                ["saving"] = new JsonObject { ["type"] = "number" },
+                                ["effect"] = new JsonObject { ["type"] = "string" },
+                                ["confidence"] = new JsonObject { ["type"] = "string" }
+                            },
+                            ["required"] = new JsonArray { "description", "saving", "effect", "confidence" }
+                        }
+                    }
                 },
-                ["required"] = new JsonArray { "scenarios", "labourLines", "nonLabourLines", "priorityBreakdown", "assumptions", "reasoning" }
+                ["required"] = new JsonArray { "scenarios", "labourLines", "nonLabourLines", "priorityBreakdown", "assumptions", "reasoning", "reductions" }
             }
         };
 
@@ -219,11 +237,38 @@ internal sealed class AnthropicCostEstimationModel(HttpClient httpClient, IOptio
             if (block.GetProperty("type").GetString() == "tool_use")
             {
                 JsonElement input = block.GetProperty("input");
-                return input.Deserialize<CostEstimateResult>(ResultSerializerOptions)
-                    ?? throw new InvalidOperationException("Anthropic tool_use input could not be deserialized into a CostEstimateResult");
+                ToolResult toolResult = input.Deserialize<ToolResult>(ResultSerializerOptions)
+                    ?? throw new InvalidOperationException("Anthropic tool_use input could not be deserialized into a ToolResult");
+
+                IReadOnlyList<CostReduction> reductions = toolResult.Reductions
+                    .Select(candidate => new CostReduction(Guid.NewGuid(), candidate.Description, candidate.Saving, candidate.Effect, candidate.Confidence))
+                    .ToList();
+
+                return new CostEstimateResult(
+                    toolResult.Scenarios,
+                    toolResult.LabourLines,
+                    toolResult.NonLabourLines,
+                    toolResult.PriorityBreakdown,
+                    toolResult.Assumptions,
+                    toolResult.Reasoning,
+                    reductions);
             }
         }
 
         throw new InvalidOperationException("Anthropic response did not contain a tool_use block");
     }
+
+    // Mirrors the tool_use input_schema exactly. Reductions arrive without an id — the model isn't
+    // reliable at producing valid, stable identifiers, so ParseResult assigns a fresh Guid per item
+    // after deserializing into this intermediate shape.
+    private sealed record ToolResult(
+        IReadOnlyList<CostScenario> Scenarios,
+        IReadOnlyList<LabourLine> LabourLines,
+        IReadOnlyList<NonLabourLine> NonLabourLines,
+        IReadOnlyList<PriorityCostLine> PriorityBreakdown,
+        IReadOnlyList<string> Assumptions,
+        string Reasoning,
+        IReadOnlyList<ReductionCandidate> Reductions);
+
+    private sealed record ReductionCandidate(string Description, decimal Saving, string Effect, string Confidence);
 }

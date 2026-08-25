@@ -1,11 +1,19 @@
 using PlanWise.Modules.Delivery.Domain.Sprints;
+using PlanWise.Modules.Delivery.Domain.Tasks;
 
 namespace PlanWise.Modules.Delivery.Application.Sprints;
 
 internal static class SprintMappings
 {
-    // Committed/completed points are always 0 until the Task entity (board and backlog) lands and
-    // sprints can accumulate points from the tasks assigned to them.
-    public static SprintResponse ToResponse(Sprint sprint) =>
-        new(sprint.Id, sprint.ProjectId, sprint.Name, sprint.Goal, sprint.StartDate, sprint.EndDate, sprint.State, 0, 0);
+    public static SprintResponse ToResponse(Sprint sprint, IReadOnlyList<ProjectTask> sprintTasks) =>
+        new(
+            sprint.Id,
+            sprint.ProjectId,
+            sprint.Name,
+            sprint.Goal,
+            sprint.StartDate,
+            sprint.EndDate,
+            sprint.State,
+            sprintTasks.Sum(task => task.Points ?? 0),
+            sprintTasks.Where(task => task.Status == ProjectTaskStatus.Done).Sum(task => task.Points ?? 0));
 }

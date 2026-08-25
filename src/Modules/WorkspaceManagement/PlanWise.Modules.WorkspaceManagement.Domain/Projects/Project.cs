@@ -66,6 +66,9 @@ public sealed class Project : Entity
     public void UpdateMember(Guid memberId, string role, decimal capacity, decimal hourlyRate) =>
         members.SingleOrDefault(member => member.Id == memberId)?.Update(role, capacity, hourlyRate);
 
+    public void SetMemberSkills(Guid memberId, IReadOnlyList<string> skills) =>
+        members.SingleOrDefault(member => member.Id == memberId)?.SetSkills(skills);
+
     public void RemoveMember(Guid memberId) => members.RemoveAll(member => member.Id == memberId);
 
     public bool ClaimMembership(string email, Guid userId)

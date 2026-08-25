@@ -139,6 +139,11 @@ namespace PlanWise.Modules.WorkspaceManagement.Infrastructure.Database.Migration
                         .HasColumnType("character varying(50)")
                         .HasColumnName("role");
 
+                    b.PrimitiveCollection<string[]>("Skills")
+                        .IsRequired()
+                        .HasColumnType("text[]")
+                        .HasColumnName("skills");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");

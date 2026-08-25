@@ -6,8 +6,10 @@ using PlanWise.Common.Domain;
 using PlanWise.Common.Presentation.Results;
 using PlanWise.Modules.Delivery.Application.Sprints.CompleteSprint;
 using PlanWise.Modules.Delivery.Application.Sprints.CreateSprint;
+using PlanWise.Modules.Delivery.Application.Sprints.GetBurndown;
 using PlanWise.Modules.Delivery.Application.Sprints.GetSprint;
 using PlanWise.Modules.Delivery.Application.Sprints.GetSprints;
+using PlanWise.Modules.Delivery.Application.Sprints.GetVelocity;
 using PlanWise.Modules.Delivery.Application.Sprints.StartSprint;
 using PlanWise.Modules.Delivery.Application.Sprints.UpdateSprint;
 
@@ -36,6 +38,12 @@ public static class SprintEndpoints
 
         group.MapPost("/sprints/{id:guid}/complete", async (Guid id, ISender sender) =>
             ToHttp(await sender.Send(new CompleteSprintCommand(id))));
+
+        group.MapGet("/sprints/{id:guid}/burndown", async (Guid id, ISender sender) =>
+            ToHttp(await sender.Send(new GetSprintBurndownQuery(id))));
+
+        group.MapGet("/projects/{projectId:guid}/velocity", async (Guid projectId, ISender sender) =>
+            ToHttp(await sender.Send(new GetProjectVelocityQuery(projectId))));
     }
 
     private static IResult ToHttp<T>(Result<T> result) =>

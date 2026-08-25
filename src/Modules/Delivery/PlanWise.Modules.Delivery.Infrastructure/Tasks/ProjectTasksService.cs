@@ -63,7 +63,8 @@ internal sealed class ProjectTasksService(DeliveryDbContext dbContext) : IProjec
                 task.Description,
                 task.Priority.ToString(),
                 task.Points,
-                task.Status == ProjectTaskStatus.Done))
+                task.Status == ProjectTaskStatus.Done,
+                task.CompletedAtUtc))
             .ToList();
     }
 

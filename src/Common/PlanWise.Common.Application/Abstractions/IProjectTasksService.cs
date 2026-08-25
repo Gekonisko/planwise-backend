@@ -35,7 +35,8 @@ public sealed record CostEstimationTaskSummary(
     string? Description,
     string Priority,
     int? Points,
-    bool IsDone);
+    bool IsDone,
+    DateTime? CompletedAtUtc);
 
 // Shared by RiskPrediction (due-date/dependency/size heuristics) and BacklogPrioritisation
 // (value/dependency/complexity scoring) — both read the same underlying task shape, just weight

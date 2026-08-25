@@ -40,6 +40,7 @@ public static class CostEstimationModule
             .UseSnakeCaseNamingConvention());
         services.AddScoped<IProjectBudgetRepository, ProjectBudgetRepository>();
         services.AddScoped<ICostEstimateRunRepository, CostEstimateRunRepository>();
+        services.AddScoped<IAppliedReductionRepository, AppliedReductionRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<CostEstimationDbContext>());
         services.AddSingleton<IRateCardProvider, DefaultRateCardProvider>();
 
