@@ -57,6 +57,10 @@ public sealed record TaskInsightSummary(
     int SubtaskTotal,
     int SubtaskDone,
     IReadOnlyList<Guid> PredecessorTaskIds,
-    int BlocksCount);
+    int BlocksCount,
+    // Needed to label whether a task actually slipped: comparing this against DueDate is the only
+    // outcome signal in the system. Stamped when a task first reaches Done and cleared if it ever
+    // moves back off it, so it is only meaningful together with Status.
+    DateTime? CompletedAtUtc);
 
 public sealed record TaskSearchSummary(Guid TaskId, Guid ProjectId, string Key, string Title);

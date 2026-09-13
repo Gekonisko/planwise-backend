@@ -4,13 +4,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PlanWise.Common.Application.Abstractions;
 using PlanWise.Common.Presentation.Endpoints;
+using PlanWise.Modules.RiskPrediction.Application.Abstractions;
 using PlanWise.Modules.RiskPrediction.Application.Abstractions.Authentication;
 using PlanWise.Modules.RiskPrediction.Application.Abstractions.Data;
 using PlanWise.Modules.RiskPrediction.Application.Risks;
+using PlanWise.Modules.RiskPrediction.Application.Training;
 using PlanWise.Modules.RiskPrediction.Domain.Risks;
+using PlanWise.Modules.RiskPrediction.Domain.Training;
 using PlanWise.Modules.RiskPrediction.Infrastructure.Authentication;
 using PlanWise.Modules.RiskPrediction.Infrastructure.Database;
 using PlanWise.Modules.RiskPrediction.Infrastructure.Risks;
+using PlanWise.Modules.RiskPrediction.Infrastructure.Training;
 using PlanWise.Modules.RiskPrediction.Presentation;
 
 namespace PlanWise.Modules.RiskPrediction.Infrastructure;
@@ -34,8 +38,14 @@ public static class RiskPredictionModule
         services.AddScoped<IRiskAssessmentRunRepository, RiskAssessmentRunRepository>();
         services.AddScoped<ITaskRiskAssessmentRepository, TaskRiskAssessmentRepository>();
         services.AddScoped<ISprintForecastRepository, SprintForecastRepository>();
+        services.AddScoped<ITaskFeatureSnapshotRepository, TaskFeatureSnapshotRepository>();
+        services.AddScoped<RiskTrainingDataRecorder>();
         services.AddScoped<IRiskInsightsService, RiskInsightsService>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<RiskPredictionDbContext>());
+
+        // The registered model decides how risk is predicted; everything upstream of here is
+        // model-agnostic. Swapping in a trained model is a one-line change on this registration.
+        services.AddScoped<IRiskPredictionModel, WeightedScorecardRiskModel>();
 
         services.AddScoped<IAsyncJobHandler, RiskAssessmentJobHandler>();
 

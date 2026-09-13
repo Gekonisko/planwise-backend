@@ -1,4 +1,5 @@
 using System.Text.Json;
+using PlanWise.Modules.RiskPrediction.Application.Abstractions;
 using PlanWise.Modules.RiskPrediction.Domain.Risks;
 
 namespace PlanWise.Modules.RiskPrediction.Application.Risks;
@@ -7,7 +8,7 @@ internal static class RiskMappings
 {
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
-    public static string SerializeFeatures(IReadOnlyList<RiskScorer.FeatureContribution> features) =>
+    public static string SerializeFeatures(IReadOnlyList<RiskFeatureContribution> features) =>
         JsonSerializer.Serialize(features, SerializerOptions);
 
     public static IReadOnlyList<FeatureContributionResponse> DeserializeFeatures(string json) =>

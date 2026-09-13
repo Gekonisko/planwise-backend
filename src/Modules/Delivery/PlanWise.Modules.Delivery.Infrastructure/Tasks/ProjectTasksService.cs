@@ -176,6 +176,7 @@ internal sealed class ProjectTasksService(DeliveryDbContext dbContext) : IProjec
             task.Subtasks.Count,
             task.Subtasks.Count(subtask => subtask.IsDone),
             predecessorIds.ToList(),
-            blocksCount);
+            blocksCount,
+            task.CompletedAtUtc);
     }
 }
