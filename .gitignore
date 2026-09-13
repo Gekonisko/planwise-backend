@@ -58,3 +58,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Research studies (research/) -- Python, not part of the .NET build.
+# Derived datasets are regenerable by each study's build_dataset.py and are
+# binary blobs rewritten on every run, so they are not tracked.
+*.parquet
+__pycache__/
+.venv/
+*.pyc

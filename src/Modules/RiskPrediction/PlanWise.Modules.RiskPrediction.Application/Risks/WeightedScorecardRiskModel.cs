@@ -16,12 +16,11 @@ namespace PlanWise.Modules.RiskPrediction.Application.Risks;
 // the implementations that replace this one (an inference call, a model-file load) will need it.
 public sealed class WeightedScorecardRiskModel : IRiskPredictionModel
 {
-    private static readonly string[] FixedAssumptions =
-    [
-        "Risk is scored by a deterministic weighted heuristic (due-date pressure, open blocking dependencies, missing assignee, task size), not a trained statistical or ML model.",
-        "No historical delivery data (actual slip outcomes) exists yet in this system, so the heuristic cannot be calibrated or backtested against real results — weights are fixed, illustrative estimates.",
-        "Sprint forecasts assume each member's configured capacity is available every day of the sprint at a constant rate; holidays, partial availability and mid-sprint scope changes are not modelled."
-    ];
+    private const string ScorecardAssumption =
+        "Risk is scored by a deterministic weighted heuristic (due-date pressure, open blocking dependencies, missing assignee, task size), not a trained statistical or ML model.";
+
+    private const string NoOutcomeDataAssumption =
+        "No historical delivery data (actual slip outcomes) exists yet in this system, so the heuristic cannot be calibrated or backtested against real results — weights are fixed, illustrative estimates.";
 
     public string ModelName => "WeightedScorecard v1";
 
@@ -45,10 +44,14 @@ public sealed class WeightedScorecardRiskModel : IRiskPredictionModel
             .ToList();
 
         // Only members linked to a real user count towards capacity — an invited-but-unregistered
-        // member isn't delivering anything yet.
-        decimal teamCapacityPoints = input.Members
+        // member isn't delivering anything yet. This sums to full-time-equivalents, not points:
+        // turning it into a delivery rate is VelocityEstimator's job.
+        decimal teamFullTimeEquivalents = input.Members
             .Where(member => member.UserId is not null)
             .Sum(member => member.Capacity);
+
+        VelocityEstimator.Estimate velocity =
+            VelocityEstimator.ForProject(input.Sprints, input.Tasks, teamFullTimeEquivalents);
 
         var sprintForecasts = input.Sprints
             .Where(sprint => sprint.State == "Active")
@@ -56,7 +59,7 @@ public sealed class WeightedScorecardRiskModel : IRiskPredictionModel
             {
                 var sprintTasks = input.Tasks.Where(task => task.SprintId == sprint.SprintId).ToList();
                 SprintForecaster.ForecastResult forecast =
-                    SprintForecaster.Forecast(sprint, sprintTasks, teamCapacityPoints, input.Today);
+                    SprintForecaster.Forecast(sprint, sprintTasks, velocity.PointsPerDay, input.Today);
                 return new SprintRiskForecast(
                     sprint.SprintId,
                     forecast.CompletionProbability,
@@ -66,6 +69,20 @@ public sealed class WeightedScorecardRiskModel : IRiskPredictionModel
             })
             .ToList();
 
-        return Task.FromResult(new RiskPredictionResult(taskRisks, sprintForecasts, TrainingWindowDays: 0, FixedAssumptions));
+        string[] assumptions =
+        [
+            ScorecardAssumption,
+            NoOutcomeDataAssumption,
+            DescribeVelocity(velocity)
+        ];
+
+        return Task.FromResult(new RiskPredictionResult(taskRisks, sprintForecasts, TrainingWindowDays: 0, assumptions));
     }
+
+    // The reader has to be able to tell a rate observed over real sprints from one that was assumed,
+    // because the two deserve very different amounts of trust.
+    private static string DescribeVelocity(VelocityEstimator.Estimate velocity) =>
+        velocity.IsMeasured
+            ? $"Sprint forecasts project delivery at {velocity.PointsPerDay:0.##} story points per day, averaged over {velocity.ObservedSprints} completed sprint(s) in this project. The rate is assumed constant: holidays, partial availability and mid-sprint scope changes are not modelled."
+            : $"This project has no completed sprint that delivered points, so there is no measured velocity to project from. Sprint forecasts instead assume {velocity.PointsPerDay:0.##} story points per day, derived from team capacity at a nominal 0.6 points per full-time member per day — an assumption, not a measurement.";
 }

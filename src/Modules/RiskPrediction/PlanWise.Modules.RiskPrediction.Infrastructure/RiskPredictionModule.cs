@@ -44,8 +44,22 @@ public static class RiskPredictionModule
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<RiskPredictionDbContext>());
 
         // The registered model decides how risk is predicted; everything upstream of here is
-        // model-agnostic. Swapping in a trained model is a one-line change on this registration.
-        services.AddScoped<IRiskPredictionModel, WeightedScorecardRiskModel>();
+        // model-agnostic.
+        //
+        // The scorecard remains the default deliberately. The trained model scores about 0.59 ROC
+        // AUC on unseen projects, which is real signal but no landslide over a tuned heuristic, and
+        // its probabilities were calibrated on other organisations' data. Making it opt-in means the
+        // switch can be justified by this system's own captured outcomes — which is exactly what
+        // task_feature_snapshots is accumulating — rather than by the study alone.
+        bool useTrainedModel = configuration.GetValue<bool>("RiskPrediction:UseTrainedModel");
+        if (useTrainedModel)
+        {
+            services.AddScoped<IRiskPredictionModel, TrainedSlipRiskModel>();
+        }
+        else
+        {
+            services.AddScoped<IRiskPredictionModel, WeightedScorecardRiskModel>();
+        }
 
         services.AddScoped<IAsyncJobHandler, RiskAssessmentJobHandler>();
 

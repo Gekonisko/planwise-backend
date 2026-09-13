@@ -2,10 +2,12 @@ using PlanWise.Common.Application.Abstractions;
 
 namespace PlanWise.Modules.RiskPrediction.Application.Risks;
 
-// Velocity here is a constant-rate proxy (team capacity spread evenly across the sprint), not a
-// figure derived from historical sprint velocity: burndown/velocity tracking doesn't exist yet
-// anywhere in Delivery (see planwise-module-roadmap memory), so there is no real trend to project
-// from. p90 is a fixed pessimistic multiplier on the p50 gap, not a real distribution.
+// Projects a sprint forward at a constant daily rate. The rate itself comes from VelocityEstimator
+// — measured from the project's own completed sprints where there are any — and is passed in rather
+// than derived here, so this stays a pure projection and the question of "how fast is this team"
+// lives in exactly one place.
+//
+// p90 is a fixed pessimistic multiplier on the p50 gap, not a real distribution.
 internal static class SprintForecaster
 {
     private const double P90Multiplier = 1.4;
@@ -15,15 +17,14 @@ internal static class SprintForecaster
     public static ForecastResult Forecast(
         SprintInsightSummary sprint,
         IReadOnlyList<TaskInsightSummary> sprintTasks,
-        decimal teamCapacityPoints,
+        decimal dailyVelocityPoints,
         DateOnly today)
     {
         decimal committed = sprintTasks.Sum(task => task.Points ?? 0);
         decimal completed = sprintTasks.Where(task => task.Status == "Done").Sum(task => task.Points ?? 0);
         decimal remaining = Math.Max(0m, committed - completed);
 
-        int sprintLengthDays = Math.Max(1, sprint.EndDate.DayNumber - sprint.StartDate.DayNumber);
-        decimal dailyVelocity = teamCapacityPoints > 0 ? teamCapacityPoints / sprintLengthDays : 0m;
+        decimal dailyVelocity = Math.Max(0m, dailyVelocityPoints);
         int daysRemaining = Math.Max(0, sprint.EndDate.DayNumber - today.DayNumber);
 
         decimal expectedPoints = committed == 0

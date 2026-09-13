@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "modelName": "TawosSprintSlip Logistic v1",
+  "createdUtc": "2026-09-13T20:40:39+00:00",
+  "provenance": {
+    "dataset": "TAWOS (Tawosi, Al-Subaihin, Moussa & Sarro, MSR 2022)",
+    "rows": 19251,
+    "projects": 36,
+    "sprints": 2686,
+    "baseRate": 0.41223832528180354,
+    "trainingWindowDays": 3175
+  },
+  "features": [
+    {
+      "name": "story_point",
+      "median": 3.0,
+      "mean": 1.4925710916307309,
+      "scale": 0.6866843263380799,
+      "coefficient": 0.34737069332550324
+    },
+    {
+      "name": "blocking_links",
+      "median": 0.0,
+      "mean": 0.08928834104452071,
+      "scale": 0.2934121150406409,
+      "coefficient": 0.25224085510221417
+    },
+    {
+      "name": "sprint_issue_count",
+      "median": 22.0,
+      "mean": 3.0115686052892148,
+      "scale": 0.8205901740321362,
+      "coefficient": 0.1452330347171852
+    },
+    {
+      "name": "sprint_story_points",
+      "median": 74.0,
+      "mean": 4.119469709812411,
+      "scale": 1.1053159123933955,
+      "coefficient": -0.4087571796592956
+    },
+    {
+      "name": "sprint_length_days",
+      "median": 14.0,
+      "mean": 2.7608968181301705,
+      "scale": 0.3841501721711727,
+      "coefficient": 0.02348304081978116
+    }
+  ],
+  "transform": "log1p",
+  "intercept": -0.3667384871909064,
+  "calibration": {
+    "kind": "sigmoid",
+    "a": -0.8470809312681972,
+    "b": 0.061896038265494245
+  },
+  "evaluation": {
+    "protocol": "GroupKFold over project_key, 5 folds",
+    "candidates": {
+      "logistic raw      / servable 5": {
+        "roc_auc": 0.5104751504799797,
+        "roc_auc_std": 0.07328640569823656,
+        "brier": 0.24606744051334345,
+        "brier_std": 0.01772725548167715
+      },
+      "logistic log1p    / servable 5": {
+        "roc_auc": 0.587648575583198,
+        "roc_auc_std": 0.030592065307151105,
+        "brier": 0.2402871006424061,
+        "brier_std": 0.018048816693908034
+      },
+      "boosted           / servable 5": {
+        "roc_auc": 0.568620011469432,
+        "roc_auc_std": 0.023814160611159183,
+        "brier": 0.25876302808869545,
+        "brier_std": 0.026776977810290332
+      },
+      "logistic log1p    / structural 7": {
+        "roc_auc": 0.5988142439736726,
+        "roc_auc_std": 0.034953813619871724,
+        "brier": 0.23890358213638993,
+        "brier_std": 0.018266073607208097
+      },
+      "boosted           / structural 7": {
+        "roc_auc": 0.587463321552464,
+        "roc_auc_std": 0.01781743195155782,
+        "brier": 0.2511218945498066,
+        "brier_std": 0.021995041086130065
+      }
+    },
+    "calibrationBrier": {
+      "sigmoid": 0.23999833574725,
+      "isotonic": 0.24129422280939794
+    }
+  }
+}
