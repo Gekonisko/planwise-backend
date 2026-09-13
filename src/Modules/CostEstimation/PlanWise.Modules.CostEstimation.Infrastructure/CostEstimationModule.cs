@@ -42,7 +42,7 @@ public static class CostEstimationModule
         services.AddScoped<ICostEstimateRunRepository, CostEstimateRunRepository>();
         services.AddScoped<IAppliedReductionRepository, AppliedReductionRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<CostEstimationDbContext>());
-        services.AddSingleton<IRateCardProvider, DefaultRateCardProvider>();
+        services.AddScoped<IRateCardProvider, ProjectMemberRateCardProvider>();
 
         services.AddOptions<AnthropicOptions>().BindConfiguration(AnthropicOptions.SectionName);
         services.AddHttpClient<ICostEstimationModel, AnthropicCostEstimationModel>((provider, client) =>

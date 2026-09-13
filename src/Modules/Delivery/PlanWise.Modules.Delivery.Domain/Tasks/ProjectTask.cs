@@ -71,17 +71,20 @@ public sealed class ProjectTask : Entity
         return task;
     }
 
+    // The nullable fields take Optional<T> rather than plain nullables so that "field omitted" and
+    // "field explicitly set to null" stay distinguishable — clearing a sprint, assignee, due date or
+    // estimate is a real user action, and treating null as "no change" made all four impossible.
     public void Update(
         string? title,
         string? description,
         TaskPriority? priority,
-        int? points,
-        Guid? assigneeId,
-        DateOnly? dueDate,
-        Guid? sprintId)
+        Optional<int?> points,
+        Optional<Guid?> assigneeId,
+        Optional<DateOnly?> dueDate,
+        Optional<Guid?> sprintId)
     {
         bool changed = title is not null || description is not null || priority is not null ||
-                       points is not null || assigneeId is not null || dueDate is not null || sprintId is not null;
+                       points.IsSet || assigneeId.IsSet || dueDate.IsSet || sprintId.IsSet;
 
         if (title is not null)
         {
@@ -98,29 +101,55 @@ public sealed class ProjectTask : Entity
             Priority = priority.Value;
         }
 
-        if (points is not null)
+        if (points.IsSet)
         {
-            Points = points;
+            Points = points.Value;
         }
 
-        if (assigneeId is not null)
+        if (assigneeId.IsSet)
         {
-            AssigneeId = assigneeId;
+            AssigneeId = assigneeId.Value;
         }
 
-        if (dueDate is not null)
+        if (dueDate.IsSet)
         {
-            DueDate = dueDate;
+            DueDate = dueDate.Value;
         }
 
-        if (sprintId is not null)
+        if (sprintId.IsSet)
         {
-            SprintId = sprintId;
+            ApplySprint(sprintId.Value);
         }
 
         if (changed)
         {
             Raise(new ProjectTaskUpdatedDomainEvent(Id, ProjectId, Key));
+        }
+    }
+
+    // Sprint membership and board status are two views of the same fact: a task committed to a sprint
+    // belongs on the board, and a task pulled back to the product backlog does not. Without this
+    // coupling a task could sit in a sprint while still holding Status.Backlog, and the board -- which
+    // only renders the three post-backlog columns -- would show it nowhere at all.
+    //
+    // Only the two safe transitions are automated. Promotion happens from Backlog alone, so work
+    // already in progress or done keeps its column when it moves between sprints; demotion happens
+    // from the first column alone, so pulling a started or finished task out of a sprint never
+    // discards that progress.
+    private void ApplySprint(Guid? sprintId)
+    {
+        bool joiningSprint = sprintId is not null && SprintId != sprintId;
+        bool leavingSprint = sprintId is null && SprintId is not null;
+
+        SprintId = sprintId;
+
+        if (joiningSprint && Status == ProjectTaskStatus.Backlog)
+        {
+            Status = ProjectTaskStatus.Todo;
+        }
+        else if (leavingSprint && Status == ProjectTaskStatus.Todo)
+        {
+            Status = ProjectTaskStatus.Backlog;
         }
     }
 

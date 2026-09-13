@@ -31,9 +31,11 @@ public sealed class CostEstimationJobHandler(
     {
         ProjectInfo? projectInfo = await projectAccessService.GetProjectInfoAsync(projectId, cancellationToken);
         IReadOnlyList<CostEstimationTaskSummary> tasks = await projectTasksService.GetCostEstimationTasksAsync(projectId, cancellationToken);
-        IReadOnlyList<RoleRate> rateCard = rateCardProvider.GetRates();
+        ProjectRateCard rateCard = await rateCardProvider.GetRatesAsync(projectId, cancellationToken);
 
-        string inputHash = ComputeInputHash(tasks, rateCard);
+        // The rate card is part of the hash, so re-pricing a member or changing their role
+        // invalidates the cache and the next run genuinely re-estimates.
+        string inputHash = ComputeInputHash(tasks, rateCard.Rates);
 
         CostEstimateRun? latest = await runRepository.GetLatestForProjectAsync(projectId, cancellationToken);
         if (latest is not null && latest.InputHash == inputHash)
@@ -46,7 +48,8 @@ public sealed class CostEstimationJobHandler(
             projectInfo?.ClientName,
             Currency,
             tasks.Where(task => !task.IsDone).ToList(),
-            rateCard);
+            rateCard.Rates,
+            rateCard.IsFromProjectTeam);
 
         CostEstimateResult result = await model.EstimateAsync(prompt, cancellationToken);
 
@@ -73,7 +76,7 @@ public sealed class CostEstimationJobHandler(
                 .Where(task => !task.IsDone)
                 .OrderBy(task => task.TaskId)
                 .Select(task => new { task.TaskId, task.Title, task.Description, task.Priority, task.Points }),
-            RateCard = rateCard.OrderBy(rate => rate.Role).Select(rate => new { rate.Role, rate.HourlyRate, rate.Currency })
+            RateCard = rateCard.OrderBy(rate => rate.Role).Select(rate => new { rate.Role, rate.HourlyRate, rate.Headcount, rate.Currency })
         };
 
         byte[] bytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(canonical));

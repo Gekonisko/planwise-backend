@@ -11,6 +11,8 @@ internal sealed class UpdateTaskCommandValidator : AbstractValidator<UpdateTaskC
         RuleFor(command => command.Priority)
             .Must(priority => Enum.TryParse<Domain.Tasks.TaskPriority>(priority, ignoreCase: true, out _))
             .When(command => command.Priority is not null);
-        RuleFor(command => command.Points).GreaterThanOrEqualTo(0).When(command => command.Points is not null);
+        RuleFor(command => command.Points.Value)
+            .GreaterThanOrEqualTo(0)
+            .When(command => command.Points is { IsSet: true, Value: not null });
     }
 }

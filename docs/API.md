@@ -226,7 +226,11 @@ Full `TaskResponse` including `subtasks` and `links` (still no `comments`).
 { "title": null, "description": null, "priority": null, "points": null,
   "assigneeId": null, "dueDate": null, "sprintId": null, "labelIds": null }
 ```
-Partial-update (non-null wins), same "can't clear back to null" caveat as `PATCH /projects/{id}` — **except** `labelIds`, where an explicit `[]` does clear all labels (a list can distinguish "untouched" from "emptied" where a scalar can't). `sprintId` here is how a backlog item gets scheduled into a sprint — there's no separate endpoint for it.
+Partial-update. `title` and `priority` follow the "non-null wins, can't clear back to null" rule (they're non-nullable on the entity, so clearing them is meaningless). `points`, `assigneeId`, `dueDate` and `sprintId` **can** be cleared: they bind to `Optional<T>`, which distinguishes an omitted property from an explicit `null`, so sending `"assigneeId": null` unassigns and omitting it leaves the assignee alone. `labelIds` likewise treats an explicit `[]` as "clear all labels".
+
+`sprintId` is how a backlog item gets scheduled into a sprint — there's no separate endpoint for it — and it moves `status` with it, because sprint membership and board placement are the same fact seen twice:
+- Setting a sprint on a task whose status is `Backlog` promotes it to `Todo`, so it shows up on the board. A task already `InProgress`/`Done` keeps its column when moved between sprints.
+- Clearing the sprint on a `Todo` task demotes it back to `Backlog`. An `InProgress`/`Done` task keeps its column, so pulling it out of a sprint never discards progress.
 
 ### `DELETE /tasks/{id}`
 Hard delete (unlike projects, which archive). `204`.
@@ -402,11 +406,19 @@ Full run history, newest first — every run is persisted (cache hits are *not* 
 ```
 `PUT` body: `{ "amount": 50000, "currency": "USD" }`. `GET` on a project with no budget set returns a zero default (`amount: 0`, `updatedAtUtc: null`) rather than `404`. Owned by `CostEstimation`, not `WorkspaceManagement` — reverses an earlier roadmap note; the endpoint lives with the screen it serves (same reasoning as Workload living in Delivery), not with the `Project` entity.
 
-### `GET /reference/rates`
+### `GET /projects/{projectId}/rates`
 ```json
-[{ "role": "Developer", "hourlyRate": 75, "currency": "USD" }]
+{ "rates": [{ "role": "Backend Engineer", "hourlyRate": 106.67, "headcount": 1.5, "currency": "USD",
+              "members": [{ "email": "rita@x.com", "role": "Backend Engineer", "capacity": 1.0, "hourlyRate": 95 },
+                          { "email": "sam@x.com",  "role": "Backend Engineer", "capacity": 0.5, "hourlyRate": 130 }] }],
+  "isFromProjectTeam": true,
+  "unpricedMembers": [{ "email": "new@x.com", "role": "Analyst", "capacity": 1.0, "hourlyRate": 0 }] }
 ```
-A fixed, hardcoded role→rate table (`DefaultRateCardProvider`) — no `PUT` exists in the spec for it, and none is built. Five roles seeded: Developer, Lead Developer, Designer, QA Engineer, Project Manager.
+The rate card is **derived from the project's own members** (`ProjectMemberRateCardProvider`), not a global table: members are grouped by `role` (case-insensitively, since role is free text), `hourlyRate` is the capacity-weighted blend of that role's members, and `headcount` is the sum of their capacity fractions. There is no write endpoint — you change the card by editing members via `PUT /projects/{projectId}/members/{memberId}`.
+
+Each rate line carries the `members` it was blended from, so a client can show *why* a role's rate is what it is without re-deriving the grouping and weighting rules. `unpricedMembers` lists everyone excluded from every line for having no hourly rate (or no role) — they contribute nothing to the estimate, and are returned explicitly so the UI can name them rather than silently dropping them.
+
+If nobody on the project has an hourly rate yet, a single placeholder line (`Team member`, 75/h) is returned with `isFromProjectTeam: false`, and the estimator is told in the prompt to flag the resulting costs as indicative only.
 
 ### `GET /cost-estimates/{id}/burn`
 ```json
@@ -430,8 +442,8 @@ Both `204`-equivalent (return the updated `ReductionsResponse`, same shape as th
 
 **Not implemented / gaps, stated plainly**:
 - No genuine "historical actuals" (real spend/time-tracking data) exist anywhere in the system — both the estimate's own `assumptions` and `burn`'s proxy-based `actualSpendSeries` say so explicitly rather than inventing figures.
-- `GET /reference/rates` has no write endpoint (matches the literal spec, which also has none).
-- Rate card is global, not per-project or per-org configurable.
+- The rate card has no write endpoint of its own; it's edited indirectly through project members' `role`/`hourlyRate`.
+- Rate card is per-project (derived from members) but not per-org, and currency is fixed at USD.
 
 ---
 
@@ -609,7 +621,7 @@ Also `Notifications`. No search index: queries every project the caller can acce
 ] }
 ```
 
-### `GET /reference/rates`
+### `GET /projects/{projectId}/rates`
 Built in `CostEstimation` — see section 6.
 
 ### `GET /me/preferences` / `PUT /me/preferences`

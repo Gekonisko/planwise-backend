@@ -81,10 +81,22 @@ internal sealed class AnthropicCostEstimationModel(HttpClient httpClient, IOptio
         {
             ["model"] = options.Value.Model,
             ["max_tokens"] = 4096,
+            // The role constraint is load-bearing: the rate card is this project's actual staff, and
+            // labour lines for roles nobody on the project fills are what made earlier estimates read
+            // as arbitrary. Rates are given, not guessed, so the model may only choose the hours.
             ["system"] = "You are a cost estimation assistant for software delivery projects. Produce a realistic, " +
                          "well-reasoned cost estimate from the backlog and rate card provided, plus a short list of " +
                          "concrete cost-reduction recommendations (e.g. descoping a low-priority item, reducing a " +
-                         "role's allocated hours, deferring non-labour spend) each with an estimated dollar saving. " +
+                         "role's allocated hours, deferring non-labour spend) each with an estimated dollar saving.\n\n" +
+                         "Hard constraints on labourLines:\n" +
+                         "- Use ONLY the roles listed in the rate card, spelled exactly as given. Never invent a role " +
+                         "the project does not staff, and never split or merge the listed roles.\n" +
+                         "- Use the exact hourlyRate given for each role. Do not substitute your own market rate.\n" +
+                         "- cost must equal hours x hourlyRate for every line.\n" +
+                         "- Each role's headcount is the full-time-equivalent people available in it. Keep the hours " +
+                         "you allocate to a role proportionate to that capacity, and say so in your assumptions if a " +
+                         "role is staffed too thinly for the backlog it has to absorb.\n" +
+                         "- Omit a role entirely rather than padding it with token hours.\n\n" +
                          "Always call the submit_cost_estimate tool with your answer.",
             ["messages"] = new JsonArray
             {
@@ -106,10 +118,22 @@ internal sealed class AnthropicCostEstimationModel(HttpClient httpClient, IOptio
         builder.AppendLine(CultureInfo.InvariantCulture, $"Project: {prompt.ProjectName}{clientSuffix}");
         builder.AppendLine(CultureInfo.InvariantCulture, $"Currency: {prompt.Currency}");
         builder.AppendLine();
-        builder.AppendLine("Role rate card:");
+        builder.AppendLine(prompt.RateCardIsFromProjectTeam
+            ? "Project team and rate card (these are the only roles staffed on this project):"
+            : "Rate card (PLACEHOLDER — no member of this project has an hourly rate set yet):");
         foreach (RoleRate rate in prompt.RateCard)
         {
-            builder.AppendLine(CultureInfo.InvariantCulture, $"- {rate.Role}: {rate.HourlyRate} {rate.Currency}/hour");
+            builder.AppendLine(
+                CultureInfo.InvariantCulture,
+                $"- {rate.Role}: {rate.HourlyRate} {rate.Currency}/hour, {rate.Headcount} FTE available");
+        }
+
+        if (!prompt.RateCardIsFromProjectTeam)
+        {
+            builder.AppendLine();
+            builder.AppendLine("Because the rate card is a placeholder rather than the real team, state clearly in " +
+                               "your assumptions that these costs are indicative only until members are given roles " +
+                               "and hourly rates.");
         }
 
         builder.AppendLine();

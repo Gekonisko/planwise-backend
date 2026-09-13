@@ -1,4 +1,5 @@
 using PlanWise.Common.Application.Messaging;
+using PlanWise.Common.Domain;
 using PlanWise.Modules.Delivery.Application.Tasks;
 
 namespace PlanWise.Modules.Delivery.Application.Tasks.UpdateTask;
@@ -8,8 +9,8 @@ public sealed record UpdateTaskCommand(
     string? Title,
     string? Description,
     string? Priority,
-    int? Points,
-    Guid? AssigneeId,
-    DateOnly? DueDate,
-    Guid? SprintId,
+    Optional<int?> Points,
+    Optional<Guid?> AssigneeId,
+    Optional<DateOnly?> DueDate,
+    Optional<Guid?> SprintId,
     IReadOnlyList<Guid>? LabelIds) : ICommand<TaskResponse>;

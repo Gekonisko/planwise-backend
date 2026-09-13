@@ -14,8 +14,10 @@ public static class RateCardEndpoints
     {
         RouteGroupBuilder group = app.MapGroup("/api/v1").RequireAuthorization();
 
-        group.MapGet("/reference/rates", async (ISender sender) =>
-            ToHttp(await sender.Send(new GetRatesQuery())));
+        // Project-scoped: the rate card is built from this project's own members, so there is no
+        // meaningful project-independent version of it.
+        group.MapGet("/projects/{projectId:guid}/rates", async (Guid projectId, ISender sender) =>
+            ToHttp(await sender.Send(new GetRatesQuery(projectId))));
     }
 
     private static IResult ToHttp<T>(Result<T> result) =>

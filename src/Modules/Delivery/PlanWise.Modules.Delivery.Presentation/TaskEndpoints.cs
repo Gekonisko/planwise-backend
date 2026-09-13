@@ -95,14 +95,16 @@ public static class TaskEndpoints
         int? BusinessValue,
         IReadOnlyList<Guid>? LabelIds);
 
+    // Optional<T> on the nullable fields keeps "omitted" distinct from "explicitly null", so a
+    // client can clear an estimate, assignee, due date or sprint instead of only ever setting them.
     public sealed record TaskUpdateRequest(
         string? Title,
         string? Description,
         string? Priority,
-        int? Points,
-        Guid? AssigneeId,
-        DateOnly? DueDate,
-        Guid? SprintId,
+        Optional<int?> Points,
+        Optional<Guid?> AssigneeId,
+        Optional<DateOnly?> DueDate,
+        Optional<Guid?> SprintId,
         IReadOnlyList<Guid>? LabelIds);
 
     public sealed record ReorderRequest(IReadOnlyList<Guid> TaskIds);
