@@ -369,7 +369,7 @@ Section 9 (Schedule optimisation) is built separately — see below, including `
 
 ## 6. Cost estimation
 
-Module: `CostEstimation` (Postgres schema `cost_estimation`). The only section that calls a real external model — everything else "intelligence"-shaped in this codebase (the Scheduling optimiser, below) is a deterministic heuristic. Uses the same shared `common.async_jobs` job contract as section 9: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
+Module: `CostEstimation` (Postgres schema `cost_estimation`). The only section that calls a real external LLM. Of the other "intelligence"-shaped sections, RiskPrediction can serve a trained model (section 7) and the Scheduling optimiser is a real constraint solver (section 9); BacklogPrioritisation remains a heuristic. Uses the same shared `common.async_jobs` job contract as section 9: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
 
 **Setup**: needs `CostEstimation:Anthropic:ApiKey` — see the note at the top of this document. Model defaults to `claude-sonnet-5` (`CostEstimation:Anthropic:Model`), calling the real Anthropic Messages API directly over `HttpClient` (no SDK dependency) with a forced tool-use call so the response is reliably structured JSON rather than parsed out of prose. One retry is built in for the rare case where the model's output doesn't strictly match the declared schema on the first attempt (observed live during development — not hypothetical); a second miss surfaces as a real job failure.
 
@@ -449,7 +449,7 @@ Both `204`-equivalent (return the updated `ReductionsResponse`, same shape as th
 
 ## 7. Risk and delay prediction
 
-Module: `RiskPrediction` (Postgres schema `risk_prediction`). Labelled `ML` in the spec, but — like the Scheduling optimiser — this is a deterministic weighted heuristic (`WeightedScorecard v1`), not a trained statistical or ML model: there is no historical slip-outcome data anywhere in this system to fit or backtest a real model against, and every result's `explanation` says so explicitly rather than implying otherwise. Uses the same shared `common.async_jobs` job contract: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
+Module: `RiskPrediction` (Postgres schema `risk_prediction`). Two models are available behind `IRiskPredictionModel`, and the run's `modelVersion` says which produced it. The default `WeightedScorecard v1` is a deterministic weighted heuristic with `trainingWindowDays: 0`. Setting `RiskPrediction:UseTrainedModel=true` selects `TawosSprintSlip Logistic v1`, a logistic regression fitted offline on 19,251 sprint-committed issues from 36 open-source projects (see `research/sprint-slip-model/`), which reports a real training window and scores ~0.59 ROC AUC on unseen projects. Only *task slip probability* is learned either way — sprint forecasts and day impact remain projections, and every result's `assumptions` array says so explicitly rather than implying otherwise. Uses the same shared `common.async_jobs` job contract: `POST .../run` → `202` + job id, poll `GET /jobs/{id}`.
 
 **Scoring, stated plainly**: each open task is scored 0–1 by summing fixed weights for whichever risk factors apply — overdue (0.35) or due within 3 days (0.20), open blocking dependencies (0.10 each, capped at 0.30), no assignee (0.15), and large scope ≥8 points (up to 0.20). `dayImpact` is `probability × max(1, points/2)` (or 3 days if unestimated). Sprint forecasts assume each member's configured `Capacity` (points) is available at a constant daily rate across the sprint — there's no real velocity history to project from (burndown/velocity aren't built yet either), so this is a proxy, not a trend.
 
@@ -568,11 +568,11 @@ Same as `apply`, but only for the listed assignment ids (from the proposal's `as
 
 ### `GET /schedule/proposals/{id}/explanation`
 ```json
-{ "id": "guid", "modelName": "GreedyCapacityBalancer v1",
-  "objective": "Balance workload for unassigned backlog tasks across project members by remaining capacity, preferring a member whose skill tags match the task's title",
-  "constraintsHonoured": ["Existing assignments on already-assigned tasks were not changed", "A member whose skill tags matched the task's title was preferred over one with no match", "..."],
+{ "id": "guid", "modelName": "CpSatScheduleOptimiser v1",
+  "objective": "Minimise the project's finish date (makespan) subject to dependency order, one task at a time per member and capacity-scaled durations; then reduce lateness against due dates, then prefer members whose skill tags match the task's title",
+  "constraintsHonoured": ["Dependency order is enforced: no task starts before every unfinished predecessor has finished", "No member is given two tasks at the same time", "The solution is proven optimal for the stated objective", "..."],
   "constraintsRelaxed": ["Skill matching is a title-substring heuristic, not true competency matching — no task carries a structured required-skill field", "..."],
-  "expectedGain": "Reduces max/min assigned-points imbalance across members from 4 to 0; 2 of 3 assignment(s) matched on skill tags",
+  "expectedGain": "Project finishes in 8 day(s) (around 2026-09-21), 4 day(s) sooner than the greedy load-balancer's assignment of the same work. 3 assignment(s) proposed, 0 matching on skill tags.",
   "generatedAtUtc": "2026-08-23T12:36:53Z" }
 ```
 
@@ -639,7 +639,7 @@ Hosted centrally in `Common` (`ProjectHub`, mapped at `/hubs/project/{id:guid}`)
 ## What's not implemented at all
 
 Every endpoint in the literal spec now has a real implementation — nothing is a stub or a placeholder. What's left is deliberate simplification, stated in its own section above rather than silently assumed, plus one methodology gap:
-- RiskPrediction, BacklogPrioritisation, and the Scheduling optimiser are all deterministic heuristics, not trained/real ML models (sections 7, 8, 9).
+- BacklogPrioritisation is a deterministic heuristic, not a trained model (section 8). RiskPrediction ships both a heuristic and a trained logistic model, the heuristic being the default (section 7). The Scheduling optimiser is a real OR-Tools CP-SAT constraint solver, with the old greedy balancer kept as its baseline and its fallback (section 9).
 - Sprint/velocity forecasts (sections 7, 9) and cost `burn` (section 6) use proxies — a constant-rate member-`Capacity` assumption for forecasts, and a points-completed-so-far proxy for actual spend — in place of real historical burndown/velocity/spend-tracking data, none of which exists anywhere in this system.
 - Skill matching (section 9) is a title-substring heuristic against a member's own tags, not true competency matching — no task carries a structured required-skill field.
 - Search (section 10) has no real index — an N+1 query over every accessible project. Mentions are a best-effort `@handle` regex scan, not a real mention system.

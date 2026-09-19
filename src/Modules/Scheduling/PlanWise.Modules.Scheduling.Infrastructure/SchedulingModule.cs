@@ -6,6 +6,7 @@ using PlanWise.Common.Application.Abstractions;
 using PlanWise.Modules.Scheduling.Application;
 using PlanWise.Modules.Scheduling.Application.Abstractions.Authentication;
 using PlanWise.Modules.Scheduling.Application.Abstractions.Data;
+using PlanWise.Modules.Scheduling.Application.Abstractions;
 using PlanWise.Modules.Scheduling.Application.Optimisation;
 using PlanWise.Modules.Scheduling.Domain.Milestones;
 using PlanWise.Modules.Scheduling.Domain.Optimisation;
@@ -40,6 +41,24 @@ public static class SchedulingModule
         services.AddScoped<IScheduleItemRepository, ScheduleItemRepository>();
         services.AddScoped<IScheduleProposalRepository, ScheduleProposalRepository>();
         services.AddScoped<IUnitOfWork>(provider => provider.GetRequiredService<SchedulingDbContext>());
+        // The registered optimiser decides how assignments are chosen; the job handler, the proposal
+        // aggregate and the apply endpoints are all indifferent to it.
+        //
+        // CP-SAT is the default here, unlike RiskPrediction's trained model. The difference is that a
+        // solver optimises the stated objective directly rather than estimating something — it cannot
+        // be worse than the greedy baseline on makespan, and when it cannot solve at all it says so
+        // and hands back the greedy result. Set RiskPrediction-style opt-out via
+        // Scheduling:UseConstraintSolver=false to pin the old greedy behaviour.
+        bool useSolver = configuration.GetValue("Scheduling:UseConstraintSolver", defaultValue: true);
+        if (useSolver)
+        {
+            services.AddScoped<IScheduleOptimisationModel, CpSatScheduleOptimiser>();
+        }
+        else
+        {
+            services.AddScoped<IScheduleOptimisationModel, GreedyCapacityBalancer>();
+        }
+
         services.AddScoped<IAsyncJobHandler, ScheduleOptimisationJobHandler>();
 
         return services;
