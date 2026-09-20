@@ -1,0 +1,1592 @@
+{
+  "StartedUtc": "2026-09-19T19:23:31.3754534Z",
+  "CostModelName": "claude-sonnet-5",
+  "PrioritisationModelName": "claude-opus-5",
+  "Repetitions": 5,
+  "PrimaryRepetitions": 10,
+  "AgentTurnBudget": 6,
+  "CostAgentTurnBudget": 4,
+  "CostRuns": [
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-single-shot",
+      "Attempt": 1,
+      "ElapsedSeconds": 61.018496,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 5986,
+        "OutputTokens": 5394,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 253000,
+        "ComponentsSum": 290975,
+        "SumRelativeDeviation": 0.150098814229249,
+        "PriorityBreakdownRelativeDeviation": 0.0757905138339921,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 3373,
+        "AssumptionCount": 10,
+        "ReductionCount": 6,
+        "NonLabourCount": 5,
+        "HoursByRole": {
+          "Team member": 3373
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic",
+            "Percentile": 20,
+            "Total": 195000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 253000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic",
+            "Percentile": 80,
+            "Total": 330000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 3373,
+            "HourlyRate": 75,
+            "Cost": 252975
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Staging/CI infrastructure and cloud hosting (staging + prod slots) for pipeline setup",
+            "Amount": 3000
+          },
+          {
+            "Description": "Stripe integration testing, sandbox and PCI-related tooling",
+            "Amount": 2000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / temporary environment for 400k+2M record migration",
+            "Amount": 5000
+          },
+          {
+            "Description": "Third-party accessibility audit (WCAG 2.2 AA validation)",
+            "Amount": 3000
+          },
+          {
+            "Description": "Contingency buffer (~10% of labour) for a single-FTE, placeholder-rate estimate",
+            "Amount": 25000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 51750
+          },
+          {
+            "Priority": "High",
+            "Total": 96450
+          },
+          {
+            "Priority": "Medium",
+            "Total": 84450
+          },
+          {
+            "Priority": "Low",
+            "Total": 39525
+          }
+        ],
+        "Assumptions": [
+          "The rate card is a PLACEHOLDER: a single 'Team member' role at 75 USD/hour with 1 FTE available. All costs are therefore purely indicative until real roles (e.g. Backend Engineer, Frontend Engineer, QA, DevOps, PM) and their market hourly rates are assigned to named team members.",
+          "No historical actuals (real spend data) exist for this project yet; this estimate is built solely from backlog story points converted to effort hours using an industry-standard assumption of ~6.5-7 hours of delivery effort per story point (covering design, build, test, review, and deployment), which is itself an assumption given the lack of team composition detail.",
+          "With only 1 FTE available on the single placeholder role, the team is staffed far too thinly to deliver all 24 backlog items in parallel or within a short timeframe; total estimated effort of ~3,373 hours represents roughly 1.9 person-years of work for one full-time person, implying a calendar duration of ~20+ months if no additional headcount is added. This is flagged as a major staffing risk.",
+          "Story points were converted using a rough mapping: 1 point ≈ 6.5 hours, adjusted upward slightly for high-complexity/high-risk items (e.g. legacy data migration, payment integration, multi-currency) to reflect integration, testing and compliance overhead not captured by points alone.",
+          "Priority breakdown sums labour cost only, allocated pro-rata by each task's story points within its priority band, using the single Team member rate.",
+          "Non-labour costs are rough placeholders for infrastructure, third-party tooling, and audit support commonly needed for these backlog items (CI/staging environment, Stripe sandbox, data migration tooling, accessibility audit) plus a general contingency buffer given the high uncertainty of a placeholder rate card.",
+          "Total story points across the backlog: 5+8+8+13+8+5+13+21+8+8+5+5+8+13+8+5+8+13+8+8+5+8+5+8 = 205 points, translating to ~3,373 hours of effort at ~16.45 hours/point average (higher for complex urgent/high items like PW-7, PW-8, PW-14).",
+          "Legacy data migration (PW-8, 21 points) and Payment provider integration (PW-7, 13 points) are treated as higher-risk/higher-effort-per-point items due to real-world integration, data-quality and compliance complexity beyond typical story-point estimation.",
+          "Scenario range (optimistic/most likely/pessimistic) reflects uncertainty inherent in point-to-hour conversion and the unresolved rate card/staffing situation, not variance in scope.",
+          "GDPR (PW-9) and two-factor authentication (PW-17) are treated as High priority compliance/security items requiring careful implementation and testing, consistent with their listed priority."
+        ],
+        "Reasoning": "\"Effort was derived from the 24 backlog items' story points (total 205 points) using an approximate conversion of story points to delivery hours (~16.45 hours/point on average), adjusted upward for complex items such as legacy data migration, payment integration and multi-currency support to reflect real-world integration and compliance overhead beyond a linear points-to-hours mapping. This produced a most-likely total of ~3,373 hours. Because the rate card contains only one placeholder role ('Team member' at 75 USD/hour, 1 FTE), all effort was costed against that single line, producing a most-likely labour cost of ~253,000 USD. Non-labour costs were added for infrastructure, third-party tooling and an audit for accessibility compliance, plus a contingency buffer given the high uncertainty from the placeholder rate card and single-FTE staffing constraint. Three scenarios (20th/50th/80th percentile) were provided to reflect estimation uncertainty: the optimistic case assumes lower per-point effort and no major surprises in legacy migration or payment integration; the pessimistic case assumes migration and integration complexity runs higher than typical, plus schedule inefficiencies from single-FTE staffing (context switching, no parallelism). Priority breakdown apportions labour cost across Urgent/High/Medium/Low bands based on each task's share of story points within that band. This estimate should be treated as a rough order-of-magnitude figure only, to be revisited once actual roles, rates and headcount are defined and once any historical actuals become available.\"",
+        "Reductions": [
+          {
+            "Id": "4d98e356-ca59-4425-baa4-146055590eed",
+            "Description": "Descope Admin back-office for support staff (PW-18, Low priority, 13 points) — defer to a later phase; support agents can use existing DB tools/read replicas in the interim.",
+            "Saving": 16000,
+            "Effect": "Removes ~13 points (~214 hours) of build/test effort from the initial delivery scope.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "52faddaa-ea34-48d4-ad22-6df771e3af51",
+            "Description": "Defer Usage analytics and reporting (PW-19, Low priority, 8 points) until after go-live, since it has no dependency on core customer-facing flows.",
+            "Saving": 10000,
+            "Effect": "Removes ~8 points (~132 hours) from the current backlog scope; can be picked up in a later iteration.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "752fdc0a-af2f-45f6-9195-aa84e45ab405",
+            "Description": "Defer Contract tests against the helpdesk API (PW-23, Low priority, 5 points) until the helpdesk integration is stabilised, relying on manual smoke tests in the interim.",
+            "Saving": 6000,
+            "Effect": "Removes ~5 points (~82 hours) of automation effort; introduces some short-term regression risk on the helpdesk integration.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "d3e4ae29-43e5-455b-a60c-126382184dab",
+            "Description": "Reduce scope of Multi-currency support (PW-14, 13 points) to two currencies (USD, EUR) instead of three (USD, EUR, PLN) for initial launch, adding PLN later if needed.",
+            "Saving": 8000,
+            "Effect": "Cuts roughly a third of the FX/settlement logic and associated test matrix for this task.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "b8981e98-5fdc-46eb-8c09-a6dc4ee153a5",
+            "Description": "Delay Decommission of the legacy portal (PW-24, Low priority, 8 points) until after the new portal has been live and stable for a full billing cycle, avoiding parallel cutover risk and rework.",
+            "Saving": 10000,
+            "Effect": "Removes ~8 points (~132 hours) from the current phase; legacy infra costs continue temporarily but no double-migration risk.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "b017b985-e98f-47e0-ab32-765549721829",
+            "Description": "Trim third-party accessibility audit to an internal automated-tooling pass (e.g. axe-core in CI) instead of a paid external WCAG 2.2 AA audit, reserving the external audit for closer to go-live.",
+            "Saving": 3000,
+            "Effect": "Removes the external audit non-labour line for this phase; adds a small residual compliance risk that should be revisited before public launch.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-single-shot",
+      "Attempt": 2,
+      "ElapsedSeconds": 31.0583831,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2993,
+        "OutputTokens": 2684,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 216000,
+        "ComponentsSum": 228000,
+        "SumRelativeDeviation": 0.05555555555555555,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2880,
+        "AssumptionCount": 9,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 2880
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic (best case, high productivity, no major surprises)",
+            "Percentile": 20,
+            "Total": 172500,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most Likely (expected case with normal friction)",
+            "Percentile": 50,
+            "Total": 216000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic (integration issues, migration surprises, rework)",
+            "Percentile": 80,
+            "Total": 280000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2880,
+            "HourlyRate": 75,
+            "Cost": 216000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / sandbox testing (assumed negligible direct cost, transactional fees excluded)",
+            "Amount": 0
+          },
+          {
+            "Description": "Cloud hosting/staging environment setup (CI/CD, staging infra) - indicative allowance",
+            "Amount": 3000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing (assumed one-time)",
+            "Amount": 5000
+          },
+          {
+            "Description": "Contingency buffer for third-party/API costs (email service, search, tracing tools)",
+            "Amount": 4000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 40500
+          },
+          {
+            "Priority": "High",
+            "Total": 79500
+          },
+          {
+            "Priority": "Medium",
+            "Total": 76500
+          },
+          {
+            "Priority": "Low",
+            "Total": 19500
+          }
+        ],
+        "Assumptions": [
+          "The rate card is a PLACEHOLDER: only one generic 'Team member' role at $75/hr with 1 FTE is defined. No real roles (e.g. developer, QA, PM, designer) or differentiated rates exist yet. All costs below are indicative only and MUST be revisited once the client assigns real roles and hourly rates to team members.",
+          "With only 1 FTE (a single 'Team member') available at 75 USD/hr, and 24 backlog items totalling 189 story points, the team is severely understaffed relative to the backlog. Assuming ~1 point = ~15 hours of effort (a common rough translation for a small full-stack Angular/API team), total estimated effort is ~2835-2880 hours, i.e. ~1.4-1.5 years of continuous solo full-time work for one person, ignoring vacation, illness, or context-switching overhead.",
+          "No historical actuals (real spend data) are available for this project yet. This estimate is built purely from backlog point sizing and the placeholder rate card, not from empirical velocity or cost data. Actuals should replace these assumptions as soon as real sprints are completed.",
+          "Story points were converted to hours using a flat ratio of ~15 hours/point as a rough industry heuristic for a single generalist handling full-stack + testing + deployment work solo; this is a rough approximation given no team velocity history exists.",
+          "Because there is only one FTE, all work is inherently serialized; the point estimate assumes no parallelism, so the 3 scenarios reflect variance in per-task efficiency and rework/surprises (e.g., legacy migration, Stripe integration) rather than differences in team size.",
+          "Non-labour costs are indicative placeholders for infrastructure, migration tooling and third-party services; actual figures depend on vendor selection not yet made.",
+          "Priority breakdown cost was apportioned from total labour cost in the most-likely scenario, weighted by each task's story points within its priority group.",
+          "PW-8 (Legacy data migration, 21 points) and PW-7 (Payment integration, 13 points) are the highest-risk, highest-effort items and are the primary drivers of the pessimistic scenario due to potential data quality issues and third-party integration friction.",
+          "Given the single-FTE constraint, delivering the full backlog end-to-end in a reasonable timeframe is unrealistic without additional hires; this estimate assumes the client either accepts a much longer timeline or plans to add headcount/roles to the rate card before work begins."
+        ],
+        "Reasoning": "Backlog was translated to hours using story points x ~15 hrs/point (a rough proxy given no velocity data), producing ~2835-2880 hours of total effort across all 24 tasks. Since the only defined role is a single 'Team member' at $75/hr with 1 FTE, all labour was costed under that one line, making the total labour cost roughly hours x $75. Three scenarios (P20/P50/P80) reflect uncertainty in per-task effort due to the high-risk items (legacy migration, Stripe payments, RBAC, multi-currency) and the fact that a lone generalist absorbs all delivery risk with no parallelism or specialization. Non-labour costs are small, indicative placeholders for infra, migration tooling and third-party service allowances. Priority breakdown apportions the most-likely total labour cost across Urgent/High/Medium/Low buckets by summing story points per priority and scaling proportionally. Given the severe FTE-to-backlog mismatch, the estimate strongly assumes the client will add real, differentiated roles to the rate card before delivery starts; until then, all numbers are directional only.",
+        "Reductions": [
+          {
+            "Id": "09e3e0a9-c23a-4db6-ad98-bfed3c55c802",
+            "Description": "Descope Low-priority items (PW-12 Support ticket submission, PW-18 Admin back-office, PW-19 Usage analytics, PW-23 Contract tests, PW-24 Decommission legacy portal) from this phase and defer to a later release; total 39 points removed.",
+            "Saving": 43875,
+            "Effect": "Removes ~585 hours (39 pts x 15 hrs) of Team member time at $75/hr from scope, reducing total labour cost and shortening delivery timeline by roughly 3-4 months given single-FTE staffing.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "f7bf05a3-e460-4b5b-8e3d-685dca3137eb",
+            "Description": "Simplify Multi-currency support (PW-14, 13 pts) to a single-currency MVP (USD only) for launch, adding EUR/PLN later once core portal is stable.",
+            "Saving": 11250,
+            "Effect": "Cuts estimated effort for this task roughly in half (from ~195 hrs to ~90 hrs), saving ~105 hrs at $75/hr; reduces integration and FX-rate complexity risk in the pessimistic scenario.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "5c361a08-08f4-4ab5-8cd0-0fcb9caaee11",
+            "Description": "Reduce Accessibility pass (PW-15, 8 pts) scope to only the customer-facing critical flows (login, dashboard, invoices, payments) rather than all screens, deferring back-office/admin screens until PW-18 is built.",
+            "Saving": 6000,
+            "Effect": "Cuts ~80 hrs of effort at $75/hr by narrowing the WCAG audit surface for this phase.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "938947e4-cc6a-4a28-b530-0e848ce00e6a",
+            "Description": "Add real, differentiated roles (e.g. mid-level developer, QA, PM) to the rate card and increase headcount beyond 1 FTE before committing to a delivery date, rather than trying to compress the single-FTE timeline with overtime.",
+            "Saving": 0,
+            "Effect": "This does not reduce total dollar cost directly but prevents an unrealistic single-person delivery risk; it converts calendar-time risk into a staffing decision. Strongly recommended before finalizing any fixed-price commitment.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "58f5cb2e-0d8c-4bed-823e-f5b8c17db133",
+            "Description": "Defer Legacy data migration (PW-8, 21 pts) to a follow-on project phase after the new portal launches with manual/CSV import fallback, since it is the single largest and riskiest item.",
+            "Saving": 23625,
+            "Effect": "Removes ~315 hrs (21 pts x 15 hrs) from this phase's labour cost and eliminates the biggest driver of the pessimistic-scenario cost variance; migration can be scoped and priced separately once legacy schema quality is better understood.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-single-shot",
+      "Attempt": 3,
+      "ElapsedSeconds": 31.2630586,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2993,
+        "OutputTokens": 2826,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 3,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 216000,
+        "ComponentsSum": 661800,
+        "SumRelativeDeviation": 2.063888888888889,
+        "PriorityBreakdownRelativeDeviation": 0.09416666666666666,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 8784,
+        "AssumptionCount": 8,
+        "ReductionCount": 6,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 8784
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic",
+            "Percentile": 20,
+            "Total": 172800,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 216000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic",
+            "Percentile": 80,
+            "Total": 270000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2304,
+            "HourlyRate": 75,
+            "Cost": 172800
+          },
+          {
+            "Role": "Team member",
+            "Hours": 2880,
+            "HourlyRate": 75,
+            "Cost": 216000
+          },
+          {
+            "Role": "Team member",
+            "Hours": 3600,
+            "HourlyRate": 75,
+            "Cost": 270000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration setup / transaction fees (indicative, non-labour tooling cost)",
+            "Amount": 500
+          },
+          {
+            "Description": "Staging/CI infrastructure (cloud hosting, pipeline runners) - monthly indicative",
+            "Amount": 800
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / temporary read replica",
+            "Amount": 1500
+          },
+          {
+            "Description": "Email/SMS delivery service (transactional email provider) - indicative monthly",
+            "Amount": 200
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 44100
+          },
+          {
+            "Priority": "High",
+            "Total": 90720
+          },
+          {
+            "Priority": "Medium",
+            "Total": 68040
+          },
+          {
+            "Priority": "Low",
+            "Total": 33480
+          }
+        ],
+        "Assumptions": [
+          "The rate card provided is a PLACEHOLDER: a single generic 'Team member' role at $75/hr with 1 FTE. No real team roles (e.g. developer, QA, PM, designer) or differentiated rates have been assigned yet. All cost figures below are therefore indicative only and should be revisited once actual roles and rates are set.",
+          "With only 1 FTE available at 'Team member', total available capacity is roughly 1,920 hours/year (40hrs/week x 48 working weeks). The backlog (24 tasks, ~208 story points) is far larger than 1 FTE can realistically absorb within a normal project timeframe; hours below assume either a materially extended timeline (well over a year) or that additional headcount will be added once the rate card is finalized. This is flagged as a major staffing risk.",
+          "Story points were converted to effort using a rough heuristic of 12-16 hours per point for the 'Most Likely' scenario, adjusted per task complexity/risk (e.g. legacy migration, payment integration, and RBAC carry higher effort multipliers due to integration and compliance risk; smaller UI-only tasks carry lower multipliers).",
+          "No historical actuals (real spend data) exist for this project yet, so all effort estimates are derived from backlog description and points only, not calibrated against past delivery velocity. This significantly widens uncertainty.",
+          "Non-labour costs are indicative placeholders for third-party services (Stripe, hosting/CI, legacy data migration tooling, email delivery) since no vendor quotes were supplied.",
+          "Priority breakdown allocates the Most Likely total (216,000) proportionally across tasks based on estimated effort per priority tier.",
+          "Optimistic/Pessimistic scenarios apply approximately -20%/+25% swings on the Most Likely hours to reflect the wide uncertainty from an unstaffed, single-generic-role rate card and no historical velocity data.",
+          "Assumed a 48-working-week year and standard 40-hour week to translate FTE availability into annual capacity for the single 'Team member' role."
+        ],
+        "Reasoning": "\"Because the rate card only defines one generic 'Team member' role at $75/hr with 1 FTE, all 24 backlog items had to be costed against that single undifferentiated pool of labour rather than mapped to specialist roles (e.g. backend dev, frontend dev, QA, DevOps, PM) that such a backlog would normally require. I estimated effort per task using story points as a proxy for relative size, applying a heuristic hours-per-point conversion (roughly 12-16 hrs/point for 'Most Likely') with upward adjustments for tasks carrying integration, compliance, or data-migration risk (PW-7 Payment provider integration, PW-8 Legacy data migration, PW-4 RBAC, PW-9 GDPR) and downward adjustments for smaller, well-scoped UI or config tasks (PW-24 Decommission, PW-23 Contract tests). Total estimated effort across the backlog came to roughly 2,880 hours for the Most Likely case, costed at the flat $75/hr rate to produce $216,000. Optimistic and Pessimistic bands were derived by flexing total hours -20%/+25% to reflect the substantial uncertainty from (a) an unstaffed placeholder rate card, (b) no historical actuals for velocity calibration, and (c) a backlog whose total scope (~208 points) far exceeds what a single FTE could deliver in a normal project window, implying either a very long timeline or unplanned headcount growth. Non-labour lines were added as indicative placeholders for the obvious third-party dependencies called out in the backlog (Stripe, CI/staging hosting, legacy DB migration tooling, transactional email) since no vendor pricing was supplied. Priority breakdown was derived by allocating the Most Likely total proportionally to each task's estimated effort share within its priority tier, giving a rough view of where the $216k is concentrated (Urgent items like registration/login and Stripe payments are relatively small in points but critical path; High priority items, including the large legacy migration, dominate spend; Medium priority carries the bulk of feature breadth; Low priority items are the smallest, most deferrable slice).\"",
+        "Reductions": [
+          {
+            "Id": "30128063-38f1-46f9-8702-5b926538f56f",
+            "Description": "Descope PW-18 Admin back-office for support staff (Low priority, 13 points) to a later phase; support agents can use direct DB/read-only tooling short-term.",
+            "Saving": 15600,
+            "Effect": "Removes ~208 hours of build/test effort from the Most Likely estimate.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "dd619a59-1c27-4789-8fe7-a79b26ff7de7",
+            "Description": "Defer PW-19 Usage analytics and reporting and PW-24 Decommission legacy portal (both Low priority) to a post-launch phase, keeping legacy running slightly longer instead of shutting it down immediately.",
+            "Saving": 14400,
+            "Effect": "Removes ~192 hours combined; legacy hosting cost continues short-term but avoids build cost now.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "c05a7a51-eff2-4eba-a250-3d3765a2f910",
+            "Description": "Reduce PW-14 Multi-currency support to a single-currency (USD) launch, adding EUR/PLN in a later release once real usage data justifies it.",
+            "Saving": 11700,
+            "Effect": "Cuts estimated FX/settlement complexity effort roughly in half (~156 hours saved).",
+            "Confidence": "low"
+          },
+          {
+            "Id": "ecbe0830-6ba1-49d9-99eb-8cb632c37117",
+            "Description": "Combine PW-12 Support ticket submission and PW-23 Contract tests into a single smaller consolidated task using a simpler no-code helpdesk widget instead of a custom sync/contract-test suite, at least for MVP.",
+            "Saving": 9000,
+            "Effect": "Saves ~120 hours by avoiding custom integration and contract-test scaffolding initially.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "a55199a3-18a1-4781-a150-1e5463a79cec",
+            "Description": "Delay non-labour spend on legacy migration tooling/read replica (PW-8) until migration scope and record counts are validated with a small pilot batch.",
+            "Saving": 1000,
+            "Effect": "Defers most of the $1,500 migration tooling line to a later budget period, only a small pilot cost incurred now.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "1062d53d-36ba-4a9e-adb9-78161f7bada8",
+            "Description": "Get the real team roles and rates defined before committing budget; a properly differentiated rate card (e.g. mixing junior/mid rates instead of a flat $75/hr for all work) typically lowers blended cost 10-15% versus a single flat senior-equivalent rate.",
+            "Saving": 21600,
+            "Effect": "Re-baselining labour cost with a realistic blended rate card instead of the placeholder flat rate; approximate 10% reduction on the $216,000 Most Likely total.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-single-shot",
+      "Attempt": 4,
+      "ElapsedSeconds": 30.6385186,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2993,
+        "OutputTokens": 2553,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 216000,
+        "ComponentsSum": 225000,
+        "SumRelativeDeviation": 0.041666666666666664,
+        "PriorityBreakdownRelativeDeviation": 0.105,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2880,
+        "AssumptionCount": 9,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 2880
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Low (best case)",
+            "Percentile": 20,
+            "Total": 172800,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 50,
+            "Total": 216000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "High (worst case)",
+            "Percentile": 80,
+            "Total": 270000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2880,
+            "HourlyRate": 75,
+            "Cost": 216000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration & webhook testing sandbox fees (indicative)",
+            "Amount": 500
+          },
+          {
+            "Description": "Oracle legacy DB extraction / migration tooling licence (indicative)",
+            "Amount": 3000
+          },
+          {
+            "Description": "Third-party accessibility audit (WCAG 2.2 AA) (indicative)",
+            "Amount": 4000
+          },
+          {
+            "Description": "CI/CD & staging cloud infrastructure setup (indicative)",
+            "Amount": 1500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 45360
+          },
+          {
+            "Priority": "High",
+            "Total": 90720
+          },
+          {
+            "Priority": "Medium",
+            "Total": 68040
+          },
+          {
+            "Priority": "Low",
+            "Total": 34560
+          }
+        ],
+        "Assumptions": [
+          "The rate card supplied is a PLACEHOLDER: a single generic 'Team member' role at $75/hr with 1 FTE. No real roles (e.g. developer, QA, PM, designer) or differentiated rates have been assigned yet, so this estimate is indicative only and should be revisited once the team is actually staffed with roles and rates.",
+          "With only 1 FTE (Team member) available at ~40 hrs/week, total backlog effort has been converted to hours using an industry-standard rule of thumb of ~6 hours of effort per story point for a solo generalist handling design, build, test and deploy end-to-end (no specialization possible with only one role).",
+          "Total backlog is 24 tasks summing to 192 story points; at 6 hrs/point that is 1,152 'ideal' engineering hours. Because a single generalist must also handle context-switching, integration, testing, deployment, and rework across 24 disparate tasks (auth, payments, migration, accessibility, i18n, admin tooling, etc.), a complexity/overhead multiplier of ~2.5x has been applied, giving ~2,880 hours total - roughly 18 months of full-time solo work for 1 FTE.",
+          "No historical actuals (real spend data) exist for this project yet; all figures are derived from story points and standard heuristics, not observed velocity, and carry corresponding uncertainty.",
+          "The single 'Team member' role is used for ALL work (planning, engineering, testing, deployment, migration, accessibility, security) since it is the only role staffed on the rate card - this is almost certainly insufficient for a project of this breadth (payments, RBAC, GDPR, legacy migration, i18n, accessibility, observability) and should be flagged to the client as a staffing risk.",
+          "Priority breakdown cost is allocated proportionally by story points within each priority band against the total labour cost.",
+          "Non-labour costs (Stripe sandbox, migration tooling, accessibility audit, CI/CD infra) are rough indicative placeholders since no vendor quotes were supplied.",
+          "1 FTE at 1,152-2,880 hours implies a project duration of roughly 12-18 months if pursued sequentially by a single person; if the client intends a faster delivery, additional FTEs/roles must be added to the rate card.",
+          "Scenario range (+/-20%) reflects uncertainty inherent in point-to-hour conversion and the unusually broad single-role staffing model, not proven variance from actuals."
+        ],
+        "Reasoning": "Backlog totals 192 story points across 24 tasks. With no real rate card (only a placeholder generic 'Team member' at $75/hr, 1 FTE), hours were derived by converting points to hours (6 hrs/point baseline for a solo generalist covering full-stack, design, QA and deployment) then applying a 2.5x overhead multiplier to account for context-switching, integration risk, and lack of specialization across highly varied work (payments, legacy migration, security, accessibility, i18n). This yields ~2,880 hours, costed at the single $75/hr rate = $216,000 as the most-likely case, with +/-20% scenario bands to reflect estimation uncertainty. Priority totals are apportioned by each priority band's share of total story points. Non-labour costs are small indicative placeholders for third-party tooling/audits since none were specified. The dominant risk called out is that a single generic role/FTE is very unlikely to be sufficient in practice for this scope; the client should assign real roles (e.g., Backend Dev, Frontend Dev, QA, DevOps, PM) with differentiated rates and headcounts before this estimate is treated as firm.\"]",
+        "Reductions": [
+          {
+            "Id": "c569521b-3f0e-4a9a-b8b1-0bc4a716e100",
+            "Description": "Descope Low-priority items (PW-12 Support ticket submission, PW-18 Admin back-office, PW-19 Usage analytics, PW-23 Contract tests, PW-24 Decommission legacy portal) to a later phase — 39 points total, ~20% of backlog.",
+            "Saving": 43200,
+            "Effect": "Removes ~576 hours of the 2,880-hour estimate (39/192 points x 2,880 hrs x $75), deferring roughly $43,200 of spend to a future phase.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "d5f46e6c-9151-428e-b463-c096907aa1dc",
+            "Description": "Defer Multi-currency support (PW-14, 13 points) and Usage analytics/reporting (PW-19, already counted above if kept) until after initial launch since portal can launch single-currency first.",
+            "Saving": 14625,
+            "Effect": "Removes ~195 hours (13/192 x 2,880) of labour from the current estimate, to be picked up in a later release.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "351600d7-b6bf-410b-ac1a-138bb867f008",
+            "Description": "Reduce Legacy data migration (PW-8, 21 points) scope by migrating only active accounts/invoices first (e.g. last 2 years) rather than the full 400k/2M record history in this phase.",
+            "Saving": 15750,
+            "Effect": "Cuts roughly half of the migration effort (~10.5 of 21 points, ~157 hrs) by narrowing initial migration scope, deferring historical backfill to a follow-up project.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "7ca4615e-ca5a-4d3e-a63a-25832036c7fe",
+            "Description": "Replace bespoke Design system and component library (PW-2, 8 points) with an existing open-source Angular UI kit (e.g. Angular Material) instead of building one from scratch.",
+            "Saving": 9000,
+            "Effect": "Saves an estimated 120 hours of build effort by adopting rather than building a component library, though some customization time remains.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "4b9909d8-2944-4069-8ac0-3f549ff12ad8",
+            "Description": "Staff the project with a proper multi-role team (e.g. 2 developers, 1 QA, 1 PM) instead of a single generalist FTE, which typically reduces total elapsed hours due to specialization and parallel work even if headcount cost rises.",
+            "Saving": 0,
+            "Effect": "Not a direct dollar saving in this placeholder estimate, but flagged because the current single-FTE/single-role model likely inflates hours via the 2.5x overhead multiplier; proper role specialization could shrink that multiplier and total cost once real rates are set.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-single-shot",
+      "Attempt": 5,
+      "ElapsedSeconds": 36.484186,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2993,
+        "OutputTokens": 3325,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 120250,
+        "ComponentsSum": 122250,
+        "SumRelativeDeviation": 0.016632016632016633,
+        "PriorityBreakdownRelativeDeviation": 0.09563409563409564,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1450,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 6,
+        "HoursByRole": {
+          "Team member": 1450
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic (lean scope, no major surprises)",
+            "Percentile": 25,
+            "Total": 98000,
+            "Confidence": null
+          },
+          {
+            "Name": "Base case (as planned, placeholder team)",
+            "Percentile": 50,
+            "Total": 120250,
+            "Confidence": null
+          },
+          {
+            "Name": "Pessimistic (single-resource risk, migration/integration overruns, added specialist hires)",
+            "Percentile": 90,
+            "Total": 165000,
+            "Confidence": null
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 1450,
+            "HourlyRate": 75,
+            "Cost": 108750
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration sandbox/testing fees and initial transaction processing setup",
+            "Amount": 1500
+          },
+          {
+            "Description": "Staging environment cloud infrastructure (CI/CD, hosting) for 8-9 months",
+            "Amount": 4000
+          },
+          {
+            "Description": "Transactional email service (templating, sending, bounce handling) subscription",
+            "Amount": 1200
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing and one-off extraction support",
+            "Amount": 3500
+          },
+          {
+            "Description": "Search/full-text indexing service (e.g. hosted Elasticsearch) subscription",
+            "Amount": 1800
+          },
+          {
+            "Description": "Observability/tracing tooling (APM, dashboards, alerting) subscription",
+            "Amount": 1500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 11197
+          },
+          {
+            "Priority": "High",
+            "Total": 33585
+          },
+          {
+            "Priority": "Medium",
+            "Total": 43178
+          },
+          {
+            "Priority": "Low",
+            "Total": 20790
+          }
+        ],
+        "Assumptions": [
+          "The rate card is explicitly a placeholder ('Team member' at $75/hr, 1 FTE) — no real roles (e.g. developer, QA, PM, designer) or negotiated rates have been assigned yet, so all costs below are indicative only until the team is properly staffed with roles and rates.",
+          "Story points were converted to effort hours at a rate of 6 hours per point, a standard mid-complexity assumption for full-stack Angular/API work, then a 20% overhead was added for integration, review, and coordination since a single generic resource must cover all these functions itself.",
+          "No historical actuals (real spend data) exist for this project yet; this estimate is based solely on backlog sizing and the placeholder rate, not on past delivery performance.",
+          "A single 1-FTE 'Team member' cannot realistically cover all specializations implied by this backlog (frontend, backend, DevOps, data migration, security, QA) simultaneously; the role is staffed far too thinly for 202 story points of work, and true delivery will likely require additional specialized hires or contractors, which would change both the cost and the timeline materially.",
+          "At 1,450 total hours and 1 FTE (~40 hrs/week), this backlog implies roughly 36 weeks (~8-9 months) of continuous solo effort with no absences, no parallelism, and no ramp-up time — a significant schedule and delivery risk.",
+          "Non-labour costs (Stripe fees, staging infra, email service, migration tooling, search indexing, observability tooling) are rough placeholder estimates since no vendor quotes or infra budget were provided; actual figures will depend on chosen vendors and usage volumes.",
+          "Priority-band cost breakdown is derived by allocating hours proportionally to each task's story points within that priority band, then costing at the flat $75/hr rate.",
+          "PW-8 (Legacy data migration, 21 points, migrating 400k records/2M invoice lines) is treated as a single generic-resource task, but in practice this scale of migration typically requires specialist data engineering effort not represented by a generic 'Team member' rate."
+        ],
+        "Reasoning": "Only one rate card entry exists: \"Team member\" at $75/hr, 1 FTE. This is a placeholder rate card — no actual roles (e.g. developer, QA, PM) or hourly rates have been assigned. All 24 backlog items must be delivered by this single generic \"Team member\" resource at 1 FTE capacity (~1,700-1,800 productive hours/year, but for project sizing I convert story points to hours using a standard conversion of 1 point ≈ 6 hours of effort, a common mid-complexity estimate for a small Angular/API team, then apply a 20% overhead factor for testing, review, and coordination since there's only one generic resource with no specialization).\n\nTotal story points = 5+8+8+13+8+5+13+21+8+8+5+5+8+13+8+5+8+13+8+8+5+8+5+8 = 202 points.\nBase hours = 202 * 6 = 1,212 hours.\nOverhead (integration, review, PM/coordination since it's a single generic resource wearing all hats) = +20% = ~1,454 hours, rounded to 1,450 hours.\n\nAt 1 FTE (~2,000 hours/year, ~40 hrs/week), 1,450 hours ≈ 36 weeks (~8.5 months) of continuous work for one person — this is a long timeline for a single resource, which I flag as a major risk/assumption.\n\nCost = 1,450 hours * $75/hr = $108,750.\n\nNon-labour costs: since rate card is placeholder and no infra/tooling budget given, I include modest estimated non-labour lines for third-party services explicitly implied by backlog (Stripe fees/sandbox, staging infra, email service, migration tooling) as indicative placeholders, clearly flagged as assumptions.\n\nPriority breakdown: allocate hours proportionally to points within each priority band, then cost at $75/hr.\nUrgent: PW-3(8)+PW-7(13)=21 pts\nHigh: PW-1(5)+PW-4(13)+PW-5(8)+PW-8(21)+PW-9(8)+PW-17(8)=63 pts\nMedium: PW-2(8)+PW-6(5)+PW-10(8)+PW-11(5)+PW-13(8)+PW-14(13)+PW-15(8)+PW-16(5)+PW-20(8)+PW-21(5)+PW-22(8)=81 pts\nLow: PW-12(5)+PW-18(13)+PW-19(8)+PW-23(5)+PW-24(8)=39 pts\nTotal points = 21+63+81+39=204 (close to 202, minor rounding in my sum; using 204 as denominator for proportion, negligible difference)\n\nHours per priority = (points/204)*1450:\nUrgent: 21/204*1450=149.3 → $11,197\nHigh: 63/204*1450=447.8 → $33,585\nMedium: 81/204*1450=575.7 → $43,178\nLow: 39/204*1450=277.2 → $20,790\nSum ≈ $108,750 (matches labour total, rounding aside)\n\nScenarios: base case (P50) = labour + non-labour. Low estimate (P25/optimistic, higher confidence lower bound assuming faster delivery, some descoping) and high estimate (P90, pessimistic, accounting for single-resource risk, migration complexity, integration surprises).\n\nGiven the huge risk of a single 1-FTE \"Team member\" resource with unclear skill role, I widen the range significantly for the high scenario.\n\nReductions: I suggest descoping/deferring Low priority items (PW-12, PW-18, PW-19, PW-23, PW-24 = 39 points = ~19% of total) which would save proportional hours/cost; also flag PW-8 (Legacy data migration, 21 points, largest single item) as a candidate for phased/reduced scope or specialist contractor rather than generic team member; and defer non-essential non-labour spend (e.g. delay decommission infra shutdown, use free-tier tooling initially).",
+        "Reductions": [
+          {
+            "Id": "27aee7bf-ec22-491d-8609-7f5464c3368f",
+            "Description": "Descope or defer all Low-priority items (PW-12 Support ticket submission, PW-18 Admin back-office, PW-19 Usage analytics, PW-23 Contract tests, PW-24 Decommission legacy portal — 39 of 202 points) to a later phase.",
+            "Saving": 20790,
+            "Effect": "Removes ~19% of backlog scope from this phase; delays admin tooling, analytics, contract testing and legacy decommission until after core portal launch.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "05de7fe4-8c22-4e18-bf21-7c0a2c35f688",
+            "Description": "Reduce Multi-currency support (PW-14, 13 points) to launch with a single currency (USD) initially, adding EUR/PLN in a later release.",
+            "Saving": 7000,
+            "Effect": "Cuts roughly two-thirds of the FX/settlement complexity for initial launch; multi-currency work is deferred, not eliminated.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "a483b3f1-17d0-4aa8-a27b-c997a94393e6",
+            "Description": "Defer the Accessibility pass to WCAG 2.2 AA (PW-15, 8 points) and Performance hardening of invoice list (PW-16, 5 points) to a post-launch hardening sprint rather than initial delivery.",
+            "Saving": 5850,
+            "Effect": "Initial release ships with baseline (not fully audited) accessibility and unoptimized invoice list performance; both are addressed in a fast-follow release before wide rollout.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "7722c868-fcaa-4ad5-91fe-1a56bc42537d",
+            "Description": "Delay non-essential non-labour spend: postpone observability/tracing tooling subscription and search indexing service until after MVP launch, using basic logging in the interim.",
+            "Saving": 3300,
+            "Effect": "Reduces early tooling spend; error/perf visibility and search are limited during initial launch window.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "408d17b2-a3a4-4042-a11b-39914cc92ef9",
+            "Description": "Phase the Legacy data migration (PW-8, 21 points) — migrate active/recent customer records and invoices first, defer historical archive migration to a later batch.",
+            "Saving": 6000,
+            "Effect": "Cuts initial migration effort roughly in half; older historical invoice lines remain on legacy system temporarily and require a follow-up migration project.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-agent",
+      "Attempt": 1,
+      "ElapsedSeconds": 26.5102009,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 7648,
+        "OutputTokens": 2674,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 187000,
+        "ComponentsSum": 187000,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2360,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 2360
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic",
+            "Percentile": 10,
+            "Total": 163000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 187000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic",
+            "Percentile": 90,
+            "Total": 223000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2360,
+            "HourlyRate": 75,
+            "Cost": 177000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration & PCI compliance review",
+            "Amount": 2000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing",
+            "Amount": 3000
+          },
+          {
+            "Description": "Staging/CI infrastructure (cloud costs)",
+            "Amount": 1500
+          },
+          {
+            "Description": "Contingency for third-party/legacy unknowns",
+            "Amount": 3500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 34500
+          },
+          {
+            "Priority": "High",
+            "Total": 61500
+          },
+          {
+            "Priority": "Medium",
+            "Total": 66000
+          },
+          {
+            "Priority": "Low",
+            "Total": 25000
+          }
+        ],
+        "Assumptions": [
+          "The rate card provided is a PLACEHOLDER: all 24 backlog tasks are costed against a single generic 'Team member' role at $75/hr with 1 FTE available, because no real team members, specialised roles (e.g. Frontend/Backend/QA/DevOps), or individual hourly rates have been assigned yet. These costs are INDICATIVE ONLY and must be re-estimated once real roles and rates are set.",
+          "1 FTE at 1 person cannot realistically deliver ~2,360 hours of work solo in a normal timeframe (that's roughly 1.4 person-years of work for one person); this estimate assumes the hours will actually be delivered by a team of equivalent size/skill once properly staffed, or that the single FTE works across an extended multi-year timeline. This is flagged as a significant staffing risk.",
+          "Story points were converted to engineering hours using a rough heuristic of ~8-9 hours per point, adjusted upward for tasks with known high complexity/risk (payment integration, legacy migration, multi-currency, RBAC) and downward for simpler UI/config tasks.",
+          "No historical actuals (real spend data) are available for this project yet; this estimate is based purely on backlog scope and story points, not on observed team velocity or past delivery costs.",
+          "Non-labour costs are rough placeholders for Stripe/PCI review, legacy Oracle migration tooling, staging/CI cloud infrastructure, and a general contingency for third-party/legacy unknowns; actual vendor quotes have not been obtained.",
+          "PW-8 (Legacy data migration, 21 points) and PW-7 (Payment provider integration, 13 points) are assumed to carry extra risk premiums baked into their hour allocations due to data volume (2M+ invoice lines) and financial/webhook reconciliation complexity.",
+          "Scenario spread (Optimistic -12.8%, Pessimistic +19.3%) reflects uncertainty due to the placeholder team/rate structure and lack of historical velocity data, not confidence in scope estimates alone.",
+          "Priority breakdown totals are derived by allocating each task's estimated labour cost (plus a proportional share of non-labour costs) according to its priority label (Urgent/High/Medium/Low)."
+        ],
+        "Reasoning": "Backlog totals 24 tasks / 201 story points. Hours were derived per task using ~8-9 hours/point as a baseline, with premiums added for high-risk items (payment integration, legacy migration, RBAC, multi-currency, 2FA) and slight reductions for simpler tasks (contract tests, decommissioning, ticket submission). This produced a total of ~2,360 engineering hours, costed at the single placeholder rate of $75/hr = $177,000 labour. Non-labour costs of $10,000 cover indicative third-party/infrastructure spend (Stripe/PCI review, Oracle migration tooling, CI/staging cloud costs, and a general contingency buffer for unknowns in legacy integration). Total Most Likely estimate: $187,000. Optimistic (-13%) and Pessimistic (+19%) scenarios reflect uncertainty from the placeholder rate card, single-FTE staffing constraint, and absence of historical velocity data. Priority breakdown allocates cost proportionally by task priority label to show where budget is concentrated (Urgent items like auth and payments are relatively cheap in point-count but critical path; Medium-priority items dominate due to sheer number of tasks).",
+        "Reductions": [
+          {
+            "Id": "e4b935de-c62e-490d-8774-095d41566eec",
+            "Description": "Descope PW-18 (Admin back-office for support staff, Low priority, 13 points) to a later phase; support staff can use direct DB/admin tooling short-term.",
+            "Saving": 9750,
+            "Effect": "Removes ~130 hours of build time from the initial release scope.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "0bbdece2-254b-406b-8843-8601a6d55c40",
+            "Description": "Defer PW-19 (Usage analytics and reporting, Low priority, 8 points) and PW-23 (Contract tests against helpdesk API, Low priority, 5 points) to a post-launch phase since neither blocks core customer-facing functionality.",
+            "Saving": 8700,
+            "Effect": "Removes ~116 hours of build time; contract tests can be added once helpdesk integration stabilises.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8542e109-9ebc-495c-9027-9373e9ecda71",
+            "Description": "Reduce scope of PW-14 (Multi-currency support) at launch to a single settlement currency (USD) with display-only conversion for EUR/PLN, deferring full multi-currency settlement.",
+            "Saving": 6000,
+            "Effect": "Cuts estimated hours on PW-14 roughly in half by removing settlement/reconciliation logic for non-USD currencies initially.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "d162a07b-ace2-4539-8fc0-b92d2133152e",
+            "Description": "Defer PW-24 (Decommission legacy portal, Low priority) until after the new portal has been live and stable for a full billing cycle, rather than in the initial delivery window.",
+            "Saving": 4500,
+            "Effect": "Removes ~60 hours from the initial estimate; legacy infra costs continue slightly longer but reduce delivery risk.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "2059537f-b849-4ddf-aed4-aef8d688e853",
+            "Description": "Reduce non-labour contingency line from $3,500 to $1,500 once real vendor quotes for Oracle migration tooling and Stripe/PCI review are obtained, replacing guesswork with actuals.",
+            "Saving": 2000,
+            "Effect": "Lowers non-labour budget; requires follow-up procurement step before committing.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-agent",
+      "Attempt": 2,
+      "ElapsedSeconds": 33.2249341,
+      "HttpCalls": 3,
+      "Usage": {
+        "InputTokens": 12071,
+        "OutputTokens": 3172,
+        "Calls": 3
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 177500,
+        "ComponentsSum": 177500,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2320,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 3,
+        "HoursByRole": {
+          "Team member": 2320
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic",
+            "Percentile": 10,
+            "Total": 156000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 177500,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic",
+            "Percentile": 90,
+            "Total": 225000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2320,
+            "HourlyRate": 75,
+            "Cost": 174000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / third-party payment sandbox costs",
+            "Amount": 500
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing",
+            "Amount": 2000
+          },
+          {
+            "Description": "Infrastructure (staging environment, CI runners) setup costs",
+            "Amount": 1000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 31500
+          },
+          {
+            "Priority": "High",
+            "Total": 65625
+          },
+          {
+            "Priority": "Medium",
+            "Total": 61875
+          },
+          {
+            "Priority": "Low",
+            "Total": 18500
+          }
+        ],
+        "Assumptions": [
+          "The supplied rate card is a PLACEHOLDER: a single 'Team member' role at 75 USD/hour with only 1 FTE available. All costs below are indicative only and MUST be revisited once real team members are assigned roles (e.g. Frontend, Backend, QA, DevOps) and given their own hourly rates — a single generalist rate materially understates cost for specialist work like the Oracle migration or Stripe integration.",
+          "No historical actuals (real spend data) exist for this project yet, so this estimate is built purely from story points translated into effort hours and the placeholder rate — it is not calibrated against real velocity or cost history.",
+          "Story points were converted to engineering hours using an approximate 5 hours per point baseline (typical for small/well-understood tasks), scaled up for tasks with inherent complexity or risk (legacy migration, payment integration, multi-currency, RBAC) to 7-8 hours per point to reflect integration, testing and edge-case overhead.",
+          "Total estimated effort across the 24 backlog items is ~2,320 hours. With only 1 FTE available on the placeholder rate card (working ~1,700-1,880 productive hours/year), this backlog represents well over a full year of solo effort — the team is staffed far too thinly for this scope. This MUST be flagged to the client/PM: either headcount needs to increase, timeline needs to extend past 12 months, or scope needs to be cut.",
+          "Non-labour costs are rough placeholders for Stripe fees/sandbox, Oracle migration tooling, and CI/staging infrastructure — actual vendor quotes have not been obtained.",
+          "Scenario spread (Optimistic -12%, Most Likely baseline, Pessimistic +27%) reflects typical uncertainty for a backlog with a large, risky data migration (PW-8) and a payment integration (PW-7), both of which are common sources of overrun.",
+          "Priority breakdown costs are derived pro-rata from each task's estimated hours at the 75 USD/hour placeholder rate, then summed by priority tag.",
+          "Points-to-hours mapping assumed: Urgent/High-risk complex items (PW-4, PW-7, PW-8, PW-9, PW-14) weighted at ~7-8 hrs/point; all other items at ~5 hrs/point."
+        ],
+        "Reasoning": "Effort was derived by converting each backlog item's story points into hours using a baseline of ~5 hours/point for straightforward items, increased to 7-8 hours/point for items carrying higher technical risk or integration complexity (RBAC, payment integration, legacy data migration, GDPR workflows, multi-currency). Summing across all 24 items gives ~2,320 hours of total engineering effort. Since the rate card provided is a placeholder with a single generic 'Team member' role at 75 USD/hour, all effort was booked to that one role — cost = hours x 75 for every line, verified via check_estimate. Non-labour costs were added for the three items with clear external cost exposure: Stripe integration/sandbox fees, Oracle migration tooling, and CI/staging infrastructure setup. Three scenarios were produced around the baseline (Most Likely = sum of line items exactly, at 177,500 USD): an Optimistic case assuming some efficiency gains reduce the estimate by ~12%, and a Pessimistic case reflecting the very real risk of overruns on the legacy migration and payment integration, adding ~27%. Given only 1 FTE is available against ~2,320 hours of backlog, this estimate should be read as a total-cost figure rather than a deliverable timeline — the client needs to add headcount or accept a materially longer delivery schedule, or cut scope, which is addressed in the reduction recommendations.",
+        "Reductions": [
+          {
+            "Id": "a39feee4-76f4-4020-bd58-0853dfdc3e86",
+            "Description": "Descope PW-18 (Admin back-office for support staff), PW-19 (Usage analytics and reporting), PW-23 (Contract tests against helpdesk API) and PW-24 (Decommission legacy portal) — all tagged Low priority — from this phase and move to a later release.",
+            "Saving": 25500,
+            "Effect": "Removes ~340 hours of low-priority backlog scope from the initial delivery; can be picked up in a follow-on phase once core portal is live.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "88c8d8ab-4eec-4d2c-97c8-64e5d5eebeda",
+            "Description": "Defer PW-14 (Multi-currency support) until after initial launch — most customers can likely be served in a single settlement currency at go-live, with multi-currency added once real demand is confirmed.",
+            "Saving": 7500,
+            "Effect": "Cuts ~100 hours of medium-priority scope; re-adds risk of rework if multi-currency is needed sooner, but avoids speculative investment.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "87ce219d-cacf-4192-b9e1-886e6075900a",
+            "Description": "Reduce scope of PW-8 (Legacy data migration) to a phased migration (migrate active accounts first, archive/cold-migrate the remainder later) rather than a single big-bang migration of all 400k records and 2M invoice lines.",
+            "Saving": 15000,
+            "Effect": "Cuts ~200 hours from the highest-risk, highest-effort item by narrowing the first-pass migration scope; remaining data migrated in a lower-priority follow-up.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "c76cdbe2-6648-45b0-bd60-bc569fee7ad7",
+            "Description": "Defer PW-15 (Accessibility pass to WCAG 2.2 AA) to immediately after launch rather than in the initial build, unless a compliance deadline forces it into scope now.",
+            "Saving": 6000,
+            "Effect": "Removes ~80 hours from the initial phase; carries legal/compliance risk if accessibility is a hard requirement, so should only be deferred with client sign-off.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "48554916-48c7-45c2-a108-8656143ae978",
+            "Description": "Reduce non-labour spend by using free-tier/sandbox Stripe testing and open-source CI runners instead of paid infrastructure during the build phase, deferring paid tiers to closer to go-live.",
+            "Saving": 1000,
+            "Effect": "Cuts non-labour costs from 3,500 to ~2,500 during the initial build; paid tiers re-added before production launch.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-agent",
+      "Attempt": 3,
+      "ElapsedSeconds": 28.6849628,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 7648,
+        "OutputTokens": 2700,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": false,
+        "PercentilesMonotonic": false,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 189975,
+        "ComponentsSum": 189975,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2413,
+        "AssumptionCount": 7,
+        "ReductionCount": 4,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 2413
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 189975,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Optimistic (best case)",
+            "Percentile": 10,
+            "Total": 168000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Pessimistic (worst case)",
+            "Percentile": 90,
+            "Total": 230000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2413,
+            "HourlyRate": 75,
+            "Cost": 180975
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "CI/staging environment and cloud infra costs",
+            "Amount": 2000
+          },
+          {
+            "Description": "Stripe integration/testing and PCI review",
+            "Amount": 1500
+          },
+          {
+            "Description": "Legacy Oracle migration tooling/licensing",
+            "Amount": 3000
+          },
+          {
+            "Description": "Contingency for third-party services (email, search, tracing tools)",
+            "Amount": 2500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 31500
+          },
+          {
+            "Priority": "High",
+            "Total": 74250
+          },
+          {
+            "Priority": "Medium",
+            "Total": 65250
+          },
+          {
+            "Priority": "Low",
+            "Total": 18975
+          }
+        ],
+        "Assumptions": [
+          "The provided rate card (75 USD/hour, 1 FTE, generic 'Team member') is a placeholder — no real team members, roles, or negotiated rates exist yet. All costs here are indicative only and MUST be re-estimated once actual staff are assigned roles (e.g. backend, frontend, QA, DevOps) and their real hourly rates are known.",
+          "No historical actuals (real spend/velocity data) exist for this project or team, so effort has been estimated purely from story points using an assumed points-to-hours conversion (1 point ≈ 6 hours of blended effort, informed by task descriptions and typical complexity), not from empirical throughput.",
+          "Only one role ('Team member') is available on the rate card at 1 FTE (i.e. one person, ~40 hrs/week, ~2080 hrs/year). The backlog totals ~2413 hours of estimated effort, which exceeds a single FTE's annual capacity (roughly 1.16 work-years) — this role is staffed far too thinly for the full backlog and either headcount must increase, timeline must extend (~14+ months sequentially), or scope must shrink.",
+          "Story points were converted to hours as: 5 pts ≈ 30 hrs, 8 pts ≈ 48 hrs, 13 pts ≈ 78 hrs, 21 pts ≈ 126 hrs, reflecting typical relative sizing, then summed across all 24 backlog items and lightly adjusted upward (~10%) for integration/testing overhead not captured in individual task points.",
+          "Non-labour costs (CI/cloud infra, Stripe/PCI setup, Oracle migration tooling, misc third-party service contingency) are rough placeholders since no vendor quotes were supplied; actuals will vary once vendors/tools are selected.",
+          "Scenario spread (Optimistic/Most Likely/Pessimistic) reflects estimation uncertainty typical of early-stage backlogs with no actuals: -12% for best case (fewer unknowns in migration/integration) and +21% for worst case (legacy migration, multi-currency, and Stripe reconciliation are historically prone to overruns).",
+          "Priority breakdown costs are apportioned pro-rata from each task's estimated hours multiplied by the single blended rate, since no per-role cost differentiation exists yet."
+        ],
+        "Reasoning": "Effort was sized per backlog item from story points using an approximate 1 point = 6 hours blended-effort heuristic (adjusted for described complexity, e.g. legacy migration and payment integration carry extra risk buffer), then summed to ~2413 hours across all 24 items. Since the only available rate card entry is a single placeholder 'Team member' role at $75/hr with 1 FTE, all labour was costed against that one line, explicitly flagging that 1 FTE cannot realistically absorb ~2413 hours of work within a normal timeframe (it implies over a year of continuous solo effort), so either more headcount/roles need to be added to the rate card or the timeline/scope must adapt. Non-labour costs were added for infrastructure, third-party integration (Stripe/PCI), legacy migration tooling, and general service contingency, based on typical costs for comparable engagements since no vendor quotes were given. Three scenarios (P10/P50/P90) were produced to reflect the wide uncertainty inherent in a backlog with no historical actuals and significant unknowns (large-scale legacy data migration, multi-currency settlement, payment reconciliation). A priority-based cost breakdown was derived by allocating each task's cost by its assigned priority label. Cost-reduction options focus on descoping/deferring low-priority backlog items and trimming buffer/contingency, since headcount and rate are fixed by the placeholder card.",
+        "Reductions": [
+          {
+            "Id": "d282e646-27df-48c1-ac66-976f877a693b",
+            "Description": "Defer low-priority items PW-12 (Support ticket submission), PW-18 (Admin back-office), PW-19 (Usage analytics), PW-23 (Contract tests), and PW-24 (Decommission legacy portal) to a later phase — none block the core customer-facing launch.",
+            "Saving": 23700,
+            "Effect": "Removes ~39 points (~316 hours) of low-priority backlog from this phase; portal can launch without them and they can be scheduled post-launch.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "f998a2d2-f1d1-49bb-b5ed-bb5970eeb1a4",
+            "Description": "Descope multi-currency support (PW-14) to USD-only at launch, adding EUR/PLN later once volume justifies it.",
+            "Saving": 5850,
+            "Effect": "Removes 13 points (~78 hours) of complex FX/settlement work from the initial release.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8c6c532f-5296-4f76-a511-f6dabbf5e4f3",
+            "Description": "Reduce non-labour contingency line for third-party services from $2,500 to $1,000 by confirming actual vendor pricing (email/search/tracing tools) before committing budget.",
+            "Saving": 1500,
+            "Effect": "Tighter non-labour estimate once real vendor quotes replace the placeholder contingency; risk shifts to a change request if quotes come in higher.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "acf1a339-4bcc-46d6-bc0e-d993eb81c1e6",
+            "Description": "Phase the legacy data migration (PW-8) into a smaller pilot migration (e.g. 10% of records) for initial launch, with full migration following in a second pass once validated.",
+            "Saving": 9450,
+            "Effect": "Cuts an estimated 21 points (~126 hours) down to a lighter pilot-scope migration (~50 hours), deferring the remaining ~76 hours; reduces risk of a costly one-shot migration failure.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-agent",
+      "Attempt": 4,
+      "ElapsedSeconds": 31.9353189,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 7655,
+        "OutputTokens": 2994,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 173450,
+        "ComponentsSum": 173450,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2226,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Team member": 2226
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Low (optimistic)",
+            "Percentile": 10,
+            "Total": 148000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 50,
+            "Total": 173450,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "High (pessimistic)",
+            "Percentile": 90,
+            "Total": 217000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2226,
+            "HourlyRate": 75,
+            "Cost": 166950
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "CI/staging environment hosting and tooling",
+            "Amount": 1500
+          },
+          {
+            "Description": "Stripe integration setup and PCI-related tooling",
+            "Amount": 1000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing",
+            "Amount": 2500
+          },
+          {
+            "Description": "Contingency for third-party services (email, search, tracing)",
+            "Amount": 1500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 31500
+          },
+          {
+            "Priority": "High",
+            "Total": 62250
+          },
+          {
+            "Priority": "Medium",
+            "Total": 61200
+          },
+          {
+            "Priority": "Low",
+            "Total": 18500
+          }
+        ],
+        "Assumptions": [
+          "The rate card provided is a PLACEHOLDER: all team members are listed generically as 'Team member' at $75/hour with only 1 FTE available. Costs below are indicative only until real roles (e.g. backend, frontend, QA, DevOps) and their respective hourly rates are assigned.",
+          "With only 1 FTE available across the whole project, the backlog (24 tasks, ~168 story points) must be delivered sequentially by a single person. This is a major capacity constraint: at a rough conversion of 1 point ≈ 8-10 hours (including design, build, test, review), total effort is estimated at ~2,226 hours, which equates to over a year of full-time work (2,226 hrs / ~1,880 hrs per FTE-year ≈ 1.2 years) for one person alone, before accounting for illness, leave, or context-switching overhead.",
+          "No historical actuals (real spend/velocity data) exist for this project yet, so hours-per-point conversions are estimated using generic industry rule-of-thumb ratios rather than observed team velocity. This is a significant source of estimating risk.",
+          "Story points were converted to hours at approximately 10 hours/point for high-complexity/high-risk items (integrations, migrations, security) and 8 hours/point for more standard CRUD/UI items, then summed across all 24 backlog items.",
+          "Non-labour costs are rough placeholders for third-party tooling/services (CI infrastructure, Stripe fees/tooling, Oracle migration tooling, misc. SaaS for email/search/tracing) since no vendor quotes were supplied.",
+          "Scenario spread (Low/Most likely/High) reflects uncertainty inherent in single-resource delivery, unclear legacy data quality (PW-8), and integration risk (PW-7 Stripe, PW-8 Oracle migration) rather than differences in scope.",
+          "Priority breakdown allocates each task's estimated labour cost to its stated priority bucket (Urgent, High, Medium, Low) to show where budget concentration lies.",
+          "It is assumed the client wants a single blended estimate across the full backlog rather than a phased/sprint-by-sprint budget; re-estimation is strongly recommended once real roles and rates are defined and once actual velocity data exists."
+        ],
+        "Reasoning": "Since the rate card only provides one generic 'Team member' role at $75/hr with 1 FTE, I could not break the estimate down by specialized roles (backend, frontend, QA, DevOps, etc.) as would normally be done for a project of this shape. Instead, I converted the 24 backlog items' story points into estimated hours using standard point-to-hour heuristics (8-10 hrs/point depending on complexity/risk), reflecting that items like Legacy Data Migration (PW-8, 21 pts), Payment Provider Integration (PW-7, 13 pts), RBAC (PW-4, 13 pts) and Multi-currency (PW-14, 13 pts) carry higher integration/data risk and were weighted at the higher end. This produced a total of ~2,226 hours at $75/hr = $166,950 in labour cost. I added non-labour line items for third-party tooling/services implicated by specific backlog items (CI/staging infra for PW-1, Stripe tooling for PW-7, Oracle migration tooling for PW-8, and a general contingency for smaller SaaS dependencies like email/search/tracing used in PW-11/PW-13/PW-22), totalling $6,500. This gives a most-likely total of $173,450. I derived optimistic (-15%) and pessimistic (+25%) scenarios to reflect the substantial uncertainty from: (a) a placeholder rate card with only 1 FTE trying to absorb a ~168-point backlog, (b) unknown legacy data quality for the Oracle migration, and (c) no historical velocity data to validate the point-to-hour conversion. I flagged the single-FTE capacity constraint explicitly as this is likely the single biggest risk to schedule and cost — the backlog as scoped cannot realistically be delivered by 1 FTE in a normal project timeframe, and either headcount must increase or scope/timeline must be renegotiated.",
+        "Reductions": [
+          {
+            "Id": "ee5d27fa-b8d1-48f4-9780-332a800edc20",
+            "Description": "Descope Legacy Admin Back-office (PW-18, Low priority, 13 pts) from this phase — defer to a later release since it serves internal support staff, not customers.",
+            "Saving": 9750,
+            "Effect": "Removes ~130 hours of build/test effort; internal support agents continue using existing manual processes until a later phase.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "6eae13fa-d2e7-4def-b12b-9f18d66e527a",
+            "Description": "Defer Usage Analytics and Reporting (PW-19, Low priority, 8 pts) and Contract Tests against Helpdesk API (PW-23, Low priority, 5 pts) to a post-launch phase.",
+            "Saving": 7800,
+            "Effect": "Removes ~104 hours; finance dashboards and contract-test safety net are delivered later once core portal is live, accepting some short-term integration risk with the helpdesk.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "f308ba5e-ca1a-4e1b-ab17-d2ded66138ff",
+            "Description": "Drop Support Ticket Submission (PW-12, Low priority, 5 pts) from this phase and have customers continue using existing helpdesk channels directly.",
+            "Saving": 3750,
+            "Effect": "Removes ~50 hours; no in-portal ticket submission at launch, slightly less convenient customer support workflow initially.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8dc4b06a-7078-4357-be06-f50e42a6baf0",
+            "Description": "Simplify Multi-currency support (PW-14, 13 pts) to launch with a single currency (USD) and add EUR/PLN in a later iteration.",
+            "Saving": 5850,
+            "Effect": "Removes ~78 hours; reduces FX-rate integration and settlement complexity for MVP launch at the cost of limiting initial addressable market to USD customers.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "d2db4430-0da1-4906-ba86-7ff60b21d010",
+            "Description": "Increase headcount beyond the current 1 FTE placeholder, or explicitly extend timeline, rather than trying to compress ~2,226 hours of work into a single resource.",
+            "Saving": 0,
+            "Effect": "No direct dollar saving, but prevents hidden cost/schedule overruns from context-switching fatigue, single-point-of-failure risk, and unrealistic delivery timelines that a 1-FTE plan would otherwise incur.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Arm": "llm-agent",
+      "Attempt": 5,
+      "ElapsedSeconds": 31.8370979,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 7628,
+        "OutputTokens": 2907,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 188300,
+        "ComponentsSum": 188300,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0.01858736059479554,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2464,
+        "AssumptionCount": 8,
+        "ReductionCount": 4,
+        "NonLabourCount": 3,
+        "HoursByRole": {
+          "Team member": 2464
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Low (optimistic)",
+            "Percentile": 10,
+            "Total": 176500,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 50,
+            "Total": 188300,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "High (pessimistic)",
+            "Percentile": 90,
+            "Total": 226000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2464,
+            "HourlyRate": 75,
+            "Cost": 184800
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / sandbox testing costs",
+            "Amount": 500
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing",
+            "Amount": 2000
+          },
+          {
+            "Description": "Contingency for infrastructure (staging/CI environment) setup",
+            "Amount": 1000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 25200
+          },
+          {
+            "Priority": "High",
+            "Total": 71400
+          },
+          {
+            "Priority": "Medium",
+            "Total": 68250
+          },
+          {
+            "Priority": "Low",
+            "Total": 19950
+          }
+        ],
+        "Assumptions": [
+          "The rate card provided is a PLACEHOLDER: a single undifferentiated 'Team member' role at $75/hr with 1 FTE available. No real roles (e.g. backend, frontend, QA, PM) or differentiated rates have been assigned yet. All costs below are indicative only and must be revisited once actual team members, roles and rates are confirmed — true costs could differ substantially depending on seniority mix and specialisation.",
+          "No historical actuals (real spend data) exist for this project or team; estimate is built from story points translated to engineering hours using a standard assumption of ~8 hours of effort per story point (a common, though rough, translation used absent velocity data), which is itself a source of uncertainty.",
+          "Only 1 FTE is available against a backlog totalling 189 story points (~1512 base hours of implementation), which is a substantial mismatch: at 1 FTE working full-time this backlog represents over a year of solo work. Additional buffer hours (~63% on top of base) have been added for integration, testing, code review substitutes, rework and project management overhead that would normally be spread across multiple roles/people — this inflates the single-person hour estimate to 2,464 hours. This is flagged explicitly: the role is staffed far too thinly for the backlog it must absorb, and realistically this project requires multiple FTEs/roles (e.g. backend, frontend, QA, DevOps) to be delivered in a reasonable timeframe.",
+          "Story points were mapped to hours per item based on relative complexity described (e.g. legacy data migration at 21 points assumed to require significant hours for schema mapping, batch processing and validation; simple CRUD-style features at 5 points assumed to require comparatively less effort), then summed and multiplied by an effort-buffer factor for a single generalist absorbing all disciplines.",
+          "Non-labour costs are rough placeholders for Stripe sandbox/integration testing, migration tooling/licensing for the legacy Oracle extract, and minor infra costs for CI/staging — these have not been quoted from vendors and should be confirmed.",
+          "Priority-based cost breakdown is derived pro-rata from each task's estimated hours/cost relative to total backlog cost, grouped by the priority label given in the backlog.",
+          "Scenario range (10th/50th/90th percentile) reflects overall estimation uncertainty given the placeholder rate card, unproven single-person velocity, and lack of historical actuals; the pessimistic scenario also accounts for high-risk items (legacy migration, payment integration, RBAC) running over.",
+          "It is assumed the team member is a generalist capable of covering full-stack development, QA, DevOps and coordination tasks, which is optimistic and a key risk factor if only one person is truly available."
+        ],
+        "Reasoning": "Backlog was translated into effort using story points as a proxy for relative complexity, converted to hours (~8 hrs/point baseline) and then inflated by a buffer (~63%) to account for the fact that a single 'Team member' FTE must cover all disciplines (design, build, test, deploy, PM) that would normally be split across specialised roles. This produced a total of 2,464 hours at the placeholder rate of $75/hr = $184,800 in labour. Non-labour costs were added for third-party/integration costs tied to specific backlog items (Stripe fees, Oracle migration tooling, CI/staging infra). Three scenarios were produced to reflect the wide uncertainty inherent in: (a) a placeholder, unvalidated rate card; (b) no historical actuals; and (c) a severe capacity mismatch (1 FTE vs ~189 points of backlog). The priority breakdown apportions the labour+non-labour cost pro-rata across each task's priority tag so the client can see where budget concentration lies (Urgent/High priority items like auth, RBAC, payments and migration dominate risk and cost). Cost-reduction recommendations focus on descoping/deferring Low-priority items, trimming Medium-priority scope, and flagging the single-FTE capacity constraint as the primary lever/risk for both cost and schedule.",
+        "Reductions": [
+          {
+            "Id": "651a62dd-cdcf-44b7-9187-6e2fe5fd7426",
+            "Description": "Defer all 5 Low-priority backlog items (PW-12 Support ticket submission, PW-18 Admin back-office, PW-19 Usage analytics, PW-23 Contract tests, PW-24 Decommission legacy portal) to a later phase/backlog.",
+            "Saving": 19950,
+            "Effect": "Removes ~39 points / ~266 buffered hours of scope from the current estimate; legacy portal can typically keep running a little longer and support/analytics/back-office tooling can follow after the core customer-facing portal ships.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "d81a3250-96b1-4f20-801a-58ca478fa42d",
+            "Description": "Descope or simplify Multi-currency support (PW-14, 13 points) to a single-currency (USD-only) launch, deferring EUR/PLN settlement and daily FX handling.",
+            "Saving": 8500,
+            "Effect": "Cuts a large Medium-priority item down to near-zero incremental work for v1; multi-currency can be added once real customer demand for EUR/PLN is confirmed.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "ace72f3e-461b-469f-be21-0cf5433c67e3",
+            "Description": "Reduce Accessibility pass (PW-15) scope for launch to critical-path screens only (registration, login, dashboard, payments) rather than full WCAG 2.2 AA coverage across all screens, with full coverage as a fast-follow.",
+            "Saving": 3500,
+            "Effect": "Lowers initial effort on an 8-point item while still meeting compliance on the highest-traffic/highest-risk flows; remaining screens addressed in a subsequent iteration.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "40491d3f-4f25-4478-8d08-e059054e7c94",
+            "Description": "Increase team capacity beyond the current 1 FTE placeholder (e.g. add a second team member or contractor) rather than trying to compress the single-FTE timeline.",
+            "Saving": 0,
+            "Effect": "Does not reduce total dollar cost, but is flagged as the key structural fix: 1 FTE against ~189 points of backlog implies a very long delivery timeline and higher risk of rework/context-switching costs that are not fully captured in this dollar estimate. Recommend re-costing once real roles/rates are known.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    }
+  ],
+  "PrioritisationRuns": [],
+  "AllocationRuns": []
+}

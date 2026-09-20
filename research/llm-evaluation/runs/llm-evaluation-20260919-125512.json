@@ -1,0 +1,1896 @@
+{
+  "StartedUtc": "2026-09-19T12:55:12.3276704Z",
+  "CostModelName": "claude-sonnet-5",
+  "PrioritisationModelName": "claude-opus-5",
+  "Repetitions": 5,
+  "PrimaryRepetitions": 10,
+  "CostRuns": [
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 1,
+      "ElapsedSeconds": 27.8059146,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2664,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 122558,
+        "ComponentsSum": 126197.96,
+        "SumRelativeDeviation": 0.029699897191533806,
+        "PriorityBreakdownRelativeDeviation": 0.049429657794676805,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1256,
+        "AssumptionCount": 9,
+        "ReductionCount": 5,
+        "NonLabourCount": 5,
+        "HoursByRole": {
+          "Backend Developer": 612,
+          "Frontend Developer": 380,
+          "QA Engineer": 168,
+          "DevOps Engineer": 96
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic (low complexity realized, no major integration issues)",
+            "Percentile": 10,
+            "Total": 107850,
+            "Confidence": null
+          },
+          {
+            "Name": "Most Likely (base estimate)",
+            "Percentile": 50,
+            "Total": 122558,
+            "Confidence": null
+          },
+          {
+            "Name": "Pessimistic (migration/integration overruns, rework)",
+            "Percentile": 90,
+            "Total": 159325,
+            "Confidence": null
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 612,
+            "HourlyRate": 98.33,
+            "Cost": 60177.96
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 380,
+            "HourlyRate": 90,
+            "Cost": 34200
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 168,
+            "HourlyRate": 70,
+            "Cost": 11760
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 96,
+            "HourlyRate": 110,
+            "Cost": 10560
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud infrastructure (staging + CI runners) for pipeline setup and ongoing builds",
+            "Amount": 2500
+          },
+          {
+            "Description": "Stripe integration setup, sandbox testing, and webhook infra",
+            "Amount": 1500
+          },
+          {
+            "Description": "Data migration tooling/licensing (ETL scripts, Oracle connector, validation tooling)",
+            "Amount": 3000
+          },
+          {
+            "Description": "Design/UI asset licensing (icon sets, theming assets) for component library",
+            "Amount": 500
+          },
+          {
+            "Description": "Contingency buffer for third-party/API rate limits or environment provisioning delays",
+            "Amount": 2000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 41500
+          },
+          {
+            "Priority": "High",
+            "Total": 58000
+          },
+          {
+            "Priority": "Medium",
+            "Total": 17000
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available yet for this project; effort figures are based on analogy/expert judgement against similar Angular/API/Stripe/migration projects, not on this team's measured throughput.",
+          "Delivery window assumed ~16 weeks, used to sanity-check role hour allocations against available FTE capacity.",
+          "1 story point translated to roughly 6-8 hours of blended effort depending on task type (UI-heavy vs backend-heavy vs infra/migration).",
+          "QA Engineer at 0.6 FTE is thinly staffed relative to the volume of Urgent/High priority features requiring regression and security testing (auth, RBAC, payments); this is flagged as a risk.",
+          "DevOps Engineer at 0.4 FTE is concentrated on CI/staging setup (PW-1) and migration cutover support (PW-8); any additional infra incidents would require re-prioritization or a scope trim elsewhere.",
+          "Legacy data migration (PW-8) effort assumes reasonably clean source schema; actual complexity of 400k records/2M invoice lines could shift this materially, hence the wide P90 band.",
+          "Backend Developer role absorbs the largest share of hours since most backlog items (auth, RBAC, dashboard API, invoices API, Stripe integration, migration) are backend/API-centric.",
+          "Non-labour costs are rough order-of-magnitude allowances for cloud infra, Stripe setup, migration tooling, and contingency; actual vendor quotes were not available.",
+          "Priority breakdown costs are allocated proportionally to story points within each priority band using the blended hourly rate mix."
+        ],
+        "Reasoning": "Estimate derived from 8 backlog items totalling 81 story points, converted to effort using a baseline of ~6-8 hours/point blended across roles depending on task type (infra, frontend UI, backend/API, integration, data migration). Role mix per task was assigned based on task nature (e.g. CI/staging -> DevOps+Backend; component library -> Frontend heavy; auth/RBAC/payments -> Backend heavy with QA; dashboard/invoice UI -> Frontend+Backend; data migration -> Backend+DevOps+QA). QA allocated ~15-20% of build hours per feature task for test design/execution. DevOps concentrated on pipeline and migration cutover support, respecting its low 0.4 FTE capacity (i.e. ~16 hrs/week for a project of this length). Backend Developer (1.5 FTE, ~60 hrs/week capacity) absorbs the largest share since most tasks (auth, RBAC, dashboard API, invoices API, Stripe integration, migration) are backend-centric. Frontend Developer (1.0 FTE, ~40 hrs/week) covers component library, dashboard UI, invoice UI, and UI portions of auth/RBAC. No historical actuals exist for this team, so effort figures are analogy/expert-judgement based with wide uncertainty bands reflected in the scenario percentiles. A 15% integration/PM contingency and a non-labour allowance for cloud infra, Stripe fees setup, staging environment, and migration tooling/licensing are included.\n\nTotal estimated hours: Backend 612h, Frontend 380h, QA 168h, DevOps 96h => base labour ~$113,058. Adding non-labour (~$9,500) gives a most-likely total of ~$122,558. P10/P50/P90 scenarios scale this by -12%/0%/+30% to reflect estimation uncertainty, especially around PW-8 (migration) and PW-7 (Stripe integration) which are historically prone to overruns.\n\nCapacity check: Backend Developer 1.5 FTE over an assumed 16-week delivery window has ~960 hours available; allocated 612h (64%) leaves headroom for other maintenance/support, which is reasonable. Frontend 1.0 FTE over 16 weeks = 640h available; allocated 380h (59%) is reasonable. QA 0.6 FTE = 384h available; allocated 168h (44%) is reasonable, though QA is thinly staffed relative to the number of urgent features needing regression testing. DevOps 0.4 FTE = 256h available; allocated 96h (37%) is fine but tight if staging/CI issues arise during migration cutover.",
+        "Reductions": [
+          {
+            "Id": "098a0ac2-4641-418c-b1da-73114cbf3777",
+            "Description": "Descope PW-2 (Design system and component library) to a minimal set of components now, deferring full theming tokens and advanced dialog/table variants to a later phase",
+            "Saving": 8000,
+            "Effect": "Reduces Frontend Developer hours by ~90h; delays full design system consistency until phase 2",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "9a893adb-633f-4a0e-8260-1fa7e474125c",
+            "Description": "Reduce QA Engineer allocation on Medium-priority items (PW-2, PW-6) in favor of developer self-testing/peer review, reserving dedicated QA for Urgent items (auth, payments)",
+            "Saving": 3500,
+            "Effect": "Cuts ~50 QA hours; increases regression risk on lower-priority features",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "e8c49b8c-6a69-4da0-a92f-3e32cc8a636d",
+            "Description": "Defer Legacy Data Migration (PW-8) to a follow-on project phase after go-live, launching with manual/CSV import for a limited initial customer set",
+            "Saving": 35000,
+            "Effect": "Removes the bulk of migration-related Backend/DevOps/QA hours and tooling cost from this phase; requires an interim manual data process",
+            "Confidence": "low"
+          },
+          {
+            "Id": "fd314839-e3e0-4899-8d21-b145e7ebab6c",
+            "Description": "Use a pre-built Angular UI kit (e.g. Angular Material or PrimeNG) instead of a fully custom component library for PW-2",
+            "Saving": 6000,
+            "Effect": "Reduces Frontend Developer build hours by ~65h at the cost of some visual customization",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "23b02bce-0cb6-4e52-bb24-43af17afaf6c",
+            "Description": "Trim non-labour contingency and migration tooling budget by negotiating a fixed-price ETL tool license instead of custom scripting",
+            "Saving": 1500,
+            "Effect": "Reduces non-labour spend; assumes a suitable off-the-shelf ETL tool is available for the Oracle source schema",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 2,
+      "ElapsedSeconds": 60.458344,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 4284,
+        "OutputTokens": 6333,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 0.75,
+        "MaxLineArithmeticError": 8.00,
+        "RealisticTotal": 58349,
+        "ComponentsSum": 58348.76,
+        "SumRelativeDeviation": 4.1131810313801435E-06,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 524,
+        "AssumptionCount": 8,
+        "ReductionCount": 4,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 272,
+          "Frontend Developer": 132,
+          "QA Engineer": 72,
+          "DevOps Engineer": 48
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Best case",
+            "Percentile": 50,
+            "Total": 53681,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 65,
+            "Total": 58349,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Worst case",
+            "Percentile": 90,
+            "Total": 72936,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 272,
+            "HourlyRate": 98.33,
+            "Cost": 26753.76
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 132,
+            "HourlyRate": 90,
+            "Cost": 11880
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 72,
+            "HourlyRate": 70,
+            "Cost": 5040
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 48,
+            "HourlyRate": 110,
+            "Cost": 5280
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud staging environment & CI tooling (approx. 3 months)",
+            "Amount": 1200
+          },
+          {
+            "Description": "Stripe sandbox/test transaction fees & PCI compliance review",
+            "Amount": 800
+          },
+          {
+            "Description": "Data migration tooling / Oracle ETL connector license (one-time)",
+            "Amount": 2500
+          },
+          {
+            "Description": "Contingency buffer (~10% of labour) given no historical actuals",
+            "Amount": 4895
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 15112
+          },
+          {
+            "Priority": "High",
+            "Total": 33842
+          },
+          {
+            "Priority": "Medium",
+            "Total": 9395
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) exist for this project yet; estimate is based on story-point-to-hour heuristics (1 point ≈ 6 engineering hours) and role-mix judgment per task type, not observed velocity.",
+          "Story points converted to hours and split across roles based on typical effort profile for each task (e.g., CI/staging is DevOps-heavy, dashboard/design work is Frontend-heavy, migration/payments are Backend+QA heavy).",
+          "QA Engineer (0.6 FTE) and DevOps Engineer (0.4 FTE) are thinly staffed relative to backlog demand; their allocated hours (72h and 48h respectively) will likely be the pacing constraint and may extend calendar duration even though cost is capped by hours worked.",
+          "Backend Developer capacity (1.5 FTE) comfortably covers the 272 allocated hours over the estimated delivery window (~3-3.5 weeks of overlapping work).",
+          "Legacy data migration (PW-8) assumes a semi-automated ETL approach; fully manual reconciliation of 2M invoice lines would significantly increase Backend and QA hours.",
+          "Payment integration (PW-7) assumes use of Stripe's standard hosted APIs/webhooks rather than a fully custom PCI-scope solution.",
+          "A 10% labour contingency is included in non-labour costs to cover estimation uncertainty given the lack of historical actuals; this should be revisited once real velocity data is available.",
+          "Priority-based cost breakdown is apportioned by story-point weight per priority tier as a reasonable proxy, since tasks are not individually costed by priority."
+        ],
+        "Reasoning": "\nEstimation approach: convert story points to engineering hours using a standard 1 point ≈ 6 hours baseline for a mid-level developer, then split effort across roles per task type (backend/frontend/QA/devops), and apply a role's proportional capacity (FTE) as a sanity check against elapsed calendar time. Total points = 5+8+8+13+8+5+13+21 = 81 points.\n\nTask-level role split (hours), based on task nature:\n- PW-1 CI pipeline & staging (5 pts, High): DevOps-heavy. ~30 pts-hours total -> DevOps 24h, Backend 6h.\n- PW-2 Design system/component library (8 pts, Medium): Frontend-heavy. Frontend 40h, QA 8h.\n- PW-3 Registration/login (8 pts, Urgent): Backend+Frontend+QA. Backend 32h, Frontend 16h, QA 8h.\n- PW-4 RBAC (13 pts, High): Backend-heavy with UI enforcement. Backend 52h, Frontend 16h, QA 10h.\n- PW-5 Customer dashboard (8 pts, High): Frontend-heavy with backend API. Backend 16h, Frontend 32h, QA 8h.\n- PW-6 Invoice list/detail (5 pts, Medium): Backend 16h, Frontend 20h, QA 6h.\n- PW-7 Payment integration (13 pts, Urgent): Backend-heavy, critical, QA heavy for reconciliation. Backend 60h, Frontend 8h, QA 16h, DevOps 4h (webhook infra).\n- PW-8 Legacy data migration (21 pts, High): Backend + DevOps heavy, QA for validation. Backend 90h, DevOps 20h, QA 16h.\n\nSum per role:\nBackend: 6+32+52+16+16+60+90 = 272h\nFrontend: 40+16+16+32+20+8 = 132h\nQA: 8+8+10+8+6+16+16 = 72h\nDevOps: 24+4+20 = 48h\n\nCheck capacity proportionality: Backend 1.5 FTE ~ 60h/week/person *1.5=90h/week capacity; 272h/90 ≈ 3 weeks. Frontend 1.0 FTE ~ 40h/week; 132h ≈ 3.3 weeks. QA 0.6 FTE ~24h/week; 72h ≈ 3 weeks. DevOps 0.4 FTE ~16h/week; 48h ≈ 3 weeks. Roughly consistent ~3-3.5 week sprint-equivalent effort, reasonable for backlog convergence, though DevOps and QA are thin (0.4 and 0.6 FTE) and will be the pacing constraint for CI/QA-heavy tasks — flagged as assumption/risk.\n\nCosts:\nBackend: 272 * 98.33 = 26,753.76\nFrontend: 132 * 90 = 11,880\nQA: 72 * 70 = 5,040\nDevOps: 48 * 110 = 5,280\n\nLabour subtotal = 26,753.76+11,880+5,040+5,280 = 48,953.76\n\nNon-labour costs: Stripe integration test/sandbox fees, cloud staging environment hosting, data migration tooling/licenses, contingency for legacy Oracle export tooling.\n- Cloud staging environment & CI tooling (3 months): 1,200\n- Stripe sandbox/test transaction fees & compliance review: 800\n- Data migration tooling license (ETL/Oracle connector) one-time: 2,500\n- Contingency buffer (10% of labour) for unknowns given no historical actuals: 4,895\n\nNon-labour subtotal = 1,200+800+2,500+4,895 = 9,395\n\nTotal base estimate = 48,953.76 + 9,395 = 58,348.76\n\nPriority breakdown (sum points cost proportionally by priority using labour+non-labour split roughly by point-weighted share):\nTotal points 81. \nUrgent points = PW-3(8)+PW-7(13)=21 -> 21/81=25.9%\nHigh points = PW-1(5)+PW-4(13)+PW-5(8)+PW-8(21)=47 -> 47/81=58.0%\nMedium points = PW-2(8)+PW-6(5)=13 -> 13/81=16.0%\n\nApply to total 58,348.76:\nUrgent: 25.9%*58,348.76 ≈ 15,112\nHigh: 58.0%*58,348.76 ≈ 33,842\nMedium: 16.0%*58,348.76 ≈ 9,335 (rounding adjustments to sum to total)\n\nScenarios:\n- Best case (P50, optimistic execution, no rework): ~ -8% => 53,681\n- Most likely (P50 baseline as estimated): 58,349\n- Worst case (P90, migration/integration complications, QA/DevOps bottleneck causing overtime or contractor top-up): +25% => 72,936\n\nReductions/recommendations:\n1. Defer PW-2 (Design system) to a later phase since it's Medium priority and not blocking urgent features — saves its full allocated cost (Frontend 40h + QA 8h = 40*90+8*70=3600+560=4160).\n2. Reduce QA scope on PW-6 (Invoice list) by combining manual QA with automated regression reuse from PW-3, saving ~4 hours QA (~$280) — low-confidence marginal saving; better to cut non-labour contingency instead.\n3. Trim contingency buffer from 10% to 6% once a pilot sprint establishes real velocity data, saving ~$1,958.\n4. Use managed Stripe-hosted checkout instead of fully custom webhook/reconciliation UI to cut Backend hours on PW-7 by ~15h (~$1,475).\n5. Negotiate a fixed-fee data migration tooling license via vendor discount or open-source ETL instead of commercial connector, saving ~$1,500 non-labour.\n\nI'll list top 3-4 concrete reductions with savings and effect/confidence.\n</reasoning>\n",
+        "Reductions": [
+          {
+            "Id": "cc1e98fb-0f70-4050-a5ba-4c09589dcfe4",
+            "Description": "Defer PW-2 (Design system and component library, Medium priority) to a later phase since it does not block urgent/high-priority feature delivery.",
+            "Saving": 4160,
+            "Effect": "Removes 40 Frontend hours and 8 QA hours from current phase scope; component library work is rescheduled to a subsequent release.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "584ed88a-0523-41bc-a09b-4ffef14cf860",
+            "Description": "Use Stripe-hosted Checkout/Elements for PW-7 instead of a fully custom payment UI and reconciliation flow, reducing custom Backend integration work.",
+            "Saving": 1475,
+            "Effect": "Cuts ~15 Backend Developer hours by leveraging Stripe's pre-built, PCI-compliant components instead of custom-building equivalent flows.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "2758e43d-62e2-40b1-9af7-74531b76a23b",
+            "Description": "Replace commercial Oracle ETL connector license with an open-source or in-house scripted migration approach for PW-8.",
+            "Saving": 1500,
+            "Effect": "Removes the one-time data migration tooling license non-labour cost; adds some Backend scripting time already accounted for in current hour estimate.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "bcf3b003-93ff-4d31-885e-ac51d2622b1b",
+            "Description": "Reduce contingency buffer from 10% to 6% of labour once an initial sprint establishes real team velocity.",
+            "Saving": 1958,
+            "Effect": "Lowers non-labour contingency line; only recommended after the first 2-3 weeks of actual delivery data confirm estimate accuracy.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 3,
+      "ElapsedSeconds": 28.0370124,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2915,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 168000,
+        "ComponentsSum": 163231,
+        "SumRelativeDeviation": 0.028386904761904763,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1420,
+        "AssumptionCount": 9,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 700,
+          "Frontend Developer": 380,
+          "QA Engineer": 210,
+          "DevOps Engineer": 130
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Low (optimistic)",
+            "Percentile": 20,
+            "Total": 148000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 50,
+            "Total": 168000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "High (pessimistic)",
+            "Percentile": 80,
+            "Total": 196000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 700,
+            "HourlyRate": 98.33,
+            "Cost": 68831
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 380,
+            "HourlyRate": 90,
+            "Cost": 34200
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 210,
+            "HourlyRate": 70,
+            "Cost": 14700
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 130,
+            "HourlyRate": 110,
+            "Cost": 14300
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud/staging infrastructure setup and 6-month run cost (CI pipeline, staging environment)",
+            "Amount": 6000
+          },
+          {
+            "Description": "Stripe integration setup, PCI compliance review, and webhook infra hardening (one-time)",
+            "Amount": 4000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / ETL licensing and export costs",
+            "Amount": 8000
+          },
+          {
+            "Description": "Contingency buffer (no historical actuals available; ~10% of labour)",
+            "Amount": 13200
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 62000
+          },
+          {
+            "Priority": "High",
+            "Total": 78000
+          },
+          {
+            "Priority": "Medium",
+            "Total": 28000
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) exist for this project; estimate is based on story-point-to-hour heuristics and task-type analysis, not past delivery data.",
+          "Story points converted to hours at a blended rate of roughly 6-7 engineering hours per point, split across roles by task nature.",
+          "Delivery horizon assumed to be approximately 4-5 months, within which current FTE capacity (1.5 Backend, 1.0 Frontend, 0.6 QA, 0.4 DevOps) is sufficient but tightly stretched, particularly for QA and DevOps given the number of tasks requiring their input (CI setup, payment integration, data migration).",
+          "DevOps Engineer at 0.4 FTE is thinly staffed relative to the combined demands of CI/staging setup, payment webhook infra, and migration cutover support; this is a schedule risk even though total hours fit within nominal capacity.",
+          "QA Engineer at 0.6 FTE is similarly thin given testing needs across auth, payments, RBAC, and migration validation; QA hours were prioritized toward Urgent/High tasks (auth, payments, RBAC) at the expense of lower-priority items.",
+          "Stripe transaction fees themselves are excluded from this estimate as they are ongoing operational costs, not one-time build costs; only integration/setup effort is included.",
+          "Legacy data migration (PW-8) assumes a single migration pass with validation; does not include extended parallel-run/dual-write reconciliation period, which would add cost if required.",
+          "Design system (PW-2) is scoped as a working component library sufficient for the other UI tasks, not a fully polished, documented design system.",
+          "Rate card figures and FTE availability provided are treated as fixed and accurate for the estimate period."
+        ],
+        "Reasoning": "\nEstimation approach: convert story points to engineering hours using a standard rule of thumb of ~6-7 hours per point per relevant role for a full-stack team (Backend + Frontend + QA + DevOps), adjusted for task nature (infra vs UI vs data migration vs integration). Total backlog points = 5+8+8+13+8+5+13+21 = 81 points.\n\nI allocated hours per task by role based on the nature of the work:\n- PW-1 (CI/staging, 5pts): DevOps-heavy with some Backend support.\n- PW-2 (Design system, 8pts): Frontend-heavy with QA for visual/regression testing.\n- PW-3 (Auth, 8pts, Urgent): Backend-heavy, Frontend for UI, QA for security/regression testing.\n- PW-4 (RBAC, 13pts): Backend-heavy (API enforcement), Frontend (UI gating), QA.\n- PW-5 (Dashboard, 8pts): Frontend-heavy, Backend for APIs, QA.\n- PW-6 (Invoice list/detail, 5pts): Frontend + Backend (PDF gen), QA.\n- PW-7 (Payment integration, 13pts, Urgent): Backend-heavy (Stripe, webhooks, reconciliation), QA critical (money-handling), some DevOps (secrets/webhook infra).\n- PW-8 (Data migration, 21pts): Backend-heavy (ETL scripts), DevOps (migration infra/cutover), QA (data validation) — no Frontend need.\n\nCapacity check: Backend Developer 1.5 FTE ≈ 2400 hrs over a ~6 month (26 week) delivery window at 60hrs/week combined capacity (1.5 FTE * 40hrs * 26wks ≈ 1560hrs available); Frontend 1.0 FTE ≈ 1040hrs available; QA 0.6 FTE ≈ 624hrs available; DevOps 0.4 FTE ≈ 416hrs available. My allocations (Backend 700hrs, Frontend 380hrs, QA 210hrs, DevOps 130hrs) fit comfortably within these capacities for a ~4-5 month timeline, though DevOps and QA are thin relative to the number of tasks touching them (CI, payments, migration all need DevOps/QA attention) — flagged as an assumption/risk.\n\nNon-labour costs: Stripe integration sandbox/production fees are usually transaction-based (excluded from build cost), but I included a one-time Stripe integration/compliance review fee, a staging/cloud infrastructure cost for CI pipeline, and a data migration one-time tooling/Oracle export licensing cost, plus a contingency buffer given no historical actuals exist.\n\nPriority breakdown assigns each task's full labour+relevant non-labour cost to its priority tier.\n\nReductions identified: descope PW-2 design system to a minimal token-only pass now (defer full component library), reduce QA regression hours on PW-6 (lower priority, non-critical), defer PW-8 migration scope (migrate only a partial/live dataset first, backfill later), and negotiate/reduce non-labour infra spend by using existing cloud credits.\n</reasoning>\n",
+        "Reductions": [
+          {
+            "Id": "1605b4f5-3516-44ef-9cca-60869e382254",
+            "Description": "Descope PW-2 Design System to a minimal token + core component set now, deferring advanced components (tables, dialogs theming polish) to a later phase",
+            "Saving": 9000,
+            "Effect": "Reduces Frontend and QA hours on PW-2 by roughly half",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "4bcefb56-4fea-48bc-aea9-b5678b310a11",
+            "Description": "Reduce QA regression depth on PW-6 (Invoice list/detail), a Medium-priority, lower-risk feature, relying on automated smoke tests instead of full manual regression",
+            "Saving": 2800,
+            "Effect": "Cuts QA hours allocated to PW-6 by ~40 hours",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "5c2f9438-d076-48e1-9963-c1c0d5d641ea",
+            "Description": "Phase PW-8 Legacy Data Migration: migrate active/recent customer records and invoices first, defer historical archive migration to a follow-on project",
+            "Saving": 15000,
+            "Effect": "Reduces Backend and DevOps migration hours by roughly a third and cuts migration tooling licensing cost",
+            "Confidence": "low"
+          },
+          {
+            "Id": "0dc62d80-941a-478c-a07c-08623deaecaa",
+            "Description": "Use existing cloud provider credits/reserved capacity instead of new staging infrastructure spend for PW-1",
+            "Saving": 3000,
+            "Effect": "Reduces non-labour infrastructure line item",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "4ece696a-ba30-4e34-b6bf-6e001a91a891",
+            "Description": "Defer full PCI compliance review to post-launch audit, doing a lighter internal checklist now for PW-7 initial release",
+            "Saving": 2000,
+            "Effect": "Reduces one-time Stripe integration/compliance non-labour cost",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 4,
+      "ElapsedSeconds": 29.0510432,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2997,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 110669.08,
+        "ComponentsSum": 99011.68,
+        "SumRelativeDeviation": 0.10533565472849327,
+        "PriorityBreakdownRelativeDeviation": 0.16406931366918384,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 998,
+        "AssumptionCount": 9,
+        "ReductionCount": 5,
+        "NonLabourCount": 5,
+        "HoursByRole": {
+          "Backend Developer": 496,
+          "Frontend Developer": 270,
+          "QA Engineer": 152,
+          "DevOps Engineer": 80
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 - Base estimate (labour + non-labour as scoped)",
+            "Percentile": 50,
+            "Total": 98811.68,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P70 - With 12% contingency for integration/migration unknowns",
+            "Percentile": 70,
+            "Total": 110669.08,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P90 - With 25% contingency (no historical actuals, thin DevOps capacity, migration risk)",
+            "Percentile": 90,
+            "Total": 123514.6,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 496,
+            "HourlyRate": 98.33,
+            "Cost": 48771.68
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 270,
+            "HourlyRate": 90,
+            "Cost": 24300
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 152,
+            "HourlyRate": 70,
+            "Cost": 10640
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 80,
+            "HourlyRate": 110,
+            "Cost": 8800
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration sandbox + production setup fees and initial transaction testing",
+            "Amount": 800
+          },
+          {
+            "Description": "Staging/CI cloud environment costs (compute, storage) for pipeline duration",
+            "Amount": 1500
+          },
+          {
+            "Description": "Data migration tooling / Oracle export utilities and temporary storage for 400k records + 2M invoice lines",
+            "Amount": 3500
+          },
+          {
+            "Description": "Design/component library asset licensing (icon sets, theming tools)",
+            "Amount": 400
+          },
+          {
+            "Description": "Contingency buffer for third-party API/service costs (webhooks, email for password reset)",
+            "Amount": 300
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 30617.9
+          },
+          {
+            "Priority": "High",
+            "Total": 41693.78
+          },
+          {
+            "Priority": "Medium",
+            "Total": 20200
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project or team; estimate is derived purely from story points, task descriptions, and rate card.",
+          "Story points converted to engineering hours using a rough baseline of ~5-8 hours/point depending on task complexity and role mix.",
+          "Assumed project delivery window of approximately 14 weeks to sanity-check role hours against FTE capacity.",
+          "DevOps Engineer (0.4 FTE) is thinly staffed relative to the critical-path CI/staging task (PW-1); this could bottleneck project start even though total hours fit within capacity over the full timeline.",
+          "QA effort estimated at roughly 15-20% of combined dev hours per task, scaled up for Urgent/High priority items.",
+          "Legacy data migration (PW-8) assumed to require significant Backend Developer effort for ETL scripting plus modest DevOps support for environment/cutover; no dedicated data engineer role exists on this team so Backend Developer absorbs this work.",
+          "Non-labour costs are rough allowances for third-party services (Stripe, cloud hosting, migration tooling) and may vary based on actual vendor contracts.",
+          "Priority breakdown totals reflect labour cost only, allocated per task priority; non-labour costs are not split by priority.",
+          "Frontend Developer (1.0 FTE) has notable slack capacity, suggesting some tasks could be accelerated or the role could take on additional scope if needed."
+        ],
+        "Reasoning": "Estimation approach: converted story points to engineering hours using a baseline of ~6 hours/point for backend-heavy or migration work and ~5 hours/point for frontend/design work, then split hours across roles based on task nature (backend, frontend, QA, devops). Applied role capacity constraints (1.5 FTE Backend = ~120 hrs/wk, 1.0 FTE Frontend = ~40 hrs/wk equiv per person, 0.6 FTE QA = ~24 hrs/wk, 0.4 FTE DevOps = ~16 hrs/wk) to sanity-check that allocated hours are plausible for a multi-week delivery (assumed ~10-12 week project window). QA effort estimated at ~15-20% of dev hours per task depending on complexity/priority. DevOps effort concentrated on CI/pipeline setup (PW-1) and light involvement in migration (PW-8) and payment integration (PW-7) for infra/webhook deployment support. Non-labour costs added for Stripe sandbox/production fees, cloud staging environment, and a data migration tooling/Oracle export license allowance. A 12% contingency scenario and a 20% stretch scenario are provided for risk (P50/P70/P90 style) given no historical actuals exist for this client/team combo.\n\nTask-level hour breakdown (approx):\nPW-1 CI/staging (5 pts, High): Backend 16h, DevOps 40h, QA 8h\nPW-2 Design system (8 pts, Medium): Frontend 90h, QA 12h\nPW-3 Registration/login (8 pts, Urgent): Backend 60h, Frontend 30h, QA 20h\nPW-4 RBAC (13 pts, High): Backend 90h, Frontend 30h, QA 24h\nPW-5 Dashboard (8 pts, High): Backend 30h, Frontend 60h, QA 16h\nPW-6 Invoice list/detail (5 pts, Medium): Backend 30h, Frontend 40h, QA 12h\nPW-7 Payment integration (13 pts, Urgent): Backend 110h, Frontend 20h, QA 30h, DevOps 16h\nPW-8 Legacy migration (21 pts, High): Backend 160h, QA 30h, DevOps 24h\n\nRole totals:\nBackend: 16+60+90+30+30+110+160 = 496h\nFrontend: 90+30+30+60+40+20 = 270h\nQA: 8+12+20+24+16+12+30+30 = 152h\nDevOps: 40+16+24 = 80h\n\nCapacity check over an assumed ~14-week (560 person-hours per 1.0 FTE at 40h/wk) delivery window:\nBackend 1.5 FTE -> 1.5*40*14=840h capacity vs 496h needed: feasible.\nFrontend 1.0 FTE -> 40*14=560h vs 270h needed: feasible, has slack for design system heavy load.\nQA 0.6 FTE -> 24*14=336h vs 152h needed: feasible.\nDevOps 0.4 FTE -> 16*14=224h vs 80h needed: feasible, though DevOps is thin and concentrated early (PW-1) which could bottleneck the start of the project since only 0.4 FTE is available for the critical-path CI/staging setup.\n\nPriority totals computed by summing labour cost per task grouped by priority using role rates.",
+        "Reductions": [
+          {
+            "Id": "82b5a880-74dd-40b7-a1f3-5b8220939447",
+            "Description": "Descope PW-2 (Design system and component library) to a minimal set (buttons, forms, tables only; defer theming tokens and dialogs) given it is Medium priority",
+            "Saving": 3600,
+            "Effect": "Reduces Frontend Developer hours on PW-2 from 90h to ~50h",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "01498707-23e4-4221-b461-6995fd44ba14",
+            "Description": "Defer PW-6 (Invoice list and detail view) to a later phase since it is Medium priority and not required for initial launch",
+            "Saving": 9440,
+            "Effect": "Removes PW-6 entirely from this phase (Backend 30h, Frontend 40h, QA 12h)",
+            "Confidence": "high"
+          },
+          {
+            "Id": "84cebee8-df10-4c62-bc41-1a74bd0f4b6c",
+            "Description": "Reduce QA hours on lower-risk tasks (PW-2, PW-5, PW-6) by tightening test scope to critical paths only, relying more on automated regression from PW-1 pipeline",
+            "Saving": 1960,
+            "Effect": "Cuts ~28 QA hours across Medium/High priority non-payment tasks",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "5317bdfb-26e3-4c71-a0c6-18e366c6e628",
+            "Description": "Use a managed/off-the-shelf migration tool instead of custom scripting for PW-8, reducing Backend Developer hours needed for ETL work",
+            "Saving": 4900,
+            "Effect": "Reduces Backend Developer hours on PW-8 from 160h to ~110h",
+            "Confidence": "low"
+          },
+          {
+            "Id": "69bd27c7-9781-4760-929b-939bed03f00f",
+            "Description": "Delay non-critical non-labour spend (design/component library licensing) until PW-2 scope is confirmed post-descope",
+            "Saving": 400,
+            "Effect": "Removes design/component licensing line item from this phase's budget",
+            "Confidence": "high"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 5,
+      "ElapsedSeconds": 27.7020712,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2820,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 163000,
+        "ComponentsSum": 155364.6,
+        "SumRelativeDeviation": 0.04684294478527607,
+        "PriorityBreakdownRelativeDeviation": 0.12966503067484664,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1520,
+        "AssumptionCount": 9,
+        "ReductionCount": 4,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 620,
+          "Frontend Developer": 460,
+          "QA Engineer": 260,
+          "DevOps Engineer": 180
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 (Base estimate)",
+            "Percentile": 50,
+            "Total": 141864.6,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P75 (Likely with integration/testing overruns)",
+            "Percentile": 75,
+            "Total": 163000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P90 (Worst case - migration & RBAC complexity)",
+            "Percentile": 90,
+            "Total": 184000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 620,
+            "HourlyRate": 98.33,
+            "Cost": 60964.6
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 460,
+            "HourlyRate": 90,
+            "Cost": 41400
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 260,
+            "HourlyRate": 70,
+            "Cost": 18200
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 180,
+            "HourlyRate": 110,
+            "Cost": 19800
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud infrastructure & staging environment (CI/CD, hosting) - first quarter",
+            "Amount": 4500
+          },
+          {
+            "Description": "Stripe integration sandbox/testing fees and webhook monitoring tooling",
+            "Amount": 1500
+          },
+          {
+            "Description": "Legacy data migration tooling/licensing (ETL tools, temporary Oracle connectivity)",
+            "Amount": 6000
+          },
+          {
+            "Description": "Contingency buffer for third-party API changes / migration data cleansing",
+            "Amount": 3000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 55000
+          },
+          {
+            "Priority": "High",
+            "Total": 62000
+          },
+          {
+            "Priority": "Medium",
+            "Total": 24864.6
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals/velocity data exist for this team; estimates are based on typical industry hours-per-story-point benchmarks, not project-specific history.",
+          "1 story point is assumed to equate to roughly 6-9 blended engineering hours depending on task complexity and role mix.",
+          "Delivery window assumed to be approximately one quarter (13 weeks); FTE capacity figures are derived from this window (Backend ~2,340 hrs, Frontend ~1,560 hrs, QA ~936 hrs, DevOps ~624 hrs), though actual allocation is well below max capacity to leave room for other concurrent work and non-project overhead.",
+          "DevOps Engineer is staffed at only 0.4 FTE, which is thin relative to the CI/staging setup (PW-1), payment infra, and migration cutover support all competing for this same limited pool of hours; this is a scheduling risk.",
+          "Legacy data migration (PW-8) is treated as the highest-risk item due to unknown legacy schema quality; hours may increase materially once schema profiling is done.",
+          "Payment provider integration (PW-7) assumes Stripe (not a custom PSP), reducing integration complexity versus a bespoke gateway.",
+          "QA Engineer at 0.6 FTE is assumed to focus testing effort on Urgent/High priority items first, with lighter regression coverage on Medium priority items (PW-2, PW-6).",
+          "Non-labour costs are rough order-of-magnitude estimates for cloud infra, Stripe sandbox fees, and migration tooling; actual vendor quotes were not available.",
+          "Priority breakdown totals are approximate allocations of labour + non-labour costs mapped to the priority of the dominant tasks in each band."
+        ],
+        "Reasoning": "Backlog totals 81 story points across 8 tasks. No historical velocity/actuals exist for this team, so I used industry-typical hours-per-point (6-10 hrs/point blended across roles depending on task type) and split effort by role based on task nature (backend-heavy, frontend-heavy, QA, infra). Team capacity: Backend 1.5 FTE (~2,340 hrs/quarter), Frontend 1.0 FTE (~1,560 hrs/quarter), QA 0.6 FTE (~936 hrs/quarter), DevOps 0.4 FTE (~624 hrs/quarter) assuming a ~13-week (1 quarter) delivery window at ~40hr/week per FTE minus overhead (~120 hrs/month/FTE effective). Given DevOps is only 0.4 FTE, PW-1 (CI/staging) and later infra support consume a large share of that thin capacity, flagged as a risk. Legacy data migration (PW-8, 21 points) is the largest and riskiest item, split across Backend + QA + DevOps. Payment integration (PW-7) and RBAC (PW-4) are also large.\n\nHours were allocated per task by estimating effort per role:\n- PW-1 (CI/staging, 5pt): DevOps-led, some Backend support.\n- PW-2 (Design system, 8pt): Frontend-led.\n- PW-3 (Registration/login, 8pt): Backend-led with Frontend + QA.\n- PW-4 (RBAC, 13pt): Backend-led, Frontend + QA support.\n- PW-5 (Dashboard, 8pt): Frontend-led, Backend API support, QA.\n- PW-6 (Invoice list/detail, 5pt): Frontend + Backend, QA.\n- PW-7 (Payment integration, 13pt): Backend-led (webhooks/reconciliation are backend-heavy), QA, some DevOps for infra/monitoring.\n- PW-8 (Data migration, 21pt): Backend-heavy scripting/ETL, DevOps for environment/cutover, QA for validation.\n\nTotal hours per role were summed and rates applied exactly per the rate card. Non-labour costs added for staging/cloud infra, Stripe fees/sandbox, and a data migration tooling/environment cost given the scale (400k records, 2M invoice lines) and typical one-off migration tooling/licensing needs.\n\nScenarios: P50 is the base estimate as built. P75 (likely) adds ~15% contingency for integration/testing overruns typical in payment and migration work. P90 (worst case) adds ~30% to account for RBAC complexity, Stripe reconciliation edge cases, and legacy schema surprises in migration.\n\nReductions identified: defer design system polish (theming tokens) to later phase, reduce QA scope on lower-priority invoice view by relying on shared test cases from dashboard work, and negotiate a phased/partial data migration (e.g., migrate active accounts first, defer historical/inactive records) to cut initial migration hours.",
+        "Reductions": [
+          {
+            "Id": "437b6b0a-71c8-4338-bfe3-4930f9a24183",
+            "Description": "Defer full theming tokens/advanced design system polish (PW-2) to a later phase, delivering only core components (buttons, forms, tables, dialogs) now.",
+            "Saving": 6300,
+            "Effect": "Reduces Frontend Developer hours on PW-2 by ~70 hours.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "e8db1cc1-6966-4f03-b0aa-9d26cd0e6fe4",
+            "Description": "Phase the legacy data migration (PW-8): migrate active customer accounts and recent invoices first, defer historical/inactive records to a follow-up project phase.",
+            "Saving": 15000,
+            "Effect": "Reduces Backend, QA, and DevOps hours allocated to PW-8 by roughly 35%, plus reduces migration tooling non-labour cost.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "add0142c-d8bc-4ad0-bad5-36bee6ca0cea",
+            "Description": "Reduce dedicated QA regression coverage on Medium-priority Invoice list/detail view (PW-6), relying on reused test cases from the Dashboard (PW-5) work.",
+            "Saving": 2100,
+            "Effect": "Cuts QA Engineer hours on PW-6 by ~30 hours.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "6581f393-05cd-48c5-baae-99146c7b36d8",
+            "Description": "Delay non-critical DevOps monitoring/alerting setup for Stripe webhooks until post-launch stabilization sprint.",
+            "Saving": 1500,
+            "Effect": "Removes the Stripe monitoring tooling non-labour line item from initial budget.",
+            "Confidence": "high"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 6,
+      "ElapsedSeconds": 27.7482056,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2892,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 0.75,
+        "MaxLineArithmeticError": 16.00,
+        "RealisticTotal": 129625.22,
+        "ComponentsSum": 112717.58,
+        "SumRelativeDeviation": 0.13043480273360383,
+        "PriorityBreakdownRelativeDeviation": 0.19986650745896517,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1112,
+        "AssumptionCount": 7,
+        "ReductionCount": 4,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 526,
+          "Frontend Developer": 340,
+          "QA Engineer": 142,
+          "DevOps Engineer": 104
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 - Base estimate (as scoped)",
+            "Percentile": 50,
+            "Total": 112717.58,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P70 - With integration/migration rework contingency (+15%)",
+            "Percentile": 70,
+            "Total": 129625.22,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P90 - With material schedule/scope risk (+30%)",
+            "Percentile": 90,
+            "Total": 146532.85,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 526,
+            "HourlyRate": 98.33,
+            "Cost": 51737.58
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 340,
+            "HourlyRate": 90,
+            "Cost": 30600
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 142,
+            "HourlyRate": 70,
+            "Cost": 9940
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 104,
+            "HourlyRate": 110,
+            "Cost": 11440
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees, sandbox testing, and compliance review support",
+            "Amount": 1500
+          },
+          {
+            "Description": "Staging/CI cloud infrastructure (environments, pipelines) for project duration",
+            "Amount": 2500
+          },
+          {
+            "Description": "Legacy data migration tooling, validation scripts, and Oracle export/connectivity licensing",
+            "Amount": 4000
+          },
+          {
+            "Description": "Contingency buffer for third-party/API rate changes and misc tooling",
+            "Amount": 1000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 40460.9
+          },
+          {
+            "Priority": "High",
+            "Total": 51204.68
+          },
+          {
+            "Priority": "Medium",
+            "Total": 12051.9
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project; effort-per-story-point and role splits are estimated from comparable SaaS portal projects, not measured data.",
+          "Assumed delivery window of ~12 weeks, used only to sanity-check that allocated hours per role stay within available FTE capacity.",
+          "1 story point ≈ 6-7 hours of blended effort, adjusted per task based on which roles are actually involved.",
+          "QA Engineer (0.6 FTE) and DevOps Engineer (0.4 FTE) capacity is thin relative to the backlog's testing and infrastructure/migration needs; this is a scheduling risk, not just a cost one.",
+          "Legacy data migration (PW-8) is treated as primarily a Backend + DevOps effort with QA validation, excluding any DBA-specific role since none is staffed on this project.",
+          "Non-labour costs are rough allowances for Stripe fees, cloud/staging infrastructure, and migration tooling; actual vendor quotes were not available.",
+          "All 8 backlog items are assumed in-scope for this estimate; descoping or deferring lower-priority items would reduce the total as shown in the reductions section."
+        ],
+        "Reasoning": "Estimate derived from story points using a standard planning-poker conversion (1 point ≈ 6-7 hours of blended engineering effort, adjusted per task type), then split across roles based on task nature (backend-heavy, frontend-heavy, QA, DevOps). Total backlog = 81 points. No historical actuals exist for this team/project, so effort-per-point is an assumption calibrated from typical SaaS portal builds of similar complexity (auth, RBAC, payments, data migration). Role hours were sanity-checked against available FTE capacity over an assumed ~3-month (12-week) delivery window:\n- Backend Developer: 1.5 FTE x 12 weeks x 40h = 720h capacity\n- Frontend Developer: 1.0 FTE x 12 weeks x 40h = 480h capacity\n- QA Engineer: 0.6 FTE x 12 weeks x 40h = 288h capacity\n- DevOps Engineer: 0.4 FTE x 12 weeks x 40h = 192h capacity\n\nAllocated hours were kept within these envelopes, with DevOps and QA flagged as tight given the backlog (data migration, payments webhooks, and CI setup all compete for the same thin DevOps/QA capacity).\n\nTask-level effort logic:\n- PW-1 (CI/staging, 5pts, High): DevOps-led, some Backend support. ~40h DevOps + 16h Backend.\n- PW-2 (Design system, 8pts, Medium): Frontend-heavy. ~120h Frontend + 16h QA.\n- PW-3 (Registration/login, 8pts, Urgent): Backend-heavy with Frontend and QA. ~70h Backend + 40h Frontend + 20h QA.\n- PW-4 (RBAC, 13pts, High): Backend + Frontend + QA, cross-cutting. ~90h Backend + 50h Frontend + 24h QA.\n- PW-5 (Dashboard, 8pts, High): Frontend-led with Backend API work. ~40h Backend + 70h Frontend + 16h QA.\n- PW-6 (Invoice list/detail, 5pts, Medium): Balanced Backend/Frontend. ~40h Backend + 40h Frontend + 12h QA.\n- PW-7 (Stripe integration, 13pts, Urgent): Backend + DevOps (webhooks) + QA (reconciliation testing). ~110h Backend + 20h Frontend + 30h QA + 24h DevOps.\n- PW-8 (Legacy migration, 21pts, High): Backend + DevOps heavy, QA validation. ~160h Backend + 40h DevOps + 40h QA.\n\nSummed and rounded to role totals: Backend 526h, Frontend 340h, QA 142h, DevOps 104h. All within FTE capacity envelopes (Backend well within 720h, Frontend within 480h, QA within 288h, DevOps within 192h), though QA and DevOps remain the tightest constraints relative to the risk profile of payments and migration work — flagged as a risk requiring either scope reduction, timeline extension, or temporary contractor support.\n\nNon-labour costs include Stripe sandbox/production fees, staging/cloud infrastructure for CI and migration dry-runs, and a data migration validation/reconciliation tooling allowance.\n\nScenarios (P50/P70/P90) reflect uncertainty typical for a project with no historical actuals: P50 is the base build as scoped, P70 adds ~15% contingency for integration and migration rework, P90 adds ~30% for material schedule/scope risk (e.g., migration data quality issues, Stripe compliance review delays).",
+        "Reductions": [
+          {
+            "Id": "c1b4de6a-0978-452f-9a76-8ab86ec4bb70",
+            "Description": "Defer PW-2 (Design system and component library, Medium priority) to a later phase and use a minimal off-the-shelf Angular Material theme instead of a custom component library for MVP.",
+            "Saving": 12240,
+            "Effect": "Reduces Frontend hours by ~120h and QA hours by ~16h; delays a polished design system until post-launch.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "b73f7cb5-47fe-4454-88c1-8bf899915712",
+            "Description": "Descope PW-6 (Invoice list and detail view, Medium priority) from this phase, shipping a simpler read-only invoice table without PDF download initially.",
+            "Saving": 5670,
+            "Effect": "Removes ~40h Backend, ~40h Frontend, ~12h QA; PDF export and filtering added in a later release.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8141cc97-7d0b-4f9b-9023-7f6d06d15f13",
+            "Description": "Reduce QA hours on PW-4 (RBAC) by relying more on automated test coverage built during PW-3, rather than a full separate QA pass.",
+            "Saving": 1400,
+            "Effect": "Cuts ~20h of QA Engineer time; slightly increases regression risk on permission edge cases.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "8a263150-d3ad-4462-9f41-98ffdcc5bafb",
+            "Description": "Defer non-critical migration tooling/licensing spend by reusing existing open-source ETL scripts instead of purchasing a commercial Oracle connectivity tool.",
+            "Saving": 2500,
+            "Effect": "Reduces non-labour migration tooling line from $4,000 to $1,500; requires more Backend engineering time to build custom scripts (not separately costed here).",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 7,
+      "ElapsedSeconds": 35.5533078,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 3778,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 0,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 0,
+        "ComponentsSum": 210943.6,
+        "SumRelativeDeviation": null,
+        "PriorityBreakdownRelativeDeviation": null,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1974,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 920,
+          "Frontend Developer": 600,
+          "QA Engineer": 274,
+          "DevOps Engineer": 180
+        }
+      },
+      "Result": {
+        "Scenarios": null,
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 920,
+            "HourlyRate": 98.33,
+            "Cost": 90463.6
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 600,
+            "HourlyRate": 90,
+            "Cost": 54000.0
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 274,
+            "HourlyRate": 70,
+            "Cost": 19180.0
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 180,
+            "HourlyRate": 110,
+            "Cost": 19800.0
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud staging/production environment costs (6 months)",
+            "Amount": 6000
+          },
+          {
+            "Description": "Stripe integration sandbox, PCI review, and transaction test fees",
+            "Amount": 4000
+          },
+          {
+            "Description": "Oracle legacy DB access, extraction tooling, and migration licensing",
+            "Amount": 9500
+          },
+          {
+            "Description": "Contingency buffer for legacy data migration risk (data quality/reconciliation)",
+            "Amount": 8000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 51088.9
+          },
+          {
+            "Priority": "High",
+            "Total": 98174.9
+          },
+          {
+            "Priority": "Medium",
+            "Total": 34179.8
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals/spend data exist for this project yet; estimate is based on story-point-to-hour heuristics (~6-8 hrs/point) and typical role mix per task type, not empirical velocity.",
+          "Assumed a ~26-week (6-month) delivery window when checking hour allocations against FTE capacity.",
+          "DevOps Engineer (0.4 FTE, 180 hours allocated) is thinly staffed relative to the two infrastructure-heavy tasks (CI/staging setup and legacy migration cutover); this role is a scheduling risk and may bottleneck delivery timing even though cost is contained.",
+          "QA Engineer (0.6 FTE) hours were kept lean (274 hours total) and spread thinly across all 8 backlog items; deeper regression/security testing (especially for RBAC and payments) may require additional QA time not currently budgeted.",
+          "Legacy data migration (PW-8, 21 points) carries the highest cost and risk due to data quality unknowns in the source Oracle schema; a contingency line was added rather than inflating labour hours speculatively.",
+          "Backend Developer hours (920 of ~1,560 available) and Frontend Developer hours (600 of ~1,040 available) leave headroom for rework, code review, and PM/coordination overhead not separately itemized.",
+          "Non-labour costs are rough placeholders for cloud, Stripe fees, and Oracle tooling; actual vendor quotes should replace these once available.",
+          "Story points were treated as relative complexity indicators only; actual hours may vary significantly once technical spikes are done, particularly for PW-7 (Stripe) and PW-8 (migration)."
+        ],
+        "Reasoning": "\nBacklog totals 81 story points across 8 tasks. No historical velocity/actuals exist for this team, so I estimated hours per task using a standard consulting heuristic (~6-8 hours per story point, split across roles by task nature), then allocated across the 4 staffed roles in proportion to their FTE capacity and the nature of the work (backend-heavy for RBAC/payments/migration, frontend-heavy for design system/dashboard/invoice UI, QA across all functional stories, DevOps concentrated on CI/pipeline and migration cutover support).\n\nRole capacity check (assuming a ~6-month, 26-week delivery window at 40 hrs/week/FTE):\n- Backend Developer: 1.5 FTE => ~1,560 hours available\n- Frontend Developer: 1.0 FTE => ~1,040 hours available\n- QA Engineer: 0.6 FTE => ~624 hours available\n- DevOps Engineer: 0.4 FTE => ~416 hours available\n\nI allocated hours per task summing to totals below, then checked against these caps. DevOps and QA are the tightest constraints given low FTE, so I kept their allocations lean and flagged that DevOps in particular is thinly staffed relative to two infrastructure-heavy items (PW-1 CI/staging and PW-8 migration cutover).\n\nTask-level hour allocation (Backend / Frontend / QA / DevOps):\n- PW-1 CI pipeline & staging (5 pts): 20 / 0 / 10 / 60\n- PW-2 Design system (8 pts): 10 / 190 / 20 / 0\n- PW-3 Registration/login (8 pts): 110 / 60 / 40 / 8\n- PW-4 RBAC (13 pts): 190 / 90 / 50 / 6\n- PW-5 Customer dashboard (8 pts): 60 / 130 / 30 / 0\n- PW-6 Invoice list/detail (5 pts): 50 / 90 / 24 / 0\n- PW-7 Payment integration (13 pts): 220 / 40 / 60 / 16\n- PW-8 Legacy data migration (21 pts): 260 / 0 / 40 / 90\n\nRole hour totals:\n- Backend Developer: 20+10+110+190+60+50+220+260 = 920 hours\n- Frontend Developer: 0+190+60+90+130+90+40+0 = 600 hours\n- QA Engineer: 10+20+40+50+30+24+60+40 = 274 hours\n- DevOps Engineer: 60+0+8+6+0+0+16+90 = 180 hours\n\nAll within FTE capacity caps computed above, with some headroom for the two Backend/Frontend FTEs to absorb rework and PM coordination overhead, while QA and DevOps run closer to their ceiling (DevOps at ~43% utilization of a 6-month window on 0.4 FTE, which is appropriate given only two infra-heavy tasks).\n\nCosts:\n- Backend Developer: 920 x 98.33 = 90,463.60\n- Frontend Developer: 600 x 90 = 54,000.00\n- QA Engineer: 274 x 70 = 19,180.00\n- DevOps Engineer: 180 x 110 = 19,800.00\nLabour subtotal = 183,443.60\n\nNon-labour costs: Stripe integration test/sandbox fees, cloud staging environment costs, Oracle migration tooling/licensing, and a contingency buffer for the legacy migration task (historically high-risk, no actuals to calibrate against).\n\nPriority breakdown (sum of task cost allocations, computed by summing role costs per task):\n- PW-1 (High): 20*98.33+10*70+60*110 = 1966.60+700+6600 = 9,266.60\n- PW-2 (Medium): 10*98.33+190*90+20*70 = 983.30+17100+1400 = 19,483.30\n- PW-3 (Urgent): 110*98.33+60*90+40*70+8*110 = 10816.30+5400+2800+880 = 19,896.30\n- PW-4 (High): 190*98.33+90*90+50*70+6*110 = 18682.70+8100+3500+660 = 30,942.70\n- PW-5 (High): 60*98.33+130*90+30*70 = 5899.80+11700+2100 = 19,699.80\n- PW-6 (Medium): 50*98.33+90*90+24*70 = 4916.50+8100+1680 = 14,696.50\n- PW-7 (Urgent): 220*98.33+40*90+60*70+16*110 = 21632.60+3600+4200+1760 = 31,192.60\n- PW-8 (High): 260*98.33+40*70+90*110 = 25565.80+2800+9900 = 38,265.80\n\nSum check: 9266.60+19483.30+19896.30+30942.70+19699.80+14696.50+31192.60+38265.80 = 183,443.60 ✓ matches labour subtotal.\n\nGrouped by priority:\n- Urgent: 19,896.30+31,192.60 = 51,088.90\n- High: 9,266.60+30,942.70+19,699.80+38,265.80 = 98,174.90\n- Medium: 19,483.30+14,696.50 = 34,179.80\n\nTotal labour + non-labour = 183,443.60 + 27,500 (non-labour, see lines) = 210,943.60\n\nScenarios: P50 = base estimate; P80 adds contingency for migration/integration risk and thin DevOps staffing; P20 optimistic assumes no rework and smooth Stripe/Oracle integration.\n</reasoning>\n<scenarios>[\n  {\"name\": \"Optimistic (best case, minimal rework)\", \"percentile\": 20, \"total\": 189000, \"confidence\": \"medium\"},\n  {\"name\": \"Most likely (base estimate)\", \"percentile\": 50, \"total\": 210944, \"confidence\": \"high\"},\n  {\"name\": \"Pessimistic (migration/integration risk, DevOps bottleneck)\", \"percentile\": 80, \"total\": 248000, \"confidence\": \"medium\"}\n]",
+        "Reductions": [
+          {
+            "Id": "b2d943af-e861-4730-9831-38dc7d135835",
+            "Description": "Descope PW-2 (Design system and component library) to a minimal set of shared components now, deferring full theming tokens and advanced dialog variants to a later phase",
+            "Saving": 8000,
+            "Effect": "Reduces Frontend Developer hours on PW-2 from 190 to ~100; ships faster but requires incremental design system investment later",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "36e1b24a-d79c-4a11-ab44-a311257d945b",
+            "Description": "Defer PW-6 (Invoice list and detail view) to a follow-up release since it is Medium priority and not required for initial launch",
+            "Saving": 14697,
+            "Effect": "Removes PW-6 entirely from this phase (50 Backend, 90 Frontend, 24 QA hours); invoice viewing would ship post-launch",
+            "Confidence": "high"
+          },
+          {
+            "Id": "0a9f2123-12e7-4da3-b8df-d32cc0c03581",
+            "Description": "Reduce QA hours on lower-risk Medium-priority items (PW-2, PW-6) by relying more on developer self-testing and automated checks",
+            "Saving": 3080,
+            "Effect": "Cuts ~44 QA hours from design system and invoice view tasks; increases regression risk on those specific features only",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "ed2eefd0-263b-492d-b7ef-ea15bd061093",
+            "Description": "Use a managed migration/ETL SaaS tool with a fixed-price package instead of custom tooling and licensing for PW-8",
+            "Saving": 4500,
+            "Effect": "Replaces ad-hoc Oracle extraction licensing line with a cheaper fixed-price service; may reduce migration tooling flexibility",
+            "Confidence": "low"
+          },
+          {
+            "Id": "12995440-f515-45c4-96c2-58852aa598e4",
+            "Description": "Trim the legacy migration contingency buffer from $8,000 to $4,000 by running an early data-profiling spike to reduce unknowns before committing full contingency",
+            "Saving": 4000,
+            "Effect": "Lowers non-labour contingency; only advisable after a scoped data-quality spike confirms lower risk",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 8,
+      "ElapsedSeconds": 64.4729616,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 4284,
+        "OutputTokens": 6569,
+        "Calls": 2
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 199000,
+        "ComponentsSum": 190930.6,
+        "SumRelativeDeviation": 0.04054974874371859,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1880,
+        "AssumptionCount": 11,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 820,
+          "Frontend Developer": 560,
+          "QA Engineer": 340,
+          "DevOps Engineer": 160
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic",
+            "Percentile": 20,
+            "Total": 168000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Most Likely",
+            "Percentile": 50,
+            "Total": 199000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic",
+            "Percentile": 80,
+            "Total": 245000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 820,
+            "HourlyRate": 98.33,
+            "Cost": 80630.6
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 560,
+            "HourlyRate": 90,
+            "Cost": 50400
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 340,
+            "HourlyRate": 70,
+            "Cost": 23800
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 160,
+            "HourlyRate": 110,
+            "Cost": 17600
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration sandbox/testing fees and PCI compliance review",
+            "Amount": 3000
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / temporary read-replica licensing",
+            "Amount": 6000
+          },
+          {
+            "Description": "Staging/CI cloud infrastructure setup (compute, storage) for 3 months",
+            "Amount": 4500
+          },
+          {
+            "Description": "Contingency for third-party/API rate-limit or webhook debugging",
+            "Amount": 5000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 62000
+          },
+          {
+            "Priority": "High",
+            "Total": 108000
+          },
+          {
+            "Priority": "Medium",
+            "Total": 29000
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) exist for this project; estimate is based on backlog points, task descriptions, and standard delivery ratios rather than observed velocity.",
+          "1 story point ≈ 6-7 hours of blended effort, adjusted per task complexity and role mix (e.g. migration and payment integration weighted heavier per point due to risk).",
+          "Backend Developer (1.5 FTE = ~240 hrs/month capacity) is the primary bottleneck given RBAC, payments, and migration all need heavy backend work; allocated hours reflect near-full utilization across an assumed ~3.5 month timeline.",
+          "Frontend Developer (1.0 FTE) hours cover component library, dashboard, invoice UI, and RBAC UI enforcement.",
+          "QA Engineer at 0.6 FTE is thinly staffed relative to 8 backlog items spanning auth, payments, RBAC and migration; QA hours are concentrated on Urgent/High risk items (auth, payments, migration validation) and may need to be supplemented or timeline extended.",
+          "DevOps Engineer at 0.4 FTE covers CI/staging setup (PW-1) plus ongoing pipeline support; allocation is deliberately light and front-loaded early in the project.",
+          "Legacy data migration (PW-8, 21 points) is treated as the highest-effort item due to volume (400k records, 2M invoice lines) and reconciliation/validation needs, with extra non-labour tooling cost.",
+          "Payment provider integration (PW-7) includes webhook handling and reconciliation logic, assumed to require both backend and QA effort plus a PCI/compliance review line item.",
+          "Design system (PW-2) is Medium priority and scoped conservatively as a reusable component set rather than a full design language system.",
+          "Estimate assumes no major scope changes, stable requirements, and availability of a Stripe sandbox and legacy Oracle DB access from project start.",
+          "Timeline assumed at roughly 14-16 weeks based on available FTE capacity against total backlog points (81 points)."
+        ],
+        "Reasoning": "Backlog totals 81 story points across 8 tasks. Using a blended ~6-7 hours/point (higher for the migration and payment items due to integration/reconciliation risk, lower for well-understood CRUD-style UI work), total effort was distributed across the four staffed roles in proportion to their FTE capacity and the nature of the work: Backend Developer carries the largest share (auth, RBAC, payments, migration all need API/service work), Frontend Developer covers the design system and all UI-facing tasks, QA Engineer effort is concentrated on the highest-risk/Urgent items given its limited 0.6 FTE capacity, and DevOps Engineer effort is front-loaded on CI/staging setup with light ongoing support. Non-labour costs cover Stripe/PCI review, migration tooling, cloud/staging infrastructure, and a contingency buffer for third-party integration friction. The Most Likely scenario sums labour (~172,430) plus non-labour (~18,500) plus ~8-9% schedule/scope contingency baked into the pessimistic case; optimistic assumes tighter scope realization and no migration surprises, pessimistic assumes QA understaffing and migration/webhook issues extend timeline and require rate-card overtime-equivalent hours. Priority breakdown is apportioned by summing task-level effort estimates (weighted by points and complexity) per priority bucket, converted at blended labour cost.",
+        "Reductions": [
+          {
+            "Id": "cfd8872b-b2ee-4b24-a2f9-e24f31933fc8",
+            "Description": "Descope Legacy Data Migration (PW-8) to a phased approach: migrate customer records now, defer 2M invoice-line historical migration to a post-launch phase.",
+            "Saving": 18000,
+            "Effect": "Reduces Backend Developer and QA hours tied to migration validation in this phase; invoice history remains available in legacy system in read-only mode until phase 2.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "5aa2a056-3f6f-45bb-a163-9ac908f6afb6",
+            "Description": "Reduce Design System (PW-2) scope to only the components strictly needed for PW-3/PW-5/PW-6 (buttons, forms, tables) and defer full theming/dialog polish.",
+            "Saving": 7500,
+            "Effect": "Cuts ~80 Frontend Developer hours; theming tokens and dialog components can be added incrementally as later tasks require them.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "000c2896-acb6-42a8-bcb6-c35a35a1ede8",
+            "Description": "Defer full RBAC per-project permission matrix (PW-4) UI enforcement to a fast-follow release, shipping API-level enforcement only at launch.",
+            "Saving": 9000,
+            "Effect": "Removes ~70 Frontend Developer and ~30 Backend Developer hours from initial scope; acceptable since API-level checks still secure the system.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "3001025e-b366-4a41-b263-c8dddf8db07b",
+            "Description": "Reduce DevOps non-labour infrastructure spend by using a shared/lower-tier staging environment instead of dedicated cloud resources.",
+            "Saving": 2000,
+            "Effect": "Lowers the staging/CI infrastructure line item; slightly slower staging performance is an acceptable tradeoff pre-launch.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "3bb527c6-fb7d-4eef-bf5c-6b5d925216ad",
+            "Description": "Narrow Payment Provider Integration (PW-7) initial scope to card payments only, deferring reconciliation automation to a manual/semi-manual process for the first release.",
+            "Saving": 6500,
+            "Effect": "Cuts ~50 Backend Developer and ~20 QA hours; finance team handles reconciliation manually short-term, automation added later.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 9,
+      "ElapsedSeconds": 35.3125313,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 3427,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": true,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 98581.8,
+        "ComponentsSum": 98581.8,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 935,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 460,
+          "Frontend Developer": 240,
+          "QA Engineer": 135,
+          "DevOps Engineer": 100
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic (P20) - minimal rework, no major migration surprises",
+            "Percentile": 20,
+            "Total": 80800,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Most likely (P50) - base estimate as staffed",
+            "Percentile": 50,
+            "Total": 98581.8,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "Pessimistic (P80) - migration/payment integration risk, urgent item slippage, QA/DevOps bottleneck",
+            "Percentile": 80,
+            "Total": 116326.4,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 460,
+            "HourlyRate": 98.33,
+            "Cost": 45231.8
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 240,
+            "HourlyRate": 90,
+            "Cost": 21600
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 135,
+            "HourlyRate": 70,
+            "Cost": 9450
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 100,
+            "HourlyRate": 110,
+            "Cost": 11000
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Cloud staging & CI infrastructure (3 months)",
+            "Amount": 1800
+          },
+          {
+            "Description": "Stripe integration testing / PCI compliance review",
+            "Amount": 2500
+          },
+          {
+            "Description": "Oracle-to-target migration tooling/license (PW-8)",
+            "Amount": 4000
+          },
+          {
+            "Description": "Contingency buffer for thinly-staffed QA/DevOps capacity risk",
+            "Amount": 3000
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 33500
+          },
+          {
+            "Priority": "High",
+            "Total": 41500
+          },
+          {
+            "Priority": "Medium",
+            "Total": 12281.8
+          },
+          {
+            "Priority": "Non-labour (all priorities)",
+            "Total": 11300
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project yet; estimate is based on story-point-to-hour heuristics (~6 hours/point blended) and task-type role weighting, not observed velocity.",
+          "Delivery window assumed at roughly 13 weeks (one quarter), used only to sanity-check that allocated hours per role stay within each role's FTE capacity (Backend ~780h, Frontend ~520h, QA ~312h, DevOps ~208h available in that window).",
+          "QA Engineer (0.6 FTE) and DevOps Engineer (0.4 FTE) are thinly staffed relative to the breadth of the backlog (8 tasks spanning auth, RBAC, payments, and a large data migration); allocated QA/DevOps hours are proportionate to capacity but leave little slack for concurrent workstreams, so schedule risk is concentrated there.",
+          "No Project Manager / Business Analyst role exists on the rate card; coordination overhead is assumed to be absorbed informally by the existing engineering roles and is not separately costed.",
+          "Legacy Data Migration (PW-8) hours assume a single migration pass (400k customer records + 2M invoice lines) with standard ETL tooling; unexpected schema mismatches in the legacy Oracle system could increase Backend and DevOps hours materially (captured in the pessimistic scenario).",
+          "Payment Provider Integration (PW-7) assumes standard Stripe Checkout/webhooks integration without custom PSP failover logic; PCI compliance review is a fixed non-labour line rather than ongoing cost.",
+          "Priority-based cost breakdown allocates each task's blended labour cost to its stated priority; non-labour costs are shown separately since they aren't tied to a single priority tier.",
+          "Story points are treated as relative complexity only; actual velocity may vary once real sprint data is collected, and estimate should be recalibrated after the first 2-3 sprints."
+        ],
+        "Reasoning": "\nEstimation approach: Story points converted to engineering hours using a baseline of ~6 hours/point for a blended team (typical mid-complexity SaaS features), then split across roles based on task nature (backend-heavy, frontend-heavy, infra, QA, migration). Total points = 5+8+8+13+8+5+13+21 = 81 points.\n\nRole split logic per task:\n- PW-1 (CI/staging, 5pt): DevOps-heavy, some Backend.\n- PW-2 (Design system, 8pt): Frontend-heavy, light QA.\n- PW-3 (Registration/login, 8pt, Urgent): Backend-heavy, Frontend, QA.\n- PW-4 (RBAC, 13pt, High): Backend-heavy, Frontend, QA.\n- PW-5 (Dashboard, 8pt, High): Frontend-heavy, Backend, QA.\n- PW-6 (Invoice list/detail, 5pt, Medium): Frontend + Backend, QA.\n- PW-7 (Payment integration, 13pt, Urgent): Backend-heavy, DevOps (webhooks/infra), QA (critical path).\n- PW-8 (Legacy migration, 21pt, High): Backend-heavy (ETL scripts), DevOps (infra/cutover), QA (data validation).\n\nHours per point baseline ~6h blended; allocated across roles per task weighting. Totals computed then checked against FTE capacity over an assumed 3-month (13-week, ~520 hours/role at 1.0 FTE) delivery window:\n- Backend Developer: 1.5 FTE => ~780 hours capacity over 13 weeks.\n- Frontend Developer: 1.0 FTE => ~520 hours capacity.\n- QA Engineer: 0.6 FTE => ~312 hours capacity.\n- DevOps Engineer: 0.4 FTE => ~208 hours capacity.\n\nAllocated hours (summed across tasks):\nBackend: PW-1:10, PW-3:60, PW-4:90, PW-5:40, PW-6:30, PW-7:90, PW-8:140 => 460 hours (within 780 cap, leaves room for PM/overhead & rework).\nFrontend: PW-2:70, PW-3:30, PW-4:40, PW-5:60, PW-6:40 => 240 hours (well within 520 cap).\nQA: PW-1:5, PW-3:15, PW-4:25, PW-5:15, PW-6:10, PW-7:30, PW-8:35 => 135 hours (within 312 cap).\nDevOps: PW-1:35, PW-7:25, PW-8:40 => 100 hours (within 208 cap).\n\nThese allocations respect FTE capacity constraints and reflect realistic proportional staffing; QA and DevOps are thinly staffed relative to backlog breadth, so contingency/buffer and phasing risk is flagged.\n\nNon-labour costs: Stripe sandbox/test fees negligible but PCI compliance review, staging cloud infra, and a one-off Oracle migration toolset/license are added. Also project management/coordination overhead assumed absorbed within existing roles (no PM role on rate card) — flagged as assumption.\n\nPriority breakdown computed by summing labour cost of tasks per priority using blended average rate distribution across the hours allocated per task's role mix.\n\nScenario total (P50) = base labour + non-labour. P20 (optimistic, less rework) discounts ~8%. P80 (pessimistic, integration/migration risk, urgent items slip) adds ~18%.\n\nReductions identified: descope PW-2 design system to reuse an off-the-shelf UI kit (saves Frontend hours), reduce QA hours on Medium-priority items by relying on automated regression only, defer non-essential PDF export polish in PW-6, and phase Legacy Data Migration (PW-8) to reduce initial DevOps/Backend hours by handling only critical customer records first with invoices migrated in a later phase.\n",
+        "Reductions": [
+          {
+            "Id": "9d728e8e-1b3f-48fb-8e86-6971a6c390c6",
+            "Description": "Descope PW-2 (custom design system) in favor of adopting an existing Angular Material/PrimeNG theme, reducing custom component build effort",
+            "Saving": 4500,
+            "Effect": "Cuts ~50 Frontend Developer hours from PW-2 (70h -> 20h); trades some visual differentiation for faster, cheaper delivery.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "94ec8c4d-0090-4877-af27-9f6b43447f02",
+            "Description": "Reduce QA hours on Medium-priority items (PW-2, PW-6) by relying on automated regression suite instead of extensive manual test cycles",
+            "Saving": 1050,
+            "Effect": "Cuts ~15 QA Engineer hours across PW-2/PW-6; increases reliance on existing automated coverage and slightly raises regression risk.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "504ce31e-902d-4830-a437-cf06a6392bf3",
+            "Description": "Defer non-essential PDF export styling/polish in PW-6 Invoice detail view to a post-launch iteration",
+            "Saving": 1800,
+            "Effect": "Removes ~20 Backend/Frontend hours from initial scope; PDF export ships with basic formatting only at launch.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "d215f512-8f77-48dc-895f-c437ff1c3dbe",
+            "Description": "Phase Legacy Data Migration (PW-8): migrate only active customer records and last 12 months of invoices in Phase 1, defer full historical invoice migration to Phase 2",
+            "Saving": 9000,
+            "Effect": "Reduces initial Backend (~40h) and DevOps (~15h) migration effort and shrinks the migration tooling license need; full historical data becomes a separately scoped follow-on project.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8212d796-d487-4ad7-8da2-8a931fec5aa3",
+            "Description": "Drop the contingency buffer line if the team accepts higher schedule risk on QA/DevOps-constrained tasks",
+            "Saving": 3000,
+            "Effect": "Removes the non-labour risk buffer entirely; increases likelihood of falling into the pessimistic (P80) cost scenario instead of P50.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 10,
+      "ElapsedSeconds": 24.6973278,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2351,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 137164.6,
+        "ComponentsSum": 137164.6,
+        "SumRelativeDeviation": 0,
+        "PriorityBreakdownRelativeDeviation": 0.043014013819892304,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1430,
+        "AssumptionCount": 10,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 620,
+          "Frontend Developer": 420,
+          "QA Engineer": 260,
+          "DevOps Engineer": 130
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 - Base case",
+            "Percentile": 50,
+            "Total": 137164.6,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P80 - Likely with contingency",
+            "Percentile": 80,
+            "Total": 157000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P90 - High risk (migration/payment complications)",
+            "Percentile": 90,
+            "Total": 175000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 620,
+            "HourlyRate": 98.33,
+            "Cost": 60964.6
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 420,
+            "HourlyRate": 90,
+            "Cost": 37800
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 260,
+            "HourlyRate": 70,
+            "Cost": 18200
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 130,
+            "HourlyRate": 110,
+            "Cost": 14300
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / sandbox & test transaction costs",
+            "Amount": 500
+          },
+          {
+            "Description": "Cloud staging/CI environment hosting (setup + 3 months)",
+            "Amount": 1800
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / temporary read-replica licensing",
+            "Amount": 3000
+          },
+          {
+            "Description": "Design system asset licensing (icons, theming tokens)",
+            "Amount": 600
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 47500
+          },
+          {
+            "Priority": "High",
+            "Total": 62000
+          },
+          {
+            "Priority": "Medium",
+            "Total": 21764.6
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals are available for this project; estimate is based on story points and task complexity only.",
+          "1 story point ≈ 6-7 effective hours of blended work, scaled up for integration/coordination overhead on complex tasks (RBAC, payments, migration).",
+          "Backend Developer FTE = 1.5 people ≈ 120 hrs/week capacity; Frontend = 1.0 FTE ≈ 80 hrs/week; QA = 0.6 FTE ≈ 48 hrs/week; DevOps = 0.4 FTE ≈ 32 hrs/week - all roles are staffed thinly relative to backlog, implying a multi-sprint (roughly 10-12 week) delivery timeline rather than a short burst.",
+          "DevOps Engineer (0.4 FTE) is the tightest constraint and is only allocated to CI/pipeline, migration infra, and payment webhook infra work - not general support.",
+          "QA Engineer (0.6 FTE) effort is concentrated on the urgent/high priority items (auth, RBAC, payments, migration) with lighter coverage on medium priority items.",
+          "Legacy data migration (PW-8) is treated as high-risk and includes extra Backend + QA + DevOps time for validation/reconciliation given the volume (400k customers, 2M invoice lines).",
+          "Payment provider integration (PW-7) includes webhook handling and reconciliation logic, requiring both Backend and QA time plus DevOps for secure webhook infra.",
+          "Design system (PW-2) is primarily Frontend-led with minimal QA/Backend involvement.",
+          "Estimate excludes ongoing post-launch support/maintenance costs - scope is limited to delivering the 8 backlog items to production-ready state.",
+          "A ~12% contingency is implicitly reflected in the P80 scenario to account for estimation uncertainty given lack of actuals."
+        ],
+        "Reasoning": "Effort was sized per backlog item using story points as a relative complexity proxy, translated into role-specific hours based on the nature of each task (e.g., CI/pipeline skews DevOps+Backend, design system skews Frontend, RBAC/payments/migration skew Backend+QA+DevOps). Hours were then checked against each role's FTE capacity to confirm the allocation is plausible over a ~10-12 week delivery window rather than an unrealistic compressed sprint. Backend Developer carries the largest share of hours given RBAC, payments, dashboard, invoice view, and migration all require significant API/service work. QA hours are concentrated on urgent/high risk items. DevOps hours are deliberately capped given only 0.4 FTE is available, limited to CI setup, migration infra, and payment webhook security. Non-labour costs cover third-party tooling (Stripe, cloud hosting, migration tooling, design assets) that are typically billed separately from labour. Total labour cost of ~$131,264.60 plus ~$5,900 non-labour gives a base (P50) estimate of ~$137,165, with P80/P90 scenarios adding contingency for the acknowledged estimation uncertainty (no historical actuals, high complexity of migration and payments).",
+        "Reductions": [
+          {
+            "Id": "b4517d3a-d887-4da0-a5e0-6dc5afd7d27d",
+            "Description": "Defer Design system and component library (PW-2, Medium priority) to a post-launch phase and use a base Angular Material theme initially instead of a fully custom component library.",
+            "Saving": 15000,
+            "Effect": "Removes most Frontend hours allocated to PW-2 (~165 hrs) and associated design asset licensing; delays polish but not core functionality.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "33e0caa1-b180-4c9c-bb20-563be2ec37f2",
+            "Description": "Reduce QA coverage on Medium priority items (PW-2, PW-6) to smoke testing only rather than full test cycles, relying on developer self-testing.",
+            "Saving": 4200,
+            "Effect": "Cuts ~60 QA hours from lower-risk backlog items while retaining full QA rigor on Urgent/High items.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "b8bc5ee3-b497-4822-b456-310342c6cda8",
+            "Description": "Descope PDF download from Invoice list and detail view (PW-6) to a follow-up release, delivering only the paged list and detail view initially.",
+            "Saving": 3500,
+            "Effect": "Removes Backend and Frontend hours tied to PDF generation/rendering (~35 hrs combined).",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "99435860-39e0-43ae-a714-5fa3e1f8c322",
+            "Description": "Use a managed migration service/off-the-shelf ETL tool instead of custom-built migration scripts for PW-8, reducing Backend engineering hours.",
+            "Saving": 8000,
+            "Effect": "Cuts ~70 Backend hours and ~10 DevOps hours on PW-8 by leveraging existing tooling instead of fully bespoke code, offset partially by tooling licensing already included in non-labour.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "4bd8e246-cd44-4413-8f4f-31926d680e34",
+            "Description": "Delay non-critical staging environment hardening and use a minimal single-environment CI setup for initial launch.",
+            "Saving": 1200,
+            "Effect": "Reduces DevOps hours on PW-1 by ~8 hrs and cloud hosting non-labour spend.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-2",
+      "Scenario": "sredni backlog, pelny cennik",
+      "Attempt": 1,
+      "ElapsedSeconds": 33.227576,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 3022,
+        "OutputTokens": 3232,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioRolesRecognisable": false,
+        "ScenarioNamesLiteral": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 231900,
+        "ComponentsSum": 229430.2,
+        "SumRelativeDeviation": 0.010650280293229841,
+        "PriorityBreakdownRelativeDeviation": 0.15265200517464425,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2150,
+        "AssumptionCount": 10,
+        "ReductionCount": 5,
+        "NonLabourCount": 6,
+        "HoursByRole": {
+          "Backend Developer": 940,
+          "Frontend Developer": 610,
+          "QA Engineer": 370,
+          "DevOps Engineer": 230
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 - Base estimate",
+            "Percentile": 50,
+            "Total": 196500,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P80 - Likely with integration/migration risk buffer",
+            "Percentile": 80,
+            "Total": 231900,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P95 - High risk realized (migration, Stripe, staffing constraints)",
+            "Percentile": 95,
+            "Total": 265300,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 940,
+            "HourlyRate": 98.33,
+            "Cost": 92430.2
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 610,
+            "HourlyRate": 90,
+            "Cost": 54900
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 370,
+            "HourlyRate": 70,
+            "Cost": 25900
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 230,
+            "HourlyRate": 110,
+            "Cost": 25300
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration sandbox/test fees and PCI-related review",
+            "Amount": 3000
+          },
+          {
+            "Description": "Cloud infra costs for CI/staging environment (PW-1) over project duration",
+            "Amount": 4500
+          },
+          {
+            "Description": "Data migration tooling / Oracle export utilities and temporary storage (PW-8)",
+            "Amount": 6000
+          },
+          {
+            "Description": "Third-party accessibility audit (WCAG 2.2 AA validation, PW-15)",
+            "Amount": 3500
+          },
+          {
+            "Description": "Security review of auth/2FA/RBAC implementation before go-live",
+            "Amount": 4000
+          },
+          {
+            "Description": "Contingency / unallocated buffer (5% of labour)",
+            "Amount": 9900
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 38500
+          },
+          {
+            "Priority": "High",
+            "Total": 78400
+          },
+          {
+            "Priority": "Medium",
+            "Total": 62600
+          },
+          {
+            "Priority": "Low",
+            "Total": 17000
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project yet; estimate is based purely on backlog sizing and rate card, not past performance.",
+          "Assumed a delivery window of ~17 weeks (4 months), giving Backend 1020h, Frontend 680h, QA 408h and DevOps 272h theoretical capacity; allocated hours were kept below these ceilings.",
+          "Backend Developer (1.5 FTE) is the most heavily loaded role given the volume of API-heavy work (auth, RBAC, payments, migration, GDPR, 2FA, multi-currency); at ~940 of 1020 available hours it is staffed close to its ceiling and is a scheduling risk if any backend task slips.",
+          "DevOps Engineer (0.4 FTE) is thinly staffed relative to infra-touching tasks (CI/CD, migration infra, observability, rate limiting, decommissioning); flagged as a risk of delay rather than a cost risk.",
+          "No Project Manager / Scrum Master / BA role exists on the rate card, so no coordination overhead is costed; assumed the roles self-organize or a client-side PM exists.",
+          "Story points were converted using an approximate 5 hours/point blended rate across all roles combined, adjusted per task type (e.g., migration and payments weighted higher due to complexity and reconciliation/testing needs).",
+          "QA effort was weighted more heavily toward Urgent/High priority and compliance-sensitive tasks (payments, RBAC, GDPR, 2FA, migration) and lighter on cosmetic/UI-only tasks.",
+          "Multi-currency (PW-14) assumed to use a third-party FX rate feed; no separate vendor licensing cost included beyond contingency.",
+          "Legacy data migration (PW-8) assumed one-time cutover with a fallback/reconciliation pass, not a phased multi-year migration.",
+          "Non-labour contingency of 5% of labour cost added to cover minor unforeseen tooling/license costs."
+        ],
+        "Reasoning": "\nSizing approach: converted story points to engineering hours using a baseline of ~5 hours/point for full-stack effort (backend+frontend+QA+devops combined), calibrated per task based on its nature (pure backend, pure UI, infra, data migration, etc). Total backlog points = 5+8+8+13+8+5+13+21+8+8+5+5+8+13+8+5+8+13+8+8+5+8+5+8 = 200 points.\n\nRole allocation logic:\n- Backend Developer (1.5 FTE): owns API/business logic tasks - auth, RBAC, payments, migration, GDPR, audit log, email service, search, multi-currency, rate limiting, contract tests. Heaviest load given 1.5 FTE capacity.\n- Frontend Developer (1.0 FTE): owns UI-heavy tasks - design system, dashboard, invoice UI, ticket UI, admin back-office, analytics, responsive layout, accessibility.\n- QA Engineer (0.6 FTE): testing across all tasks, weighted more heavily on payment, RBAC, migration, GDPR, 2FA (high risk areas).\n- DevOps Engineer (0.4 FTE): CI/CD, observability, decommissioning, migration infra support, rate limiting infra.\n\nCapacity check (assuming a ~4 month / ~17 week delivery window, standard for a backlog this size):\n- Backend: 1.5 FTE * 17 weeks * 40h = 1020h available\n- Frontend: 1.0 FTE * 17 weeks * 40h = 680h available\n- QA: 0.6 FTE * 17 weeks * 40h = 408h available\n- DevOps: 0.4 FTE * 17 weeks * 40h = 272h available\n\nAllocated hours below fit within these envelopes with some buffer for meetings/PM overhead already implicitly excluded (no PM role on rate card, so none allocated - flagged as assumption).\n\nPer-task estimates were built bottom-up (hours per role per task), then summed per role. This gives:\nBackend: ~940h, Frontend: ~610h, QA: ~370h, DevOps: ~230h — all within capacity, with Backend and Frontend running close to full utilization (indicating tight but feasible staffing), consistent with the note that Backend Developer capacity is the primary constraint given the volume of API-heavy work (payments, RBAC, migration, GDPR, 2FA, multi-currency).\n\nNon-labour costs: Stripe integration test/sandbox fees, cloud infra for staging/CI, data migration tooling/Oracle export licensing, contingency for third-party audit (accessibility, security review of auth/payments).\n\nPriority breakdown computed by summing estimated task costs (labour only, allocated pro-rata) grouped by priority tag.\n\nReductions identified: descoping Low-priority items (support ticket sync, admin back-office, usage analytics, contract tests, legacy decommission) which total 39 points/~19.5% of backlog; deferring multi-currency to phase 2; trimming QA on low-risk UI tasks.\n\nScenarios: P50 = base estimate, P80 = +18% for integration/migration risk, P95 = +35% for major risk realization (migration data quality issues, Stripe reconciliation edge cases, timeline slip on thinly-staffed DevOps role).\n",
+        "Reductions": [
+          {
+            "Id": "e8043a27-5847-459d-9cb4-fa7297046747",
+            "Description": "Descope all Low-priority items this phase (PW-12 ticket sync, PW-18 admin back-office, PW-19 usage analytics, PW-23 contract tests, PW-24 legacy decommission) to a later phase",
+            "Saving": 17000,
+            "Effect": "Removes ~39 backlog points of Low-priority work from labour lines entirely, deferring to a phase 2 backlog",
+            "Confidence": "high"
+          },
+          {
+            "Id": "0b2aa8f4-acbe-4a4d-ad9f-96a7d2c93e70",
+            "Description": "Defer Multi-currency support (PW-14) to phase 2; ship single-currency (USD) first",
+            "Saving": 9800,
+            "Effect": "Removes 13 points of backend/frontend/QA effort tied to FX handling and settlement logic",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "d882bd09-5b0d-470c-a6b1-904a0e13fb1d",
+            "Description": "Reduce QA allocation on low-risk cosmetic tasks (design system, mobile responsive layout, accessibility pass) by ~30%, relying more on automated visual regression tests",
+            "Saving": 3500,
+            "Effect": "Cuts roughly 50 QA hours from UI-only tasks while keeping full QA depth on payments/auth/migration",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "55f3579a-672f-4ef8-ae21-f8f1db766ef9",
+            "Description": "Use a managed migration service or Stripe-supplied reconciliation tooling instead of custom-built tooling for PW-8/PW-7",
+            "Saving": 4000,
+            "Effect": "Reduces backend build hours on migration tooling and payment reconciliation by leveraging vendor tooling; partially offset by tooling license cost already in non-labour",
+            "Confidence": "low"
+          },
+          {
+            "Id": "3e7ac320-dfa2-42eb-ad03-93365ee6a8a6",
+            "Description": "Push non-critical non-labour spend (accessibility audit, security review) to post-launch hardening sprint",
+            "Saving": 7500,
+            "Effect": "Removes third-party accessibility audit and security review from initial budget, performed in a later hardening cycle instead",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    }
+  ],
+  "PrioritisationRuns": []
+}

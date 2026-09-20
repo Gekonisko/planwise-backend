@@ -1,0 +1,814 @@
+{
+  "StartedUtc": "2026-09-19T12:49:28.7237246Z",
+  "CostModelName": "claude-sonnet-5",
+  "PrioritisationModelName": "claude-opus-5",
+  "Repetitions": 1,
+  "PrimaryRepetitions": 1,
+  "CostRuns": [
+    {
+      "ScenarioId": "CE-1",
+      "Scenario": "maly backlog, pelny cennik",
+      "Attempt": 1,
+      "ElapsedSeconds": 26.238168,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2142,
+        "OutputTokens": 2771,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 3,
+        "ScenarioNamesCanonical": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 99568,
+        "ComponentsSum": 116825.38,
+        "SumRelativeDeviation": 0.17332255343082115,
+        "PriorityBreakdownRelativeDeviation": 0.003002972842680379,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1076,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 4,
+        "HoursByRole": {
+          "Backend Developer": 486,
+          "Frontend Developer": 300,
+          "QA Engineer": 178,
+          "DevOps Engineer": 112
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Optimistic (best case, high team familiarity, few surprises)",
+            "Percentile": 20,
+            "Total": 90000,
+            "Confidence": null
+          },
+          {
+            "Name": "Most likely (baseline estimate as costed)",
+            "Percentile": 50,
+            "Total": 99568,
+            "Confidence": null
+          },
+          {
+            "Name": "Pessimistic (migration/integration complications, rework)",
+            "Percentile": 80,
+            "Total": 122000,
+            "Confidence": null
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 486,
+            "HourlyRate": 98.33,
+            "Cost": 47788.38
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 300,
+            "HourlyRate": 90,
+            "Cost": 27000
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 178,
+            "HourlyRate": 70,
+            "Cost": 12460
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 112,
+            "HourlyRate": 110,
+            "Cost": 12320
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Staging/cloud infrastructure setup and monthly hosting (3 months)",
+            "Amount": 1800
+          },
+          {
+            "Description": "Stripe integration sandbox, PCI compliance review, and webhook testing tools",
+            "Amount": 1500
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licenses and validation environment",
+            "Amount": 4000
+          },
+          {
+            "Description": "Contingency buffer (10% of labour, given no historical actuals available)",
+            "Amount": 9957
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 39913
+          },
+          {
+            "Priority": "High",
+            "Total": 47956
+          },
+          {
+            "Priority": "Medium",
+            "Total": 11400
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project; estimate is based on story points and role-allocation heuristics only.",
+          "1 story point is approximated as ~6 hours of blended effort across the team, adjusted per task by role mix.",
+          "Team operates over a roughly 12-week delivery window at standard 40 hr/week per FTE capacity.",
+          "DevOps Engineer (0.4 FTE) and QA Engineer (0.6 FTE) are thinly staffed relative to concentrated demand in PW-1, PW-7, and PW-8; this is a scheduling/capacity risk, not just a cost risk.",
+          "Legacy data migration (PW-8) assumes existing Oracle schema documentation is available and no major data-quality remediation is required beyond standard validation.",
+          "Payment provider integration (PW-7) assumes use of Stripe's standard hosted APIs, not a custom PCI Level 1 build-out.",
+          "Contingency of 10% of labour cost is included to cover estimation uncertainty given the lack of historical actuals.",
+          "Priority breakdown sums labour (at each task's estimated hours) plus a proportional share of non-labour costs."
+        ],
+        "Reasoning": "\nEstimated using story points as a proxy for relative effort, converted to hours via a ~6 hours/point baseline (typical for full-stack feature work including design, coding, testing, code review and minor rework), then allocated across roles based on task nature (backend-heavy, frontend-heavy, QA, or infra/DevOps-heavy). Total points = 5+8+8+13+8+5+13+21 = 81 points.\n\nRole allocation logic per task:\n- PW-1 (CI/staging, 5pts): DevOps-heavy, some Backend support.\n- PW-2 (Design system, 8pts): Frontend-heavy, light QA.\n- PW-3 (Registration/login, 8pts): Backend-heavy + Frontend + QA.\n- PW-4 (RBAC, 13pts): Backend-heavy + Frontend + QA.\n- PW-5 (Dashboard, 8pts): Frontend-heavy + Backend + QA.\n- PW-6 (Invoice list/detail, 5pts): Frontend + Backend + QA.\n- PW-7 (Payment integration, 13pts): Backend-heavy + QA + DevOps (webhooks/infra).\n- PW-8 (Legacy migration, 21pts): Backend-heavy + DevOps + QA (validation).\n\nCapacity check: Team FTE = 1.5 Backend + 1.0 Frontend + 0.6 QA + 0.4 DevOps = 3.5 FTE. Over a ~12-week (3-month) delivery window at ~40hr/week per FTE, available hours: Backend ~1.5*40*12=720h, Frontend ~480h, QA ~288h, DevOps ~192h. Total backlog hours estimated below (486h Backend, 300h Frontend, 178h QA, 112h DevOps) fit within these capacity ceilings, though DevOps and QA are thin relative to demand concentration in PW-1, PW-7, PW-8 — flagged as an assumption/risk.\n\nBackend hours breakdown (total 486h @98.33): PW-1:20, PW-3:60, PW-4:90, PW-5:40, PW-6:30, PW-7:100, PW-8:146.\nFrontend hours breakdown (total 300h @90): PW-2:70, PW-3:30, PW-4:40, PW-5:60, PW-6:40, PW-7:20, PW-8:0(minor UI not needed), plus PW-1:0.\nAdjusted to sum cleanly: Frontend total kept at 300h.\nQA hours breakdown (total 178h @70): PW-1:5, PW-2:10, PW-3:25, PW-4:30, PW-5:20, PW-6:15, PW-7:35, PW-8:38.\nDevOps hours breakdown (total 112h @110): PW-1:40, PW-7:30, PW-8:42.\n\nNon-labour costs include Stripe sandbox/test fees, staging infra, and a data migration tooling/license allowance, plus a contingency line given no historical actuals exist for this project.\n\nPriority breakdown computed by summing labour+non-labour cost per task grouped by priority tag (Urgent: PW-3, PW-7; High: PW-1, PW-4, PW-5, PW-8; Medium: PW-2, PW-6).\n",
+        "Reductions": [
+          {
+            "Id": "3a8bfd0b-a4e0-44cf-a235-d81f334675bf",
+            "Description": "Defer PW-2 (Design system and component library) to a later phase and use a third-party UI kit (e.g. Angular Material) initially instead of building a custom component library now.",
+            "Saving": 8100,
+            "Effect": "Removes ~70 Frontend hours and ~10 QA hours from current scope",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "aec9990a-b516-43fa-9ea8-1fd11a044f83",
+            "Description": "Descope PW-6 (Invoice list and detail view) PDF download feature to a follow-up release, keeping only the list/detail view now.",
+            "Saving": 3600,
+            "Effect": "Removes ~15 Backend hours and ~15 Frontend hours related to PDF generation",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "c3fb37f6-0bde-4e4a-9297-42f5dc237ff2",
+            "Description": "Reduce QA hours on PW-4 (RBAC) by relying more heavily on automated test suites instead of manual verification of the permission matrix.",
+            "Saving": 1050,
+            "Effect": "Cuts 15 QA hours from PW-4 testing",
+            "Confidence": "low"
+          },
+          {
+            "Id": "826b841f-265e-49d5-960a-defa6ef204be",
+            "Description": "Phase the Legacy data migration (PW-8) to migrate customer records first and invoice lines in a subsequent phase, reducing DevOps and QA validation effort in this pass.",
+            "Saving": 6200,
+            "Effect": "Removes ~20 Backend hours, ~12 DevOps hours, and ~15 QA hours from current phase",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "f3b623d2-f8dc-4ebc-9e5c-c7de318ee4ce",
+            "Description": "Use Stripe Checkout (hosted page) instead of a fully custom Stripe Elements integration for PW-7, reducing frontend and backend integration effort.",
+            "Saving": 4500,
+            "Effect": "Removes ~20 Backend hours and ~20 Frontend-equivalent integration/testing hours",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-2",
+      "Scenario": "sredni backlog, pelny cennik",
+      "Attempt": 1,
+      "ElapsedSeconds": 33.3954199,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 3022,
+        "OutputTokens": 3078,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 4,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0.00,
+        "ScenarioCount": 2,
+        "ScenarioNamesCanonical": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0.00,
+        "RealisticTotal": 168500,
+        "ComponentsSum": 189893.8,
+        "SumRelativeDeviation": 0.12696617210682493,
+        "PriorityBreakdownRelativeDeviation": 0.031864688427299705,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 1760,
+        "AssumptionCount": 10,
+        "ReductionCount": 5,
+        "NonLabourCount": 5,
+        "HoursByRole": {
+          "Backend Developer": 760,
+          "Frontend Developer": 505,
+          "QA Engineer": 300,
+          "DevOps Engineer": 195
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "P50 - Base case",
+            "Percentile": 50,
+            "Total": 168500,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "P90 - Risk-adjusted",
+            "Percentile": 90,
+            "Total": 210000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Backend Developer",
+            "Hours": 760,
+            "HourlyRate": 98.33,
+            "Cost": 74730.8
+          },
+          {
+            "Role": "Frontend Developer",
+            "Hours": 505,
+            "HourlyRate": 90,
+            "Cost": 45450
+          },
+          {
+            "Role": "QA Engineer",
+            "Hours": 300,
+            "HourlyRate": 70,
+            "Cost": 21000
+          },
+          {
+            "Role": "DevOps Engineer",
+            "Hours": 195,
+            "HourlyRate": 110,
+            "Cost": 21450
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / sandbox & webhook testing tooling",
+            "Amount": 1500
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling/licensing (one-off)",
+            "Amount": 4000
+          },
+          {
+            "Description": "Third-party accessibility audit (WCAG 2.2 AA validation)",
+            "Amount": 3000
+          },
+          {
+            "Description": "Staging/CI cloud infrastructure costs (3 months)",
+            "Amount": 2500
+          },
+          {
+            "Description": "Contingency buffer for underestimated tasks (10% of labour)",
+            "Amount": 16263
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 34000
+          },
+          {
+            "Priority": "High",
+            "Total": 72500
+          },
+          {
+            "Priority": "Medium",
+            "Total": 48000
+          },
+          {
+            "Priority": "Low",
+            "Total": 8630.8
+          }
+        ],
+        "Assumptions": [
+          "No historical actuals (real spend data) are available for this project; estimate is derived purely from story points and role-mix heuristics, not empirical velocity.",
+          "1 story point is assumed to translate to roughly 6 hours of blended engineering effort for medium-complexity enterprise web/API work; this is a rough heuristic and actual complexity per task varies.",
+          "Delivery window assumed to be approximately one quarter (13 weeks); role hours were capped close to each role's FTE capacity over that period (Backend 780h, Frontend 520h, QA 312h, DevOps 208h).",
+          "DevOps Engineer (0.4 FTE) and QA Engineer (0.6 FTE) are thinly staffed relative to the backlog's infra and testing demands (CI setup, migration cutover, payment webhooks, observability, plus QA across 24 tasks); this is a real capacity risk that may push timeline out or require temporary contractor support.",
+          "Legacy data migration (PW-8, 21 points) is assumed to require dedicated backend and DevOps effort for schema mapping, batch ETL and validation, and carries the highest technical risk/uncertainty in the backlog.",
+          "Payment integration (PW-7) assumed to use Stripe's hosted webhooks and standard reconciliation patterns rather than a custom ledger system.",
+          "Non-labour costs are estimates based on typical SaaS/tooling costs for a project of this size and are not vendor quotes.",
+          "A 10% contingency on labour cost is included to account for the lack of historical velocity data and the inherent uncertainty in point-to-hour conversion.",
+          "Accessibility pass (PW-15) assumes an external audit plus internal remediation, not a full WCAG legal compliance certification.",
+          "Multi-currency support (PW-14) assumes settlement conversion via a standard daily FX rate feed rather than building an in-house FX engine."
+        ],
+        "Reasoning": "Estimation approach: Converted story points to engineering hours using a baseline of 1 point ≈ 6 hours of blended engineering effort (a common heuristic for medium-complexity enterprise backlog items with unknowns), then split hours across roles per task type (backend/API-heavy vs frontend-heavy vs infra vs QA vs DevOps) based on task description. Total points = 5+8+8+13+8+5+13+21+8+8+5+5+8+13+8+5+8+13+8+8+5+8+5+8 = 209 points.\n\nRole allocation logic per task category:\n- Auth/RBAC/payments/migration/audit/GDPR/rate-limiting/2FA/observability: backend-heavy (60-70% backend, 10-20% QA, some DevOps for infra-touching items).\n- Design system, dashboards, invoice UI, search, multi-currency UI, accessibility, mobile, admin back-office, analytics, ticket submission: frontend-heavy (55-65% frontend, backend support 20-30%, QA 15%).\n- CI pipeline, decommission, contract tests: DevOps/QA heavy.\n- All tasks get a QA pass proportional to complexity (roughly 15-20% of total task hours), reflecting the 0.6 FTE QA capacity constraint.\n\nCapacity check across a nominal 3-month (13-week) delivery window:\n- Backend Developer: 1.5 FTE x 40h x 13w = 780h available\n- Frontend Developer: 1.0 FTE x 40h x 13w = 520h available\n- QA Engineer: 0.6 FTE x 40h x 13w = 312h available\n- DevOps Engineer: 0.4 FTE x 40h x 13w = 208h available\n\nAllocated hours were kept within (or very near) these caps, and where the backlog would require more than the team can realistically absorb in that window (especially DevOps and QA, which are thin), this is flagged as an assumption/risk rather than silently overallocating.\n\nFinal allocated hours:\n- Backend Developer: 760h (near full 780h capacity)\n- Frontend Developer: 505h (near full 520h capacity)\n- QA Engineer: 300h (near full 312h capacity)\n- DevOps Engineer: 195h (near full 208h capacity)\n\nThis reflects a team working at ~95-98% utilization for one quarter, which is aggressive but the backlog (209 points) genuinely requires it; any acceleration or added scope would need to slip timeline or add headcount.\n\nNo historical actuals exist for this project, so estimates rely purely on point-based heuristics and role-mix judgement rather than empirical velocity — this is called out explicitly as a key assumption and risk driver, and is reflected in the wide P50-P90 spread.\n\nPriority breakdown was computed by mapping each task's allocated total cost (sum of its labour lines) to its stated priority tier.\n\nReductions target the Low-priority tail (PW-12, PW-18, PW-19, PW-23, PW-24 = 39 points, ~19% of backlog) as the primary descope/defer lever, plus trimming the accessibility pass scope and deferring multi-currency settlement (keeping display-only) as secondary levers, and deferring part of the observability/tracing work until after payment go-live.",
+        "Reductions": [
+          {
+            "Id": "7bfbb02d-24f8-41b3-a474-349c953351b3",
+            "Description": "Descope all five Low-priority tasks (PW-12 ticket sync, PW-18 admin back-office, PW-19 usage analytics, PW-23 contract tests, PW-24 legacy decommission) from this phase and defer to a later release",
+            "Saving": 23400,
+            "Effect": "Removes 39 points (~19% of backlog); frees up roughly 1 month of combined Backend/Frontend/QA capacity that can be reallocated to Urgent/High items or removed from budget entirely if deferred beyond this engagement.",
+            "Confidence": "high"
+          },
+          {
+            "Id": "21a9aa1d-5f1c-4a65-82a4-8b3ed4f01c74",
+            "Description": "Reduce Multi-currency support (PW-14) scope to display-only (show EUR/PLN equivalents) and defer actual multi-currency settlement/reconciliation to a follow-up phase",
+            "Saving": 7000,
+            "Effect": "Cuts backend and QA effort on settlement logic and reconciliation testing, the highest-risk part of that task, while still delivering visible customer value.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "8dba78f7-a2c5-41da-a570-1cc6d3b6672f",
+            "Description": "Use an automated accessibility scanning tool (e.g. axe-core in CI) instead of a paid third-party WCAG audit, reserving manual audit budget for a later pre-launch pass",
+            "Saving": 3000,
+            "Effect": "Removes the third-party audit non-labour line; catches the majority of contrast/labelling issues automatically, with residual risk on nuanced screen-reader flows.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "0ccc8b2f-28ab-4519-832f-95fb322d16a9",
+            "Description": "Defer Observability tracing/dashboards (PW-22) rollout on non-payment paths until after go-live, keeping only payment-path tracing for launch",
+            "Saving": 3600,
+            "Effect": "Reduces DevOps hours allocated to PW-22 by roughly half; payment-path monitoring (the highest-risk area) is retained.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "7d44eb92-c0c5-4a6d-a73d-30191e34b61a",
+            "Description": "Reduce QA regression hours on Low/Medium priority UI tasks (PW-13 search, PW-20 mobile layout) by relying more on automated E2E tests instead of full manual QA passes",
+            "Saving": 2800,
+            "Effect": "Cuts roughly 40 QA hours; introduces some risk of missed edge cases on search relevance and responsive breakpoints that automated tests may not fully cover.",
+            "Confidence": "low"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-3",
+      "Scenario": "cennik zastepczy (brak stawek w zespole)",
+      "Attempt": 1,
+      "ElapsedSeconds": 24.9631876,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2993,
+        "OutputTokens": 2238,
+        "Calls": 1
+      },
+      "Metrics": {
+        "LabourLineCount": 1,
+        "RolesNotInRateCard": 0,
+        "RolesCaseMismatchOnly": 0,
+        "RateExactShare": 1,
+        "RateCardCoverage": 1,
+        "MaxRateDeviation": 0,
+        "ScenarioCount": 3,
+        "ScenarioNamesCanonical": false,
+        "ScenarioTotalsMonotonic": true,
+        "PercentilesMonotonic": true,
+        "LineArithmeticShare": 1,
+        "MaxLineArithmeticError": 0,
+        "RealisticTotal": 205000,
+        "ComponentsSum": 233975,
+        "SumRelativeDeviation": 0.14134146341463413,
+        "PriorityBreakdownRelativeDeviation": 0.04948780487804878,
+        "AllNonNegative": true,
+        "ReductionsWithinTotal": true,
+        "TotalHours": 2733,
+        "AssumptionCount": 8,
+        "ReductionCount": 5,
+        "NonLabourCount": 5,
+        "HoursByRole": {
+          "Team member": 2733
+        }
+      },
+      "Result": {
+        "Scenarios": [
+          {
+            "Name": "Low (optimistic)",
+            "Percentile": 20,
+            "Total": 155000,
+            "Confidence": "low"
+          },
+          {
+            "Name": "Most likely",
+            "Percentile": 50,
+            "Total": 205000,
+            "Confidence": "medium"
+          },
+          {
+            "Name": "High (pessimistic)",
+            "Percentile": 80,
+            "Total": 270000,
+            "Confidence": "low"
+          }
+        ],
+        "LabourLines": [
+          {
+            "Role": "Team member",
+            "Hours": 2733,
+            "HourlyRate": 75,
+            "Cost": 204975
+          }
+        ],
+        "NonLabourLines": [
+          {
+            "Description": "Stripe integration fees / sandbox testing costs",
+            "Amount": 500
+          },
+          {
+            "Description": "Cloud infra for CI/staging environment (PW-1) setup and monthly run",
+            "Amount": 1500
+          },
+          {
+            "Description": "Third-party accessibility audit (WCAG 2.2 AA) for PW-15",
+            "Amount": 2500
+          },
+          {
+            "Description": "Legacy Oracle data migration tooling / DBA consulting (PW-8)",
+            "Amount": 4000
+          },
+          {
+            "Description": "Contingency reserve (~10% of labour)",
+            "Amount": 20500
+          }
+        ],
+        "PriorityBreakdown": [
+          {
+            "Priority": "Urgent",
+            "Total": 40320
+          },
+          {
+            "Priority": "High",
+            "Total": 92400
+          },
+          {
+            "Priority": "Medium",
+            "Total": 63000
+          },
+          {
+            "Priority": "Low",
+            "Total": 19425
+          }
+        ],
+        "Assumptions": [
+          "The provided rate card is a PLACEHOLDER: a single 'Team member' role at $75/hr with 1 FTE available. No real team roles (e.g. dev, QA, PM, designer) or differentiated rates have been assigned yet, so this estimate is indicative only and must be revisited once actual roles/rates/headcount are confirmed.",
+          "With only 1 FTE (Team member) available, all 24 backlog items (168 story points total) must be delivered sequentially by one person; this is a major capacity constraint and is flagged as a risk, not a recommendation.",
+          "Story points converted to effort using an assumed ~16 hours/point baseline for a single generalist doing analysis, dev, test and basic deployment, adjusted per task complexity (e.g. legacy migration and payment integration weighted higher per point due to integration/compliance risk; simple UI/config tasks weighted lower).",
+          "No historical actuals (real spend data) exist for this project yet; estimate is based purely on backlog point sizing and assumed effort ratios, not on past velocity or delivery data.",
+          "Assumed 1 FTE works ~37.5 hrs/week; the ~2,733 total hours implies roughly 73 weeks (~17 months) of solo full-time work to clear the full backlog as scoped, before accounting for holidays, sick leave, or rework.",
+          "Non-labour costs (infra, tooling, audits, migration consulting) are indicative placeholders based on typical small-scale SaaS project costs, since no vendor quotes were supplied.",
+          "Contingency of ~10% of labour cost is included given the single-resource risk and unknowns around legacy migration and payment integration scope.",
+          "Priority breakdown costs are allocated pro-rata based on story points within each priority band, using the same $75/hr rate and effort-per-point assumption."
+        ],
+        "Reasoning": "\"Total backlog is 168 story points across 24 tasks. With no real rate card (only a placeholder single role/rate/1 FTE), the estimate had to translate story points into hours for a generalist 'Team member' role at $75/hr. A base effort ratio of ~16 hrs/point was used for typical feature work, scaled up for high-risk/integration-heavy items (PW-7 Payment provider, PW-8 Legacy migration, PW-4 RBAC) and scaled down slightly for simpler config/UI tasks (PW-1 CI setup, PW-24 Decommission). This produced ~2,733 total hours (~$204,975 labour). Non-labour costs cover infra, third-party audit, and migration tooling support, plus a 10% contingency given the single-FTE delivery risk. Scenarios reflect uncertainty band (+/-25-30%) around the most-likely total, driven mainly by the unknown real staffing plan and the unproven 1-FTE capacity to absorb 168 points of scope. Priority breakdown allocates the same per-point cost basis across Urgent/High/Medium/Low groupings to show where budget concentration lies (Urgent+High = ~65% of labour spend, reflecting compliance/payment/security-critical work).\"",
+        "Reductions": [
+          {
+            "Id": "f4e69096-c32e-4225-bebd-f05c24cb36e9",
+            "Description": "Descope Low-priority items (PW-12 Support ticket submission, PW-18 Admin back-office, PW-19 Usage analytics, PW-23 Contract tests, PW-24 Decommission legacy portal) to a later phase; these total 39 points (~23% of backlog).",
+            "Saving": 48000,
+            "Effect": "Removes ~640 hours of Team member time from this phase; can be re-scoped into a Phase 2 once core platform is live and real staffing is confirmed.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "3916d2e3-6b52-4f47-a58d-cc6df821dd1c",
+            "Description": "Defer Multi-currency support (PW-14, 13 points) until post-launch since portal can launch with a single settlement currency initially.",
+            "Saving": 15600,
+            "Effect": "Removes ~208 hours; multi-currency can be added once real transaction volume/currency mix data justifies the investment.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "1b3a1b2b-0bd5-4b1e-88de-57e5ef9a3f54",
+            "Description": "Reduce scope of Legacy data migration (PW-8) to a phased migration (e.g. active customers first, historical invoice lines in a later batch) rather than full 400k/2M record cutover in one pass.",
+            "Saving": 25000,
+            "Effect": "Cuts migration engineering/testing effort roughly in half for this phase by narrowing initial data scope; remaining data migrated in a lower-cost batch job later.",
+            "Confidence": "low"
+          },
+          {
+            "Id": "10150d91-c394-4256-8e8a-76eef0521714",
+            "Description": "Use a managed/off-the-shelf component library (e.g. Angular Material) instead of building a custom Design system (PW-2) from scratch.",
+            "Saving": 9000,
+            "Effect": "Cuts ~120 hours of custom component/theming build-out by adopting and lightly customizing an existing library.",
+            "Confidence": "medium"
+          },
+          {
+            "Id": "25e9ae01-a287-44f4-9318-f4130563a89e",
+            "Description": "Delay Observability tracing/dashboards (PW-22) and Rate limiting (PW-21) to immediately post-launch rather than pre-launch, keeping only basic logging/alerting at go-live.",
+            "Saving": 9750,
+            "Effect": "Removes ~130 hours from the pre-launch critical path; both are important but not launch-blocking if basic monitoring exists.",
+            "Confidence": "medium"
+          }
+        ]
+      },
+      "Error": null
+    },
+    {
+      "ScenarioId": "CE-4",
+      "Scenario": "braki w oszacowaniach punktowych",
+      "Attempt": 1,
+      "ElapsedSeconds": 56.2484632,
+      "HttpCalls": 2,
+      "Usage": {
+        "InputTokens": 6092,
+        "OutputTokens": 5476,
+        "Calls": 2
+      },
+      "Metrics": null,
+      "Result": null,
+      "Error": "Anthropic tool_use response did not match the expected schema after 2 attempts"
+    }
+  ],
+  "PrioritisationRuns": [
+    {
+      "ScenarioId": "BP-1",
+      "Scenario": "maly backlog, pelne dane",
+      "Attempt": 1,
+      "ElapsedSeconds": 9.7008247,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 1708,
+        "OutputTokens": 906,
+        "Calls": 1
+      },
+      "Metrics": {
+        "InputCount": 10,
+        "RawReturnedCount": 10,
+        "RawUnknownKeys": 0,
+        "RawDuplicateKeys": 0,
+        "RawMissingKeys": 0,
+        "RawScoresOutOfRange": 0,
+        "ResultCount": 10,
+        "UnrankedCount": 0,
+        "DependencyRespectShare": null,
+        "DependencyEdges": 0,
+        "ReasonDistinctShare": 1,
+        "ReasonMeanLength": 98.5,
+        "ValueScoreRankCorrelation": 0.6168616563258901,
+        "Order": [
+          "PW-3",
+          "PW-7",
+          "PW-1",
+          "PW-5",
+          "PW-2",
+          "PW-8",
+          "PW-4",
+          "PW-6",
+          "PW-9",
+          "PW-10"
+        ]
+      },
+      "Reasons": [
+        "Authentication is the implicit gate for dashboard, RBAC, invoices and payments, and carries high slip risk so it must fail early",
+        "Highest business value and revenue-bearing third-party integration whose unknowns should surface early",
+        "Cheap, low-risk enabler that every other item needs to be built, tested and shipped through",
+        "Primary customer-facing surface with high value and elevated slip risk, moderate size",
+        "Shared UI foundation for dashboard, invoices and admin screens; delaying it forces rework",
+        "Riskiest and largest item, and real data underpins dashboard and invoice work, so start before it can sink a late sprint",
+        "Solid value and gates admin/audit features, but depends on login and is comparatively predictable",
+        "Decent value for the smallest remaining effort with low slip risk once billing data exists",
+        "Compliance obligation worth scheduling before launch, but needs account data in place first",
+        "Lowest value, blocks nothing, and is most useful once RBAC and the features it records exist"
+      ],
+      "Error": null
+    },
+    {
+      "ScenarioId": "BP-2",
+      "Scenario": "sredni backlog, pelne dane",
+      "Attempt": 1,
+      "ElapsedSeconds": 19.3813118,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2669,
+        "OutputTokens": 1874,
+        "Calls": 1
+      },
+      "Metrics": {
+        "InputCount": 24,
+        "RawReturnedCount": 24,
+        "RawUnknownKeys": 0,
+        "RawDuplicateKeys": 0,
+        "RawMissingKeys": 0,
+        "RawScoresOutOfRange": 0,
+        "ResultCount": 24,
+        "UnrankedCount": 0,
+        "DependencyRespectShare": null,
+        "DependencyEdges": 0,
+        "ReasonDistinctShare": 1,
+        "ReasonMeanLength": 76.66666666666667,
+        "ValueScoreRankCorrelation": 0.7956703040305972,
+        "Order": [
+          "PW-1",
+          "PW-3",
+          "PW-7",
+          "PW-5",
+          "PW-2",
+          "PW-4",
+          "PW-8",
+          "PW-17",
+          "PW-6",
+          "PW-14",
+          "PW-9",
+          "PW-11",
+          "PW-13",
+          "PW-20",
+          "PW-22",
+          "PW-15",
+          "PW-10",
+          "PW-21",
+          "PW-16",
+          "PW-12",
+          "PW-23",
+          "PW-19",
+          "PW-18",
+          "PW-24"
+        ]
+      },
+      "Reasons": [
+        "CI and staging is the delivery pipeline everything else ships through, cheap and low risk",
+        "Urgent auth foundation that dashboard, RBAC and 2FA all sit on, with high slip risk worth hitting early",
+        "Highest business value, urgent revenue path, large third-party integration risk best surfaced now",
+        "Primary customer-facing surface with high value and elevated slip risk",
+        "Component library underpins dashboard, responsive and accessibility work, so its risk should land early",
+        "Access control gates admin and support features; large but moderate risk",
+        "Riskiest and largest item, blocks legacy decommission, must fail early not late",
+        "High-value security follow-on to login with meaningful slip risk",
+        "Cheap, low-risk billing view that search and performance work build on",
+        "Revenue-expanding billing capability tied to payments, sizeable effort",
+        "Compliance obligation with regulatory exposure if deferred",
+        "Shared notification plumbing needed by tickets and account flows, cheap and low risk",
+        "Highest slip risk in the backlog, pulled forward so discovery happens early",
+        "Broad UI reach with high uncertainty once the component library exists",
+        "Tracing supports operating payments and migration safely; risky enough to not defer",
+        "Accessibility conformance carries legal weight and high rework risk if left to the end",
+        "Audit trail supports compliance and admin tooling, but risky and not customer-visible",
+        "Cheap abuse protection for the exposed auth and payment endpoints",
+        "Small, low-risk tuning that only pays off after the invoice list ships",
+        "Low-priority support flow depending on notifications; modest value",
+        "Cheap safety net for the helpdesk integration, only relevant once ticketing exists",
+        "Internal reporting that needs real usage data to be meaningful",
+        "Large low-priority internal tooling with little external value",
+        "Terminal cleanup that can only follow successful migration and admin parity"
+      ],
+      "Error": null
+    },
+    {
+      "ScenarioId": "BP-3",
+      "Scenario": "brak prognozy ryzyka",
+      "Attempt": 1,
+      "ElapsedSeconds": 19.3041442,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2377,
+        "OutputTokens": 1804,
+        "Calls": 1
+      },
+      "Metrics": {
+        "InputCount": 24,
+        "RawReturnedCount": 24,
+        "RawUnknownKeys": 0,
+        "RawDuplicateKeys": 0,
+        "RawMissingKeys": 0,
+        "RawScoresOutOfRange": 0,
+        "ResultCount": 24,
+        "UnrankedCount": 0,
+        "DependencyRespectShare": null,
+        "DependencyEdges": 0,
+        "ReasonDistinctShare": 1,
+        "ReasonMeanLength": 74.70833333333333,
+        "ValueScoreRankCorrelation": 0.7918388027468829,
+        "Order": [
+          "PW-1",
+          "PW-3",
+          "PW-7",
+          "PW-5",
+          "PW-2",
+          "PW-4",
+          "PW-6",
+          "PW-17",
+          "PW-8",
+          "PW-14",
+          "PW-9",
+          "PW-11",
+          "PW-13",
+          "PW-20",
+          "PW-22",
+          "PW-21",
+          "PW-10",
+          "PW-15",
+          "PW-16",
+          "PW-12",
+          "PW-18",
+          "PW-19",
+          "PW-23",
+          "PW-24"
+        ]
+      },
+      "Reasons": [
+        "CI and staging are the delivery rails every later story ships on, and it is cheap",
+        "Identity is the gate for dashboard, RBAC, payments and every authenticated view",
+        "Highest-value revenue capability and a large external integration, so start it early",
+        "Primary customer-facing surface that invoices, search and responsive work hang off",
+        "Component library shapes all subsequent UI; building it after the screens means rework",
+        "Access model needed before admin, audit and support-facing features are built",
+        "Core billing view, modest effort, and the base for performance and search work",
+        "High-value security expectation that builds directly on the login flow",
+        "Largest item and a prerequisite for realistic data, decommissioning and reporting",
+        "Money-model change best made before more features assume single-currency amounts",
+        "Regulatory obligation with real exposure once live customer data exists",
+        "Shared plumbing that tickets, receipts and alerts all reuse, at low cost",
+        "Meaningful usability gain once invoice and order lists exist",
+        "Broad reach for customers, cheaper once the component library is settled",
+        "Tracing and dashboards pay off as payments and migration go live",
+        "Low-cost protection for the public auth and payment endpoints",
+        "Compliance and support traceability, but depends on the RBAC model landing first",
+        "Accessibility conformance is cheapest as a sweep once main screens are stable",
+        "Tuning only makes sense against the finished invoice list and migrated data volumes",
+        "Small customer-support win that relies on the notification service",
+        "Internal-only audience, large build, and blocked on roles and audit data",
+        "Reporting needs real usage and migrated history to be worth anything",
+        "Guards the helpdesk integration, so it follows the ticketing work it protects",
+        "Terminal cleanup that can only happen after migration and feature parity"
+      ],
+      "Error": null
+    },
+    {
+      "ScenarioId": "BP-4",
+      "Scenario": "lancuchy zaleznosci",
+      "Attempt": 1,
+      "ElapsedSeconds": 17.6259846,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 2493,
+        "OutputTokens": 1528,
+        "Calls": 1
+      },
+      "Metrics": {
+        "InputCount": 20,
+        "RawReturnedCount": 20,
+        "RawUnknownKeys": 0,
+        "RawDuplicateKeys": 0,
+        "RawMissingKeys": 0,
+        "RawScoresOutOfRange": 0,
+        "ResultCount": 20,
+        "UnrankedCount": 0,
+        "DependencyRespectShare": 1,
+        "DependencyEdges": 11,
+        "ReasonDistinctShare": 1,
+        "ReasonMeanLength": 71,
+        "ValueScoreRankCorrelation": 0.710894486100726,
+        "Order": [
+          "PW-1",
+          "PW-3",
+          "PW-2",
+          "PW-7",
+          "PW-5",
+          "PW-8",
+          "PW-4",
+          "PW-17",
+          "PW-6",
+          "PW-14",
+          "PW-9",
+          "PW-13",
+          "PW-20",
+          "PW-11",
+          "PW-10",
+          "PW-15",
+          "PW-16",
+          "PW-12",
+          "PW-19",
+          "PW-18"
+        ]
+      },
+      "Reasons": [
+        "Cheap, low-risk foundation that gates auth and all downstream delivery",
+        "Urgent, highest fan-out (4 dependents) and 71% slip risk, so start it early",
+        "Component library gates the dashboard and most UI work; moderate risk favours early start",
+        "Top business value revenue path, large and risky, unblocks multi-currency",
+        "Core customer-facing value, gates invoices, high slip risk once deps land",
+        "Riskiest and largest item with no prerequisites; pull forward to fail early and unblock GDPR",
+        "Access control needed before audit log and admin features",
+        "High-value security feature on the auth path with above-average slip risk",
+        "Cheap, low-risk billing view that unblocks search",
+        "Extends payment reach; sizeable but only viable after provider integration",
+        "Compliance obligation, unblocked once migration completes",
+        "Highest slip risk of the leaf features, so schedule it before other equal-value work",
+        "Broad UX reach with 71% slip risk; better tackled before polish items",
+        "Cheap, low-risk enabler that many features lean on informally",
+        "Supports governance after RBAC; moderate value with notable risk",
+        "Accessibility compliance with high uncertainty; earlier than pure nice-to-haves",
+        "Small, low-risk tuning that only matters after the invoice list ships",
+        "Low priority support feature, small effort keeps it ahead of larger low-value work",
+        "Internal insight only; no dependents and low stated priority",
+        "Lowest value for the largest remaining effort, and nothing waits on it"
+      ],
+      "Error": null
+    }
+  ]
+}

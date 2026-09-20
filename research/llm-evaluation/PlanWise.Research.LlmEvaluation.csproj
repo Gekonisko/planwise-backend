@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PlanWise.Research.LlmEvaluation</RootNamespace>
+
+    <!-- A research harness, not shipped code: the solution-wide analyzer gate would otherwise force
+         production-grade ceremony on throwaway measurement code. Deliberately narrower than the
+         backend/Directory.Build.props defaults. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    <AnalysisMode>Default</AnalysisMode>
+    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <NoWarn>$(NoWarn);CA1848;CA1031;CA2007</NoWarn>
+
+    <!-- Reads the same secret store as the API project, so the API keys are never copied anywhere. -->
+    <UserSecretsId>beeb096e-b519-4311-9b85-dd70aed621f6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.16" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.16" />
+    <!-- 10.0.0, not 9.0.16: MediatR 14 already pulls that in transitively and a lower pin is a downgrade. -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Common\PlanWise.Common.Application\PlanWise.Common.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Application\PlanWise.Modules.CostEstimation.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CostEstimation\PlanWise.Modules.CostEstimation.Infrastructure\PlanWise.Modules.CostEstimation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Application\PlanWise.Modules.BacklogPrioritisation.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\BacklogPrioritisation\PlanWise.Modules.BacklogPrioritisation.Infrastructure\PlanWise.Modules.BacklogPrioritisation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Application\PlanWise.Modules.Scheduling.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Scheduling\PlanWise.Modules.Scheduling.Infrastructure\PlanWise.Modules.Scheduling.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

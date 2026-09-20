@@ -1,0 +1,132 @@
+{
+  "StartedUtc": "2026-09-19T17:18:39.0929279Z",
+  "CostModelName": "claude-sonnet-5",
+  "PrioritisationModelName": "claude-opus-5",
+  "Repetitions": 1,
+  "PrimaryRepetitions": 1,
+  "AgentTurnBudget": 4,
+  "CostRuns": [],
+  "PrioritisationRuns": [],
+  "AllocationRuns": [
+    {
+      "ScenarioId": "AL-4",
+      "Description": "Skewed capacity: 10 tasks, 4 members of whom two are quarter-time — duration depends on who takes the work",
+      "Arm": "cpsat",
+      "Attempt": 1,
+      "ElapsedSeconds": 0.0446094,
+      "HttpCalls": 0,
+      "Usage": {
+        "InputTokens": 0,
+        "OutputTokens": 0,
+        "Calls": 0
+      },
+      "Metrics": {
+        "ModelName": "CpSatScheduleOptimiser v1",
+        "MakespanDays": 12,
+        "ReferenceMakespanDays": 12,
+        "GapPercent": 0,
+        "ProposedAssignments": 10,
+        "OpenTasksLeftUnassigned": 0,
+        "InvalidAssignments": 0,
+        "SkillMatchedTasks": 8,
+        "TasksPastDueDate": 0,
+        "BusiestMemberDays": 12,
+        "QuietestMemberDays": 8,
+        "LoadSpreadDays": 4,
+        "FellBackToGreedy": false
+      },
+      "ExpectedGain": "Project finishes in 12 day(s) (around 2026-01-17), 11 day(s) sooner than the greedy load-balancer's assignment of the same work. 10 assignment(s) proposed, 8 matching on skill tags.",
+      "Error": null
+    },
+    {
+      "ScenarioId": "AL-4",
+      "Description": "Skewed capacity: 10 tasks, 4 members of whom two are quarter-time — duration depends on who takes the work",
+      "Arm": "greedy",
+      "Attempt": 1,
+      "ElapsedSeconds": 0.0002566,
+      "HttpCalls": 0,
+      "Usage": {
+        "InputTokens": 0,
+        "OutputTokens": 0,
+        "Calls": 0
+      },
+      "Metrics": {
+        "ModelName": "GreedyCapacityBalancer v1",
+        "MakespanDays": 23,
+        "ReferenceMakespanDays": 12,
+        "GapPercent": 91.66666666666666,
+        "ProposedAssignments": 10,
+        "OpenTasksLeftUnassigned": 0,
+        "InvalidAssignments": 0,
+        "SkillMatchedTasks": 8,
+        "TasksPastDueDate": 0,
+        "BusiestMemberDays": 20,
+        "QuietestMemberDays": 6,
+        "LoadSpreadDays": 14,
+        "FellBackToGreedy": false
+      },
+      "ExpectedGain": "Reduces max/min assigned-points imbalance across members from 0 to 10; 8 of 10 assignment(s) matched on skill tags",
+      "Error": null
+    },
+    {
+      "ScenarioId": "AL-4",
+      "Description": "Skewed capacity: 10 tasks, 4 members of whom two are quarter-time — duration depends on who takes the work",
+      "Arm": "llm-single-shot",
+      "Attempt": 1,
+      "ElapsedSeconds": 3.9694442,
+      "HttpCalls": 1,
+      "Usage": {
+        "InputTokens": 1905,
+        "OutputTokens": 381,
+        "Calls": 1
+      },
+      "Metrics": {
+        "ModelName": "AgenticScheduleOptimiser v1",
+        "MakespanDays": 11,
+        "ReferenceMakespanDays": 12,
+        "GapPercent": -8.333333333333332,
+        "ProposedAssignments": 0,
+        "OpenTasksLeftUnassigned": 10,
+        "InvalidAssignments": 0,
+        "SkillMatchedTasks": 0,
+        "TasksPastDueDate": 0,
+        "BusiestMemberDays": 0,
+        "QuietestMemberDays": 0,
+        "LoadSpreadDays": 0,
+        "FellBackToGreedy": false
+      },
+      "ExpectedGain": "Project finishes in 11 day(s) (around 2026-01-16), 12 day(s) sooner than the greedy load-balancer's assignment of the same work. 0 assignment(s) proposed, 0 matching on skill tags. Agent's reasoning: No rationale given",
+      "Error": null
+    },
+    {
+      "ScenarioId": "AL-4",
+      "Description": "Skewed capacity: 10 tasks, 4 members of whom two are quarter-time — duration depends on who takes the work",
+      "Arm": "llm-agent",
+      "Attempt": 1,
+      "ElapsedSeconds": 22.7590446,
+      "HttpCalls": 4,
+      "Usage": {
+        "InputTokens": 14231,
+        "OutputTokens": 2604,
+        "Calls": 4
+      },
+      "Metrics": {
+        "ModelName": "AgenticScheduleOptimiser v1",
+        "MakespanDays": 13,
+        "ReferenceMakespanDays": 12,
+        "GapPercent": 8.333333333333332,
+        "ProposedAssignments": 10,
+        "OpenTasksLeftUnassigned": 0,
+        "InvalidAssignments": 0,
+        "SkillMatchedTasks": 7,
+        "TasksPastDueDate": 0,
+        "BusiestMemberDays": 13,
+        "QuietestMemberDays": 8,
+        "LoadSpreadDays": 5,
+        "FellBackToGreedy": false
+      },
+      "ExpectedGain": "Project finishes in 13 day(s) (around 2026-01-18), 10 day(s) sooner than the greedy load-balancer's assignment of the same work. 10 assignment(s) proposed, 7 matching on skill tags. Agent's reasoning: The critical chain S-01 → S-09 → S-10 is given to the two full-capacity seniors (priya for the api work, rosa for the ui screen), while the low-capacity engineers only take small side tasks that never gate anything. This balances loads at ~13 days and finishes on day 13, the earliest found.",
+      "Error": null
+    }
+  ]
+}
